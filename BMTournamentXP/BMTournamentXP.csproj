@@ -80,7 +80,6 @@
     <Compile Include="PatchTournamentCampaignBehavior.cs" />
     <Compile Include="BMTournamentXPMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tournaments\PatchTournamentBehavior.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
@@ -28,7 +29,29 @@ namespace BMTweakCollection
 
             string appSettings = String.Concat(BasePath.Name, "Modules/BMTweakCollection/ModuleData/BMTweakCollection.config.json");
             var configtxt = File.ReadAllText(appSettings);
-            BMTweakCollectionMain.Configuration = JsonConvert.DeserializeObject<BMRandomTweaksConfiguration>(configtxt);            
+            BMTweakCollectionMain.Configuration = JsonConvert.DeserializeObject<BMRandomTweaksConfiguration>(configtxt);
+
+            try
+            {
+                var h = new Harmony("com.darkspyre.bannerlord.tweakcol");
+                h.PatchAll();
+            }
+            catch (Exception exception1)
+            {
+                string message;
+                Exception exception = exception1;
+                string str = exception.Message;
+                Exception innerException = exception.InnerException;
+                if (innerException != null)
+                {
+                    message = innerException.Message;
+                }
+                else
+                {
+                    message = null;
+                }
+                MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
+            }
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -64,14 +87,14 @@ namespace BMTweakCollection
             CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
             if (campaignGameStarter != null)
             {
-                if (BMTweakCollectionMain.Configuration.MaxHideoutTroopsEnabled)
-                {
-                    this.ReplaceTroopLimitModel(campaignGameStarter);
-                }
-                if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
-                {
-                    this.ReplaceSmithingModel(campaignGameStarter);
-                }
+                //if (BMTweakCollectionMain.Configuration.MaxHideoutTroopsEnabled)
+                //{
+                //    this.ReplaceTroopLimitModel(campaignGameStarter);
+                //}
+                //if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
+                //{
+                //    this.ReplaceSmithingModel(campaignGameStarter);
+                //}
             }           
         }
 

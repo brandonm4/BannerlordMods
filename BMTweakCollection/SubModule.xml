@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <Name value="BMItemTweaks"/>
-  <Id value="BMItemTweaks"/>
-  <Version value="a1.0.2"/>
+  <Name value="BMTweakCollection"/>
+  <Id value="BMTweakCollection"/>
+  <Version value="e1.1.0"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>
@@ -15,9 +15,9 @@
   </DependedModules>
   <SubModules>
     <SubModule>
-      <Name value="BMItemTweaks"/>
-      <DLLName value="BMItemTweaks.dll"/>
-      <SubModuleClassType value="BMItemTweaks.BMItemTweaksMain"/>
+      <Name value="BMTweakCollection"/>
+      <DLLName value="BMTweakCollection.dll"/>
+      <SubModuleClassType value="BMTweakCollection.BMTweakCollectionMain"/>
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />

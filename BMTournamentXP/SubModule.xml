@@ -2,7 +2,7 @@
 <Module>
   <Name value="Tournament XP"/>
   <Id value="BMTournamentXP"/>
-  <Version value="f1.0.2"/>
+  <Version value="e1.1.0"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>

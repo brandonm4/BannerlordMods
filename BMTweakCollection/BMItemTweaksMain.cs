@@ -75,9 +75,9 @@ namespace BMTweakCollection
                 }
             }
 
-            InformationManager.ShowInquiry(new InquiryData("Tweak Collection Enabled",
-                 "Tweak Collection Enabled",
-                 true, false, "Ok", "No", null, null, ""), false);
+            //InformationManager.ShowInquiry(new InquiryData("Tweak Collection Enabled",
+            //     "Tweak Collection Enabled",
+            //     true, false, "Ok", "No", null, null, ""), false);
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

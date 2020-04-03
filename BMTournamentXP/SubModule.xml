@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <Name value="Tournament XP"/>
   <Id value="BMTournamentXP"/>
-  <Version value="e1.1.0"/>
+  <Version value="e1.1.1"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>
@@ -26,3 +26,4 @@
   </SubModules>
   <Xmls/>
 </Module>
+

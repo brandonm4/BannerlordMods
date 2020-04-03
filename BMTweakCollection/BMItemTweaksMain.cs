@@ -63,16 +63,16 @@ namespace BMTweakCollection
             Campaign gameType = game.GameType as Campaign;
             if (gameType != null)
             {
-                if (BMTweakCollectionMain.Configuration.ItemMultiplayerToSinglePlayerEnabled)
-                {
-                    foreach (ItemObject i in gameType.Items)
-                    {
-                        if (!i.NotMerchandise)
-                        {
-                            typeof(ItemObject).GetProperty("MultiplayerItem").SetValue(i, false);
-                        }
-                    }
-                }
+                //if (BMTweakCollectionMain.Configuration.ItemMultiplayerToSinglePlayerEnabled)
+                //{
+                //    foreach (ItemObject i in gameType.Items)
+                //    {
+                //        if (!i.NotMerchandise)
+                //        {
+                //            typeof(ItemObject).GetProperty("MultiplayerItem").SetValue(i, false);
+                //        }
+                //    }
+                //}
             }
 
             //InformationManager.ShowInquiry(new InquiryData("Tweak Collection Enabled",

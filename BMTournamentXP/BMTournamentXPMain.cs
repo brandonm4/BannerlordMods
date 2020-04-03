@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BMTournamentXP.Models;
+using HarmonyLib;
 using SandBox;
 using SandBox.TournamentMissions.Missions;
 using System;
@@ -17,14 +18,8 @@ namespace BMTournamentXP
 {
     public class BMTournamentXPMain : MBSubModuleBase
     {
-        private bool _enableTournamentXP = true;
-        private bool _enableArenaXP = true;
-        //private int _maximumTournamentBet = 300;
-        private float _tournamentxpmod = 1;
-        private float _arenaxpmod = 1;
-        private bool _showpopup = false;
-        private string _version = "e1.1.0";
-        
+        public static BMTournamentXPConfiguration Configuration { get; set; } = new BMTournamentXPConfiguration();
+
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
@@ -38,14 +33,14 @@ namespace BMTournamentXP
                 switch (n.Name.Trim().ToLower())
                 {
                     case "showinfopopup":                        
-                        if (string.Equals(n.InnerText, "true", StringComparison.OrdinalIgnoreCase))
-                        {
-                            _showpopup = true;
-                        }
-                        else
-                        {
-                            _showpopup = false;
-                        }
+                        //if (string.Equals(n.InnerText, "true", StringComparison.OrdinalIgnoreCase))
+                        //{
+                        //    _showpopup = true;
+                        //}
+                        //else
+                        //{
+                        //    _showpopup = false;
+                        //}
                         break;
                     case "tournament":
                         foreach (XmlNode nc in n.ChildNodes)
@@ -55,17 +50,17 @@ namespace BMTournamentXP
                                 case "enable":
                                     if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        _enableTournamentXP = true;
+                                        BMTournamentXPMain.Configuration.IsTournamentXPEnabled = true;
                                     }
                                     else
                                     {
-                                        _enableTournamentXP = false;
+                                        BMTournamentXPMain.Configuration.IsTournamentXPEnabled = false;
                                     }
                                     break;
                                 case "xpadjustment":
                                     float tadj = 1;
                                     float.TryParse(nc.InnerText, out tadj);
-                                    _tournamentxpmod = tadj;
+                                    BMTournamentXPMain.Configuration.TournamentXPAdjustment = tadj;
                                     break;
                                 case "additionalgold":
                                     int bg = 0;
@@ -75,11 +70,11 @@ namespace BMTournamentXP
                                 case "enablereroll":
                                     if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        TournamentCampaignBehaviorPatch1.IsEnabled = true;
+                                        BMTournamentXPMain.Configuration.TournamentPrizeRerollEnabled = true;
                                     }
                                     else
                                     {
-                                        TournamentCampaignBehaviorPatch1.IsEnabled = false;
+                                        BMTournamentXPMain.Configuration.TournamentPrizeRerollEnabled = false;
                                     }
                                     break;
                             }
@@ -93,17 +88,17 @@ namespace BMTournamentXP
                                 case "enable":
                                     if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        _enableArenaXP = true;
+                                        BMTournamentXPMain.Configuration.IsArenaXPEnabled = true;
                                     }
                                     else
                                     {
-                                        _enableArenaXP = false;
+                                        BMTournamentXPMain.Configuration.IsArenaXPEnabled = false;
                                     }
                                     break;
                                 case "xpadjustment":
                                     float tadj = 1;
                                     float.TryParse(nc.InnerText, out tadj);
-                                    _arenaxpmod = tadj;
+                                    BMTournamentXPMain.Configuration.ArenaXPAdjustment = tadj;
                                     break;                            
                             }
                         }
@@ -146,51 +141,21 @@ namespace BMTournamentXP
         {
             base.OnGameInitializationFinished(game);
 
-            DisplayVersionInfo(_showpopup);
+            DisplayVersionInfo(false);
         }
 
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
             base.OnMissionBehaviourInitialize(mission);
 
-            if (_enableArenaXP)
+            if (BMTournamentXPMain.Configuration.IsArenaXPEnabled)
             {
                 EnableArenaXP(mission);
             }
-            if (_enableTournamentXP)
+            if (BMTournamentXPMain.Configuration.IsTournamentXPEnabled)
             {
                 EnableTournamentXP(mission);
-            }
-
-            //if (!mission.HasMissionBehaviour<TournamentBehavior>())
-            //{
-            //    TournamentBehavior x = mission.GetMissionBehaviour<TournamentBehavior>();
-            //    mission.RemoveMissionBehaviour(x);
-
-            //    ITournamentGameBehavior gameBehavior = null;
-
-            //    if(mission.HasMissionBehaviour<TournamentFightMissionController>())
-            //    {
-            //        gameBehavior = mission.GetMissionBehaviour<TournamentFightMissionController>();
-            //    }
-            //    if (mission.HasMissionBehaviour<TournamentJoustingMissionController>())
-            //    {
-            //        gameBehavior = mission.GetMissionBehaviour<TournamentJoustingMissionController>();
-            //    }
-            //    if (mission.HasMissionBehaviour<TournamentArcheryMissionController>())
-            //    {
-            //        gameBehavior = mission.GetMissionBehaviour<TournamentArcheryMissionController>();
-            //    }
-            //    if (mission.HasMissionBehaviour<TownHorseRaceMissionController>())
-            //    {
-            //        gameBehavior = mission.GetMissionBehaviour<TownHorseRaceMissionController>();
-            //    }
-
-            //    BMTournamentBehavior tb = new BMTournamentBehavior(x.TournamentGame, x.Settlement, gameBehavior, x.IsPlayerParticipating);
-            //    tb.MaximumBet = _maximumTournamentBet;
-            //    mission.AddMissionBehaviour(tb);
-            //}
-
+            }            
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -217,7 +182,7 @@ namespace BMTournamentXP
               || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
               || mission.HasMissionBehaviour<TownHorseRaceMissionController>()))
             {
-                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(_tournamentxpmod));
+                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPMain.Configuration.TournamentXPAdjustment));
 
             }
         }
@@ -226,7 +191,7 @@ namespace BMTournamentXP
             if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
               mission.HasMissionBehaviour<ArenaPracticeFightMissionController>())
             {
-                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(_arenaxpmod));
+                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPMain.Configuration.ArenaXPAdjustment));
             }
         }
 
@@ -234,18 +199,18 @@ namespace BMTournamentXP
         {
             string t = "Yes";
             string a = "Yes";
-            if (!_enableTournamentXP)
+            if (!BMTournamentXPMain.Configuration.IsTournamentXPEnabled)
             {
                 t = "No";
             }
-            if (!_enableArenaXP)
+            if (!BMTournamentXPMain.Configuration.IsArenaXPEnabled)
             {
                 a = "No";
             }
-            string info = String.Concat("Tournament Patch v", _version, " Loaded\n", "Tournament XP Enabled:\t", t, "\n",
-                    "Tournament XP Amount:\t", (100 * _tournamentxpmod).ToString(), "%\n",
+            string info = String.Concat("Tournament Patch v", BMTournamentXPConfiguration.Version, " Loaded\n", "Tournament XP Enabled:\t", t, "\n",
+                    "Tournament XP Amount:\t", (100 * BMTournamentXPMain.Configuration.TournamentXPAdjustment).ToString(), "%\n",
                     "Arena XP Enabled:\t", a, "\n",
-                    "Arena XP Amount:\t", (100 * _arenaxpmod).ToString(), "%\n"
+                    "Arena XP Amount:\t", (100 * BMTournamentXPMain.Configuration.ArenaXPAdjustment).ToString(), "%\n"
                     );
 
             if (showpopup)

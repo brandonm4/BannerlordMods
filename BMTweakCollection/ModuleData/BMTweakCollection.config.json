@@ -3,6 +3,6 @@
   "MaxHideoutTroops": 30,
   "ItemMultiplayerToSinglePlayerEnabled": true,
   "CustomSmithingModelEnabled": true,
-  "CustomSmithingXPDivisor": 8,
+  "CustomSmithingXPDivisor": 12,
   "RemoveAllEquippedHorses": false
 }

@@ -32,6 +32,24 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Win64_Shipping_Client\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\Win64_Shipping_Client\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\BMTournamentXP\bin\Win64_Shipping_Client\0Harmony.dll</HintPath>
@@ -73,6 +91,7 @@
   <ItemGroup>
     <Compile Include="BMItemTweaksMain.cs" />
     <Compile Include="Models\BMRandomTweaksConfiguration.cs" />
+    <Compile Include="Models\BMTournamentXPConfiguration.cs" />
     <Compile Include="Models\CustomSmithingModule.cs" />
     <Compile Include="Models\CustomTroopLimitModel.cs" />
     <Compile Include="Patches\DefaultSmithingModel.cs" />

@@ -4,8 +4,7 @@
     <Enable>true</Enable>
     <XPAdjustment>1.0</XPAdjustment>
     <EnableReroll>true</EnableReroll>
-  
-</Tournament>
+  </Tournament>
   <Arena>
     <Enable>true</Enable>
     <XPAdjustment>1.0</XPAdjustment>

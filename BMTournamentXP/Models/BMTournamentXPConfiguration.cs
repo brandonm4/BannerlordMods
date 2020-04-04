@@ -11,12 +11,13 @@ namespace BMTournamentXP.Models
 {
     public class BMTournamentXPConfiguration
     {
-        
+
         public BMTournamentXPConfiguration(string xmlpath = "")
         {
             if (xmlpath != "")
             {
                 XmlDocument xmlDocument = new XmlDocument();
+
                 xmlDocument.Load(xmlpath);
                 XmlNode xmlNodes = xmlDocument.SelectSingleNode("BMTournamentXP");
                 foreach (XmlNode n in xmlNodes.ChildNodes)
@@ -56,7 +57,7 @@ namespace BMTournamentXP.Models
                                     case "additionalgold":
                                         int bg = 0;
                                         int.TryParse(nc.InnerText, out bg);
-                                        //TournamentBehaviourPatch.bonusmoney = bg;
+                                        BMTournamentXPMain.Configuration.TournamentBonusMoney = bg;
                                         break;
                                     case "enablereroll":
                                         if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
@@ -78,7 +79,7 @@ namespace BMTournamentXP.Models
                                         BMTournamentXPMain.Configuration.TownPrizeMin = int.Parse(nc.InnerText.Trim());
                                         break;
                                     case "includedtownprizetypes":
-                                        foreach(XmlNode np in nc.ChildNodes)
+                                        foreach (XmlNode np in nc.ChildNodes)
                                         {
                                             try
                                             {
@@ -117,13 +118,10 @@ namespace BMTournamentXP.Models
                             }
                             break;
 
-                            //case "maximumtournamentbet":
-                            //    int bet = 300;
-                            //    int.TryParse(n.InnerText, out bet);
-                            //    _maximumTournamentBet = bet;
-                            //    break;                                       
+
                     }
                 }
+                xmlDocument = null;
             }
         }
 
@@ -132,6 +130,7 @@ namespace BMTournamentXP.Models
         public bool IsTournamentXPEnabled { get; set; } = true;
         public float TournamentXPAdjustment { get; set; } = 1.0f;
         public bool TournamentPrizeRerollEnabled { get; set; } = true;
+        public int TournamentBonusMoney { get; set; } = 500;
         public bool IsArenaXPEnabled { get; set; } = true;
         public float ArenaXPAdjustment { get; set; } = 1.0f;
 
@@ -139,7 +138,7 @@ namespace BMTournamentXP.Models
         public int TownPrizeMin { get; set; } = 1000;
         public int TownPrizeMax { get; set; } = 10000;
         public List<ItemObject.ItemTypeEnum> TownValidPrizeTypes { get; set; } = new List<ItemObject.ItemTypeEnum>();
-        
+
         public bool UseTownInventoryAsPrize { get; set; } = true;
         public List<string> TourneyItems = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
     }

@@ -12,7 +12,7 @@
     TownStock - this will generate prizes based on the current towns inventory AND also allow options from Stock
     TownCustom - this will generate prizes based on the current towns inventory AND also allow options from Custom
     -->
-    <PrizeListMode>TownOnly</PrizeListMode>
+    <PrizeListMode>TownCustom</PrizeListMode>
 
     <!-- Items below the minimum or over the maximum values are ignored -->
     <TownPrizeMin>1000</TownPrizeMin>

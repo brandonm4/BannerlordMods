@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <Name value="BMSaveFixer"/>
+  <Id value="BMSaveFixer"/>
+  <Version value="e1.0.0"/>
+  <SingleplayerModule value="true"/>
+  <MultiplayerModule value="false"/>
+  <Official value="false"/>
+  <DependedModules>
+    <DependedModule Id="Native"/>
+    <DependedModule Id="SandBoxCore"/>
+    <DependedModule Id="Sandbox"/>
+    <DependedModule Id="CustomBattle"/>
+    <DependedModule Id="StoryMode" />
+  </DependedModules>
+  <SubModules>
+    <SubModule>
+      <Name value="BMSaveFixer"/>
+      <DLLName value="BMSaveFixer.dll"/>
+      <SubModuleClassType value="BMSaveFixer.BMSaveFixerMain"/>
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+  </SubModules>
+  <Xmls/>
+</Module>

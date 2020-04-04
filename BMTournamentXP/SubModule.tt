@@ -1,8 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Runtime.CompilerServices" #>
+<#@ import namespace="System.Runtime.InteropServices" #>
+<#@ output extension=".xml" #>
+<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <Name value="Tournament XP"/>
   <Id value="BMTournamentXP"/>
-  <Version value="e1.1.2"/>
+  <Version value="e1.1.1"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>
@@ -27,3 +37,6 @@
   <Xmls/>
 </Module>
 
+<#+
+//string RevisionNumber = Assembly.LoadFile("G:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\BMTournamentXP\\bin\\Win64_Shipping_Client\\BMTournamentXP.dll").GetName().Version.ToString();     
+#>

@@ -4,6 +4,15 @@
     <Enable>true</Enable>
     <XPAdjustment>1.0</XPAdjustment>
     <EnableReroll>true</EnableReroll>
+    <PrizeListMode>TownCustom</PrizeListMode>  
+    <!-- 
+    PrizeListMode can be:
+    Stock - this will use the standard prizes
+    Custom - this will load the prizes from the BMTournamentPrizeList.json file - this will not include the stock prizes - however they are by default in the custom json file.
+    TownOnly - this will generate prizes based on the current towns inventory ONLY - it will not include the stock/custom prizes
+    TownStock - this will generate prizes based on the current towns inventory AND also allow options from Stock
+    TownCustom - this will generate prizes based on the current towns inventory AND also allow options from Custom
+    -->
   </Tournament>
   <Arena>
     <Enable>true</Enable>

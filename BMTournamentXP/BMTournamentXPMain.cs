@@ -1,9 +1,11 @@
 ﻿using BMTournamentXP.Models;
 using HarmonyLib;
+using Newtonsoft.Json;
 using SandBox;
 using SandBox.TournamentMissions.Missions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,94 +26,23 @@ namespace BMTournamentXP
         {
             base.OnSubModuleLoad();
 
-            XmlDocument xmlDocument = new XmlDocument();
+            //Load config file
             string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournamentXP.config.xml");
-            xmlDocument.Load(appSettings);
-            XmlNode xmlNodes = xmlDocument.SelectSingleNode("BMTournamentXP");
-            foreach (XmlNode n in xmlNodes.ChildNodes)
+            if (File.Exists(appSettings))
             {
-                switch (n.Name.Trim().ToLower())
-                {
-                    case "showinfopopup":                        
-                        //if (string.Equals(n.InnerText, "true", StringComparison.OrdinalIgnoreCase))
-                        //{
-                        //    _showpopup = true;
-                        //}
-                        //else
-                        //{
-                        //    _showpopup = false;
-                        //}
-                        break;
-                    case "tournament":
-                        foreach (XmlNode nc in n.ChildNodes)
-                        {
-                            switch (nc.Name.Trim().ToLower())
-                            {
-                                case "enable":
-                                    if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        BMTournamentXPMain.Configuration.IsTournamentXPEnabled = true;
-                                    }
-                                    else
-                                    {
-                                        BMTournamentXPMain.Configuration.IsTournamentXPEnabled = false;
-                                    }
-                                    break;
-                                case "xpadjustment":
-                                    float tadj = 1;
-                                    float.TryParse(nc.InnerText, out tadj);
-                                    BMTournamentXPMain.Configuration.TournamentXPAdjustment = tadj;
-                                    break;
-                                case "additionalgold":
-                                    int bg = 0;
-                                    int.TryParse(nc.InnerText, out bg);                                    
-                                    //TournamentBehaviourPatch.bonusmoney = bg;
-                                    break;
-                                case "enablereroll":
-                                    if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        BMTournamentXPMain.Configuration.TournamentPrizeRerollEnabled = true;
-                                    }
-                                    else
-                                    {
-                                        BMTournamentXPMain.Configuration.TournamentPrizeRerollEnabled = false;
-                                    }
-                                    break;
-                            }
-                        }
-                        break;
-                    case "arena":
-                        foreach (XmlNode nc in n.ChildNodes)
-                        {
-                            switch (nc.Name.Trim().ToLower())
-                            {
-                                case "enable":
-                                    if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        BMTournamentXPMain.Configuration.IsArenaXPEnabled = true;
-                                    }
-                                    else
-                                    {
-                                        BMTournamentXPMain.Configuration.IsArenaXPEnabled = false;
-                                    }
-                                    break;
-                                case "xpadjustment":
-                                    float tadj = 1;
-                                    float.TryParse(nc.InnerText, out tadj);
-                                    BMTournamentXPMain.Configuration.ArenaXPAdjustment = tadj;
-                                    break;                            
-                            }
-                        }
-                        break;
-                                                           
-                    //case "maximumtournamentbet":
-                    //    int bet = 300;
-                    //    int.TryParse(n.InnerText, out bet);
-                    //    _maximumTournamentBet = bet;
-                    //    break;                                       
-                }
+                Configuration = new BMTournamentXPConfiguration(appSettings);
             }
 
+            //Load tournament items
+            string tourneyitemsfile = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournamentPrizeList.json");           
+            if (BMTournamentXPMain.Configuration.PrizeListMode.Trim().IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                if (File.Exists(tourneyitemsfile))
+                {
+                    var configtxt = File.ReadAllText(tourneyitemsfile);
+                    Configuration.TourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+                }
+            }
             try
             {
                 var h = new Harmony("com.darkspyre.bannerlord.tournament");
@@ -142,6 +73,15 @@ namespace BMTournamentXP
             base.OnGameInitializationFinished(game);
 
             DisplayVersionInfo(false);
+
+            Campaign campaign = ((Campaign)game.GameType);
+            if (campaign != null)
+            {
+
+                //   IList<CharacterObject> characters = campaign.Characters as IList<CharacterObject>;
+                //if (characters != null)
+
+            }
         }
 
         public override void OnMissionBehaviourInitialize(Mission mission)
@@ -155,7 +95,7 @@ namespace BMTournamentXP
             if (BMTournamentXPMain.Configuration.IsTournamentXPEnabled)
             {
                 EnableTournamentXP(mission);
-            }            
+            }
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -167,7 +107,7 @@ namespace BMTournamentXP
         }
         public override void OnGameLoaded(Game game, object initializerObject)
         {
-           
+
         }
         public override void OnCampaignStart(Game game, object starterObject)
         {
@@ -222,6 +162,65 @@ namespace BMTournamentXP
             else
             {
                 InformationManager.DisplayMessage(new InformationMessage(info));
+            }
+        }
+
+        private void CorruptedCharFix(Campaign campaign)
+        {
+            {
+                foreach (var c in campaign.Characters)
+                {
+                    if (c.IsHero && c.HeroObject != null)
+                    {
+                        if (c.HeroObject.IsWanderer && c.HeroObject.CompanionOf != Hero.MainHero.Clan)
+                        {
+                            //Set non-companions that are wanderers back to stock
+                            var bHadIssue = false;
+                            try
+                            {
+                                if (c.IsArcher == null)
+                                {
+                                    typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
+                                }
+                            }
+                            catch
+                            {
+                                typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
+                                bHadIssue = true;
+                            }
+                            try
+                            {
+                                if (c.IsMounted == null)
+                                {
+                                    typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
+                                }
+                            }
+                            catch
+                            {
+                                typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
+                                bHadIssue = true;
+                            }
+                            try
+                            {
+                                if (c.IsInfantry == null)
+                                {
+                                    typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
+                                }
+                            }
+                            catch
+                            {
+                                typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
+                                bHadIssue = true;
+                            }
+
+                            if (bHadIssue)
+                            {
+                                Traverse.Create(c.HeroObject).Method("SetInitialValuesFromCharacter").GetValue(new object[] { c });
+                            }
+
+                        }
+                    }
+                }
             }
         }
     }

@@ -70,14 +70,11 @@ namespace BMTournamentXP
         public static bool Prefix(ref ItemObject __result)
         {
             List<string> strArray = new List<string>();
-            foreach(var x in BMTournamentXPMain.Configuration.TourneyItems)
+            foreach (var x in BMTournamentXPMain.Configuration.TourneyItems)
             {
                 strArray.Add(x);
             }
 
-            bool bAppend = false;
-
-            
             if (BMTournamentXPMain.Configuration.PrizeListMode.Trim().IndexOf("town", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 //if it's only, remove the stock/custom items
@@ -91,24 +88,15 @@ namespace BMTournamentXP
 
                 var roster = Settlement.CurrentSettlement.ItemRoster;
                 roster.RemoveZeroCounts();
-                var list = roster.Where(x => x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.BodyArmor
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Bow
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.ChestArmor
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Crossbow
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.HandArmor
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.HeadArmor
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Horse
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.HorseHarness
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.LegArmor
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.OneHandedWeapon
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Polearm
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Shield
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Thrown
-               || x.EquipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.TwoHandedWeapon
+                var list = roster.Where(x =>
+                x.Amount > 0
+                && BMTournamentXPMain.Configuration.TownValidPrizeTypes.Contains(x.EquipmentElement.Item.ItemType)
+               && x.EquipmentElement.Item.Value >= BMTournamentXPMain.Configuration.TownPrizeMin
+               && x.EquipmentElement.Item.Value <= BMTournamentXPMain.Configuration.TownPrizeMax
                   ).OrderByDescending(x => x.EquipmentElement.Item.Value).Select(x => x.EquipmentElement.Item.StringId).ToList();
 
                 int count = 0;
-                foreach(var s in list)
+                foreach (var s in list)
                 {
                     strArray.Add(s);
                     count++;

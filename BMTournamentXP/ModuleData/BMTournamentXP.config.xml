@@ -4,7 +4,6 @@
     <Enable>true</Enable>
     <XPAdjustment>1.0</XPAdjustment>
     <EnableReroll>true</EnableReroll>
-    <PrizeListMode>TownCustom</PrizeListMode>  
     <!-- 
     PrizeListMode can be:
     Stock - this will use the standard prizes
@@ -13,6 +12,28 @@
     TownStock - this will generate prizes based on the current towns inventory AND also allow options from Stock
     TownCustom - this will generate prizes based on the current towns inventory AND also allow options from Custom
     -->
+    <PrizeListMode>TownOnly</PrizeListMode>
+
+    <!-- Items below the minimum or over the maximum values are ignored -->
+    <TownPrizeMin>1000</TownPrizeMin>
+    <TownPrizeMax>10000</TownPrizeMax>
+
+    <!-- Only these items types are included in the list -->
+    <IncludedTownPrizeTypes>
+      <TownPrizeType>Bow</TownPrizeType>
+      <TownPrizeType>ChestArmor</TownPrizeType>
+      <TownPrizeType>Crossbow</TownPrizeType>
+      <TownPrizeType>HandArmor</TownPrizeType>
+      <TownPrizeType>HeadArmor</TownPrizeType>
+      <TownPrizeType>Horse</TownPrizeType>
+      <TownPrizeType>HorseHarness</TownPrizeType>
+      <TownPrizeType>LegArmor</TownPrizeType>
+      <TownPrizeType>OneHandedWeapon</TownPrizeType>
+      <TownPrizeType>Polearm</TownPrizeType>
+      <TownPrizeType>Shield</TownPrizeType>
+      <TownPrizeType>Thrown</TownPrizeType>
+      <TownPrizeType>TwoHandedWeapon</TownPrizeType>
+    </IncludedTownPrizeTypes>
   </Tournament>
   <Arena>
     <Enable>true</Enable>
@@ -20,3 +41,32 @@
   </Arena>
   <ShowInfoPopup>false</ShowInfoPopup>
 </BMTournamentXP>
+
+<!--
+Valid Prize Types
+            Invalid = 0,
+            Horse = 1,
+            OneHandedWeapon = 2,
+            TwoHandedWeapon = 3,
+            Polearm = 4,
+            Arrows = 5,
+            Bolts = 6,
+            Shield = 7,
+            Bow = 8,
+            Crossbow = 9,
+            Thrown = 10,
+            Goods = 11,
+            HeadArmor = 12,
+            BodyArmor = 13,
+            LegArmor = 14,
+            HandArmor = 15,
+            Pistol = 16,
+            Musket = 17,
+            Bullets = 18,
+            Animal = 19,
+            Book = 20,
+            ChestArmor = 21,
+            Cape = 22,
+            HorseHarness = 23,
+            Banner = 24
+-->

@@ -175,47 +175,62 @@ namespace BMTournamentXP
                         if (c.HeroObject.IsWanderer && c.HeroObject.CompanionOf != Hero.MainHero.Clan)
                         {
                             //Set non-companions that are wanderers back to stock
+                            //The problems chars have IsArcher, IsInfantry and IsMounted as Exception - not null, true or false.  Basically just trying to access to force an exception, then murdering the char.
                             var bHadIssue = false;
                             try
                             {
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+#pragma warning disable RCS1166 // Value type object is never equal to null.
                                 if (c.IsArcher == null)
+#pragma warning restore RCS1166 // Value type object is never equal to null.
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                                 {
-                                    typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
+                                 //   typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
                                 }
                             }
                             catch
                             {
-                                typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
+                          //      typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
                                 bHadIssue = true;
                             }
                             try
                             {
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+#pragma warning disable RCS1166 // Value type object is never equal to null.
                                 if (c.IsMounted == null)
+#pragma warning restore RCS1166 // Value type object is never equal to null.
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                                 {
-                                    typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
+                                //    typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
                                 }
                             }
                             catch
                             {
-                                typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
+                             //   typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
                                 bHadIssue = true;
                             }
                             try
                             {
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+#pragma warning disable RCS1166 // Value type object is never equal to null.
                                 if (c.IsInfantry == null)
+#pragma warning restore RCS1166 // Value type object is never equal to null.
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                                 {
-                                    typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
+                               //     typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
                                 }
                             }
                             catch
                             {
-                                typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
+                             //   typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
                                 bHadIssue = true;
                             }
 
                             if (bHadIssue)
                             {
-                                Traverse.Create(c.HeroObject).Method("SetInitialValuesFromCharacter").GetValue(new object[] { c });
+                                //   Traverse.Create(c.HeroObject).Method("SetInitialValuesFromCharacter").GetValue(new object[] { c });
+                                //Murder the char
+                                //c.HeroObject.IsDead = true;
                             }
 
                         }

@@ -57,6 +57,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SandBox">
+      <HintPath>..\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -91,11 +94,11 @@
   <ItemGroup>
     <Compile Include="BMItemTweaksMain.cs" />
     <Compile Include="Models\BMRandomTweaksConfiguration.cs" />
-    <Compile Include="Models\BMTournamentXPConfiguration.cs" />
     <Compile Include="Models\CustomSmithingModule.cs" />
     <Compile Include="Models\CustomTroopLimitModel.cs" />
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
+    <Compile Include="Patches\TournamentBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StaticPropertyContractResolver.cs" />
   </ItemGroup>

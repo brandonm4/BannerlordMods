@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMTournamentXP", "BMTournam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMTweakCollection", "BMTweakCollection\BMTweakCollection.csproj", "{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMSaveFixer", "BMSaveFixer\BMSaveFixer.csproj", "{1B47843B-31B6-40B1-8D30-695B2409EFFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}.Release|x64.ActiveCfg = Release|x64
 		{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}.Release|x64.Build.0 = Release|x64
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Debug|x64.ActiveCfg = Debug|x64
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Debug|x64.Build.0 = Debug|x64
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Release|x64.ActiveCfg = Release|x64
+		{1B47843B-31B6-40B1-8D30-695B2409EFFA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <Name value="Tournament XP"/>
-  <Id value="BMTournamentXP"/>
+  <Name value="BMTournamentPrizes"/>
+  <Id value="BMTournamentPrizes"/>
   <Version value="e1.1.2"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
@@ -15,17 +15,8 @@
   </DependedModules>
   <SubModules>
     <SubModule>
-      <Name value="BMTournamentXP"/>
-      <DLLName value="BMTournamentXP.dll"/>
-      <SubModuleClassType value="BMTournamentXP.BMTournamentXPMain"/>
-      <Tags>
-        <Tag key="DedicatedServerType" value="none" />
-        <Tag key="IsNoRenderModeElement" value="false" />
-      </Tags>
-    </SubModule>
-    <SubModule>
-      <Name value="BMTournamentPrizes"/>
-      <DLLName value="BMTournamentPrizes.dll"/>
+      <Name value="BMTweakCollection"/>
+      <DLLName value="BMTweakCollection.dll"/>
       <SubModuleClassType value="BMTournamentPrizes.BMTournamentPrizesMain"/>
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
@@ -35,4 +26,3 @@
   </SubModules>
   <Xmls/>
 </Module>
-

@@ -72,48 +72,52 @@ namespace BMTournamentXP
             {
                 return;
             }
+            if (affectedAgent == null || affectedAgent.Character == null || affectorAgent == null || affectorAgent.Character == null || !affectorAgent.IsHero || affectedAgent.Origin == null || affectorAgent.Origin == null)
+                return;
+
+
+
             CharacterObject character = (CharacterObject)affectedAgent.Character;
             CharacterObject characterObject = (CharacterObject)affectorAgent.Character;
-            if (affectedAgent.Origin != null && affectorAgent != null && affectorAgent.Origin != null)
+            
+            Hero captain = BMExperienceOnHitLogic.GetCaptain(affectorAgent);
+
+            if (affectorAgent.Team.Leader == null || !affectorAgent.Team.Leader.Character.IsHero)
             {
-                PartyBase battleCombatant = (PartyBase)affectorAgent.Origin.BattleCombatant;
-                Hero captain = BMExperienceOnHitLogic.GetCaptain(affectorAgent);
-                if (affectorAgent.Team.Leader == null || !affectorAgent.Team.Leader.Character.IsHero)
-                {
-                    heroObject = null;
-                }
-                else
-                {
-                    heroObject = ((CharacterObject)affectorAgent.Team.Leader.Character).HeroObject;
-                }
-                Hero hero = heroObject;
-                CharacterObject characterObject1 = characterObject;
-                CharacterObject characterObject2 = character;
-                Hero hero1 = captain;
-                Hero hero2 = hero;
-                float single = lastSpeedBonus;
-                float single1 = lastShotDifficulty;
-                int num = lastWeaponKind;
-                float single2 = hitpointRatio;
-                bool mountAgent = affectorAgent.MountAgent != null;
-                bool team = affectorAgent.Team == affectedAgent.Team;
-                if (hero == null || affectorAgent.Character == hero.CharacterObject)
-                {
-                    flag = false;
-                }
-                else if (hero != Hero.MainHero)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    flag = (affectorAgent.Formation == null ? true : !affectorAgent.Formation.IsAIControlled);
-                }
-
-                BMExperienceOnHitLogic.OnCombatHit(characterObject1, characterObject2, hero1, hero2, single, single1, num, single2, false, mountAgent, team, flag, weaponUsageIndex, damageAmount, affectedAgent.Health < 1f);
-
-
+                heroObject = null;
             }
+            else
+            {
+                heroObject = ((CharacterObject)affectorAgent.Team.Leader.Character).HeroObject;
+            }
+            Hero hero = heroObject;
+            CharacterObject characterObject1 = characterObject;
+            CharacterObject characterObject2 = character;
+            Hero hero1 = captain;
+            Hero hero2 = hero;
+            float single = lastSpeedBonus;
+            float single1 = lastShotDifficulty;
+            int num = lastWeaponKind;
+            float single2 = hitpointRatio;
+            bool mountAgent = affectorAgent.MountAgent != null;
+            bool team = affectorAgent.Team == affectedAgent.Team;
+            if (hero == null || affectorAgent.Character == hero.CharacterObject)
+            {
+                flag = false;
+            }
+            else if (hero != Hero.MainHero)
+            {
+                flag = true;
+            }
+            else
+            {
+                flag = (affectorAgent.Formation == null ? true : !affectorAgent.Formation.IsAIControlled);
+            }
+
+            BMExperienceOnHitLogic.OnCombatHit(characterObject1, characterObject2, hero1, hero2, single, single1, num, single2, false, mountAgent, team, flag, weaponUsageIndex, damageAmount, affectedAgent.Health < 1f);
+
+
+
         }
 
         public static void OnCombatHit(CharacterObject affectorCharacter, CharacterObject affectedCharacter, Hero captainHero, Hero commander, float speedBonusFromMovement, float shotDifficulty, int affectorWeaponKind, float hitPointRatio, bool isSimulatedHit, bool isAffectorMounted, bool isTeamKill, bool isAffectorUnderCommand, int weaponUsageIndex, float damageAmount, bool isFatal)

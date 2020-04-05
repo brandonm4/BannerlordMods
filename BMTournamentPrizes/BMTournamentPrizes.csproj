@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B63EFDBB-9FAD-468E-B114-CBDE842723F4}</ProjectGuid>
+    <ProjectGuid>{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BMTournamentXP</RootNamespace>
-    <AssemblyName>BMTournamentXP</AssemblyName>
+    <RootNamespace>BMTournamentPrizes</RootNamespace>
+    <AssemblyName>BMTournamentPrizes</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,20 +17,18 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BMTournamentXP\bin\Win64_Shipping_Client\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BMTournamentXP\bin\Win64_Shipping_Client\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -51,12 +49,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Win64_Shipping_Client\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony">
+      <HintPath>..\BMTournamentXP\bin\Win64_Shipping_Client\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SandBox">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
@@ -79,10 +78,6 @@
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TaleWorlds.DotNet">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="TaleWorlds.Library">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
       <Private>False</Private>
@@ -97,29 +92,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BMExperienceOnHit.cs" />
-    <Compile Include="Models\BMTournamentXPConfiguration.cs" />
-    <Compile Include="BMTournamentXPMain.cs" />
+    <Compile Include="BMTournamentPrizes.cs" />
+    <Compile Include="Models\BMTournamentPrizeConfiguration.cs" />
+    <Compile Include="Models\TournamentPrizeExpansion.cs" />
+    <Compile Include="Patch\PatchTournamentCampaignBehavior.cs" />
+    <Compile Include="Patch\TournamentBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Content Include="ModuleData\BMTournamentPrize.config.xml" />
+    <Content Include="SubModule.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModuleData\BMTournament.config.xml" />
-    <Content Include="SubModule.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SubModule.xml</LastGenOutput>
-    </Content>
-    <Content Include="SubModule.xml">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SubModule.tt</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ModuleData\BMTournamentPrizeList.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
 </Project>

@@ -16,7 +16,11 @@
 
     <!-- Items below the minimum or over the maximum values are ignored -->
     <TownPrizeMin>1000</TownPrizeMin>
-    <TownPrizeMax>10000</TownPrizeMax>
+    <TownPrizeMax>25000</TownPrizeMax>
+      
+    <!-- Award extra prize money for harder named opponents in the tournaments - amount is per character level, so the higher the opponent, the more money you'll get -->
+    <TournamentBonusMoneyBaseNamedCharLevel>10</TournamentBonusMoneyBaseNamedCharLevel>
+    <TournamentBonusMoneyBaseNamedCharLevelEnabled>true</TournamentBonusMoneyBaseNamedCharLevelEnabled>
 
     <!-- Only these items types are included in the list -->
     <IncludedTownPrizeTypes>
@@ -33,7 +37,14 @@
       <TownPrizeType>Shield</TownPrizeType>
       <TownPrizeType>Thrown</TownPrizeType>
       <TownPrizeType>TwoHandedWeapon</TownPrizeType>
+      <TownPrizeType>Cape</TownPrizeType>
     </IncludedTownPrizeTypes>
+
+    <!-- Not Active Yet -->
+    <NumberOfPrizeOptions>1</NumberOfPrizeOptions>
+    <EnablePrizeSelection>false</EnablePrizeSelection>
+    <TownPrizeLimitBasedOnSettlementProsperity>false</TownPrizeLimitBasedOnSettlementProsperity>
+    <OppenentDifficultyAffectsOdds>false</OppenentDifficultyAffectsOdds>
   </Tournament>
   <Arena>
     <Enable>true</Enable>

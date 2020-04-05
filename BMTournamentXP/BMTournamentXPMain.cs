@@ -22,52 +22,22 @@ namespace BMTournamentXP
 {
     public class BMTournamentXPMain : MBSubModuleBase
     {
-        public static BMTournamentXPConfiguration Configuration { get; set; } = new BMTournamentXPConfiguration();
+        public static string Version { get { return "e.1.1.2"; } }
+
+
 
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
 
             //Load config file
-            string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournamentXP.config.xml");
+            string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournament.config.xml");
+
             if (File.Exists(appSettings))
             {
-                Configuration = new BMTournamentXPConfiguration(appSettings);
+                //Configuration = new BMTournamentXPConfiguration(appSettings);                
+                BMTournamentXPConfiguration.Instance.LoadXML(appSettings);
             }
-
-            ////Load tournament items
-            //string tourneyitemsfile = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournamentPrizeList.json");           
-            //if (BMTournamentXPMain.Configuration.PrizeListMode.Trim().IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0)
-            //{
-            //    if (File.Exists(tourneyitemsfile))
-            //    {
-            //        var configtxt = File.ReadAllText(tourneyitemsfile);
-            //        Configuration.TourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-            //    }
-            //}
-            try
-            {
-                var h = new Harmony("com.darkspyre.bannerlord.tournament");
-                h.PatchAll();
-            }
-            catch (Exception exception1)
-            {
-                string message;
-                Exception exception = exception1;
-                string str = exception.Message;
-                Exception innerException = exception.InnerException;
-                if (innerException != null)
-                {
-                    message = innerException.Message;
-                }
-                else
-                {
-                    message = null;
-                }
-                MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
-            }
-
-
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -89,11 +59,11 @@ namespace BMTournamentXP
         {
             base.OnMissionBehaviourInitialize(mission);
 
-            if (BMTournamentXPMain.Configuration.IsArenaXPEnabled)
+            if (BMTournamentXPConfiguration.Instance.IsArenaXPEnabled)
             {
                 EnableArenaXP(mission);
             }
-            if (BMTournamentXPMain.Configuration.IsTournamentXPEnabled)
+            if (BMTournamentXPConfiguration.Instance.IsTournamentXPEnabled)
             {
                 EnableTournamentXP(mission);
             }
@@ -123,7 +93,7 @@ namespace BMTournamentXP
               || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
               || mission.HasMissionBehaviour<TownHorseRaceMissionController>()))
             {
-                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPMain.Configuration.TournamentXPAdjustment));
+                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPConfiguration.Instance.TournamentXPAdjustment));
 
             }
         }
@@ -132,7 +102,7 @@ namespace BMTournamentXP
             if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
               mission.HasMissionBehaviour<ArenaPracticeFightMissionController>())
             {
-                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPMain.Configuration.ArenaXPAdjustment));
+                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPConfiguration.Instance.ArenaXPAdjustment));
             }
         }
 
@@ -140,18 +110,20 @@ namespace BMTournamentXP
         {
             string t = "Yes";
             string a = "Yes";
-            if (!BMTournamentXPMain.Configuration.IsTournamentXPEnabled)
+            if (!BMTournamentXPConfiguration.Instance.IsTournamentXPEnabled)
             {
                 t = "No";
             }
-            if (!BMTournamentXPMain.Configuration.IsArenaXPEnabled)
+            if (!BMTournamentXPConfiguration.Instance.IsArenaXPEnabled)
             {
                 a = "No";
             }
-            string info = String.Concat("Tournament Patch v", BMTournamentXPConfiguration.Version, " Loaded\n", "Tournament XP Enabled:\t", t, "\n",
-                    "Tournament XP Amount:\t", (100 * BMTournamentXPMain.Configuration.TournamentXPAdjustment).ToString(), "%\n",
+
+
+            string info = String.Concat("Tournament Patch v", BMTournamentXPMain.Version, " Loaded\n", "Tournament XP Enabled:\t", t, "\n",
+                    "Tournament XP Amount:\t", (100 * BMTournamentXPConfiguration.Instance.TournamentXPAdjustment).ToString(), "%\n",
                     "Arena XP Enabled:\t", a, "\n",
-                    "Arena XP Amount:\t", (100 * BMTournamentXPMain.Configuration.ArenaXPAdjustment).ToString(), "%\n"
+                    "Arena XP Amount:\t", (100 * BMTournamentXPConfiguration.Instance.ArenaXPAdjustment).ToString(), "%\n"
                     );
 
             if (showpopup)
@@ -166,106 +138,106 @@ namespace BMTournamentXP
             }
         }
 
-//        private void CorruptedCharFix(Campaign campaign)
-//        {
-//            {
-//                foreach (var c in campaign.Characters)
-//                {
-//                    if (c.IsHero && c.HeroObject != null)
-//                    {
-//                        if (c.HeroObject.IsWanderer && c.HeroObject.CompanionOf != Hero.MainHero.Clan)
-//                        {
-//                            //Set non-companions that are wanderers back to stock
-//                            //The problems chars have IsArcher, IsInfantry and IsMounted as Exception - not null, true or false.  Basically just trying to access to force an exception, then murdering the char.
-//                            var bHadIssue = false;
-//                            try
-//                            {
-//#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-//#pragma warning disable RCS1166 // Value type object is never equal to null.
-//                                if (c.IsArcher == null)
-//#pragma warning restore RCS1166 // Value type object is never equal to null.
-//#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-//                                {
-//                                 //   typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
-//                                }
-//                            }
-//                            catch
-//                            {
-//                          //      typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
-//                                bHadIssue = true;
-//                            }
-//                            try
-//                            {
-//#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-//#pragma warning disable RCS1166 // Value type object is never equal to null.
-//                                if (c.IsMounted == null)
-//#pragma warning restore RCS1166 // Value type object is never equal to null.
-//#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-//                                {
-//                                //    typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
-//                                }
-//                            }
-//                            catch
-//                            {
-//                             //   typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
-//                                bHadIssue = true;
-//                            }
-//                            try
-//                            {
-//#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-//#pragma warning disable RCS1166 // Value type object is never equal to null.
-//                                if (c.IsInfantry == null)
-//#pragma warning restore RCS1166 // Value type object is never equal to null.
-//#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-//                                {
-//                               //     typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
-//                                }
-//                            }
-//                            catch
-//                            {
-//                             //   typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
-//                                bHadIssue = true;
-//                            }
+        //        private void CorruptedCharFix(Campaign campaign)
+        //        {
+        //            {
+        //                foreach (var c in campaign.Characters)
+        //                {
+        //                    if (c.IsHero && c.HeroObject != null)
+        //                    {
+        //                        if (c.HeroObject.IsWanderer && c.HeroObject.CompanionOf != Hero.MainHero.Clan)
+        //                        {
+        //                            //Set non-companions that are wanderers back to stock
+        //                            //The problems chars have IsArcher, IsInfantry and IsMounted as Exception - not null, true or false.  Basically just trying to access to force an exception, then murdering the char.
+        //                            var bHadIssue = false;
+        //                            try
+        //                            {
+        //#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+        //#pragma warning disable RCS1166 // Value type object is never equal to null.
+        //                                if (c.IsArcher == null)
+        //#pragma warning restore RCS1166 // Value type object is never equal to null.
+        //#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+        //                                {
+        //                                 //   typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
+        //                                }
+        //                            }
+        //                            catch
+        //                            {
+        //                          //      typeof(CharacterObject).GetProperty("IsArcher").SetValue(c, false);
+        //                                bHadIssue = true;
+        //                            }
+        //                            try
+        //                            {
+        //#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+        //#pragma warning disable RCS1166 // Value type object is never equal to null.
+        //                                if (c.IsMounted == null)
+        //#pragma warning restore RCS1166 // Value type object is never equal to null.
+        //#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+        //                                {
+        //                                //    typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
+        //                                }
+        //                            }
+        //                            catch
+        //                            {
+        //                             //   typeof(CharacterObject).GetProperty("IsMounted").SetValue(c, false);
+        //                                bHadIssue = true;
+        //                            }
+        //                            try
+        //                            {
+        //#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+        //#pragma warning disable RCS1166 // Value type object is never equal to null.
+        //                                if (c.IsInfantry == null)
+        //#pragma warning restore RCS1166 // Value type object is never equal to null.
+        //#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+        //                                {
+        //                               //     typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
+        //                                }
+        //                            }
+        //                            catch
+        //                            {
+        //                             //   typeof(CharacterObject).GetProperty("IsInfantry").SetValue(c, false);
+        //                                bHadIssue = true;
+        //                            }
 
-//                            if (bHadIssue)
-//                            {
-//                                //   Traverse.Create(c.HeroObject).Method("SetInitialValuesFromCharacter").GetValue(new object[] { c });
-//                                //Murder the char
-//                                //c.HeroObject.IsDead = true;
-//                                c.HeroObject.AlwaysDie = true;
+        //                            if (bHadIssue)
+        //                            {
+        //                                //   Traverse.Create(c.HeroObject).Method("SetInitialValuesFromCharacter").GetValue(new object[] { c });
+        //                                //Murder the char
+        //                                //c.HeroObject.IsDead = true;
+        //                                c.HeroObject.AlwaysDie = true;
 
-//                                //    c.HeroObject.ChangeState(Hero.CharacterStates.Dead);
-//                                //KillCharacterAction.ApplyByRemove(c.HeroObject, true);
-//                                if (c.HeroObject.CurrentSettlement != null)
-//                                {
-//                                    Traverse.Create(c.HeroObject.CurrentSettlement).Method("RemoveHero").GetValue(new object[] { c.HeroObject });
-//                                }
+        //                                //    c.HeroObject.ChangeState(Hero.CharacterStates.Dead);
+        //                                //KillCharacterAction.ApplyByRemove(c.HeroObject, true);
+        //                                if (c.HeroObject.CurrentSettlement != null)
+        //                                {
+        //                                    Traverse.Create(c.HeroObject.CurrentSettlement).Method("RemoveHero").GetValue(new object[] { c.HeroObject });
+        //                                }
 
-//                                ApplyInternal(c.HeroObject, null, KillCharacterAction.KillCharacterActionDetail.Lost, true);
-                                
-//                                if(c.HeroObject.PartyBelongedTo != null)
-//                                {
-                                    
-//                                }
-//                            }
+        //                                ApplyInternal(c.HeroObject, null, KillCharacterAction.KillCharacterActionDetail.Lost, true);
 
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        //                                if(c.HeroObject.PartyBelongedTo != null)
+        //                                {
 
-//        private static void ApplyInternal(Hero victim, Hero killer, KillCharacterAction.KillCharacterActionDetail actionDetail, bool showNotification)
-//        {     
-//            if (!victim.IsAlive)
-//            {
-//                return;
-//            }            
-//            //victim.EncyclopediaText = KillCharacterAction.CreateObituary(victim, actionDetail);
-//            victim.EncyclopediaText = (TextObject)Traverse.Create(typeof(KillCharacterAction)).Method("CreateObituary").GetValue(new object[] { victim, actionDetail });
-//            //KillCharacterAction.MakeDead(victim, true);
-//            Traverse.Create(typeof(KillCharacterAction)).Method("MakeDead").GetValue(new object[] { victim, true });
-//            victim.MakeWounded(actionDetail);
-//        }
+        //                                }
+        //                            }
+
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        private static void ApplyInternal(Hero victim, Hero killer, KillCharacterAction.KillCharacterActionDetail actionDetail, bool showNotification)
+        //        {     
+        //            if (!victim.IsAlive)
+        //            {
+        //                return;
+        //            }            
+        //            //victim.EncyclopediaText = KillCharacterAction.CreateObituary(victim, actionDetail);
+        //            victim.EncyclopediaText = (TextObject)Traverse.Create(typeof(KillCharacterAction)).Method("CreateObituary").GetValue(new object[] { victim, actionDetail });
+        //            //KillCharacterAction.MakeDead(victim, true);
+        //            Traverse.Create(typeof(KillCharacterAction)).Method("MakeDead").GetValue(new object[] { victim, true });
+        //            victim.MakeWounded(actionDetail);
+        //        }
     }
 }

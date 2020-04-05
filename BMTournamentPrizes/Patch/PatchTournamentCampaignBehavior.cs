@@ -60,7 +60,15 @@ namespace BMTournamentXP
             // tournamentGame.Prize = TournamentCampaignBehaviorPatch1.GetTournamentPrize();
             ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
             SetTournamentSelectedPrize(tournamentGame, prize);
-            GameMenu.SwitchToMenu("town_arena");
+            try
+            {
+                GameMenu.SwitchToMenu("town_arena");
+            }
+            catch(Exception ex)
+            {
+                FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                FileLog.Log(ex.Message.ToString());
+            }
         }
 
         public static void SetTournamentSelectedPrize(TournamentGame tournamentGame, ItemObject prize)
@@ -94,13 +102,29 @@ namespace BMTournamentXP
 
                 if (BMTournamentPrizeConfiguration.Instance.PrizeListMode.Trim().IndexOf("only", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
+                    //If no prizes are found use the custom ones
+                    if (townitems.Count == 0)
+                    {
+                        //if somehow the user deleted all the custom items use the vanilla items.
+                        townitems = BMTournamentPrizeConfiguration.Instance.TourneyItems;
+                        if (townitems.Count == 0)
+                        {
+                            townitems = BMTournamentPrizeConfiguration.Instance.StockTourneyItems;
+                        }
+                    }
+
                     __result = Game.Current.ObjectManager.GetObject<ItemObject>(townitems.GetRandomElement<string>());
                     return false;
                 }
             }
-            //if we are still here, append the town items if any, to the custom/stock list.
-            //var allitems = BMTournamentPrizeConfiguration.Instance.TourneyItems.Concat(townitems.Take(10)).ToArray();
-            var allitems = townitems.Take(10).Concat(BMTournamentPrizeConfiguration.Instance.TourneyItems).ToList();
+            
+            //If user somehow manages to select custom but has no items, populate with vanilla
+            if (townitems.Count == 0 && BMTournamentPrizeConfiguration.Instance.TourneyItems.Count == 0)
+            {
+                townitems = BMTournamentPrizeConfiguration.Instance.StockTourneyItems;
+            }
+
+            var allitems = townitems.Concat(BMTournamentPrizeConfiguration.Instance.TourneyItems).ToList();
 
             var numItemsToGet = BMTournamentPrizeConfiguration.Instance.NumberOfPrizeOptions;
             if (allitems.Count() < numItemsToGet)

@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMTournamentPrizes.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\BMTournamentPrizeConfiguration.cs" />
     <Compile Include="Models\TournamentPrizeExpansion.cs" />
     <Compile Include="Patch\PatchTournamentCampaignBehavior.cs" />

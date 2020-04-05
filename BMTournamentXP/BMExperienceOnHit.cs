@@ -126,13 +126,15 @@ namespace BMTournamentXP
             float single = 1f;
             if (!isTeamKill)
             {
-                if (affectorCharacter.IsHero)
+                if (affectorCharacter.IsHero )                                    
                 {
                     Hero heroObject = affectorCharacter.HeroObject;
                     ItemObject itemFromWeaponKind = ItemObject.GetItemFromWeaponKind(affectorWeaponKind);
                     Campaign.Current.Models.CombatXpModel.GetXpFromHit(heroObject.CharacterObject, affectedCharacter, (int)damageAmount, isFatal, isSimulatedHit, out num);
                     single = (float)num;
-                    if (itemFromWeaponKind == null)
+                    if (itemFromWeaponKind == null && (heroObject == Hero.MainHero 
+                            || (affectorCharacter.HeroObject != null && affectorCharacter.HeroObject.PartyBelongedTo == Hero.MainHero.PartyBelongedTo))
+                        )
                     {
                         heroObject.AddSkillXp(DefaultSkills.Athletics, MBRandom.RoundRandomized(single));
                     }
@@ -144,19 +146,23 @@ namespace BMTournamentXP
                         {
                             single += (float)MBMath.Floor(single * single1 * Campaign.Current.Models.CombatXpModel.GetXpMultiplierFromShotDifficulty(shotDifficulty));
                         }
-                        if (heroObject == Hero.MainHero)
+                        if (heroObject == Hero.MainHero
+                                || (affectorCharacter.HeroObject != null && affectorCharacter.HeroObject.PartyBelongedTo == Hero.MainHero.PartyBelongedTo)
+                            )
                             heroObject.AddSkillXp(skillForWeapon, MBRandom.RoundRandomized(single));
                     }
                     if (!isAffectorMounted)
                     {
                         float single2 = 0.2f;
-                        if (speedBonusFromMovement > 0f)
+                        if (speedBonusFromMovement > 0f) 
                         {
                             single2 = single2 + 1.5f * speedBonusFromMovement;
                         }
                         if (single2 > 0f)
                         {
-                            if (heroObject == Hero.MainHero)
+                            if (heroObject == Hero.MainHero
+                                    || (affectorCharacter.HeroObject != null && affectorCharacter.HeroObject.PartyBelongedTo == Hero.MainHero.PartyBelongedTo)
+                                )
                                 heroObject.AddSkillXp(DefaultSkills.Athletics, MBRandom.RoundRandomized(single2 * single));
                         }
                     }
@@ -177,7 +183,9 @@ namespace BMTournamentXP
                         }
                         if (single3 > 0f)
                         {
-                            if (heroObject == Hero.MainHero)
+                            if (heroObject == Hero.MainHero
+                                    || (affectorCharacter.HeroObject != null && affectorCharacter.HeroObject.PartyBelongedTo == Hero.MainHero.PartyBelongedTo)
+                                )
                                 heroObject.AddSkillXp(DefaultSkills.Riding, MBRandom.RoundRandomized(single3 * single));
                         }
                     }

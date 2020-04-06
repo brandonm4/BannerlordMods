@@ -1,4 +1,6 @@
 ﻿using BMTournamentPrize.Models;
+using BMTournamentPrizes.Models;
+using BMTournamentPrizes.Patch;
 using HarmonyLib;
 using SandBox.TournamentMissions.Missions;
 using System;
@@ -174,7 +176,30 @@ namespace BMTweakCollection.Patches
         }
     }
 
+    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinTournament")]
+    public class TournamentBehaviorOnPlayerWinTournamentPatch1
+    {
+        public static bool Prefix(ref TournamentBehavior __instance)
+        {
+            bool bDofix = false;
+            if (__instance.TournamentGame.Prize == null)
+            {
+                bDofix = true;
+            }
+            else if (__instance.TournamentGame.Prize.ItemType == ItemObject.ItemTypeEnum.Invalid)
+            {
+                bDofix = true;
+            }
+            if (bDofix)
+            {
+               var prize = GetTournamentPrizePatch1.GenerateTournamentPrize(__instance.TournamentGame);
+                TournamentPrizeExpansion.SetTournamentSelectedPrize(__instance.TournamentGame, prize);
+            }
+            return true;
+        }
 
+        
+    }
     //[HarmonyPatch(typeof(TournamentBehavior), "GetTournamentPrize")]
     //public class GetTournamentPrizePatchCompanionWins
     //{

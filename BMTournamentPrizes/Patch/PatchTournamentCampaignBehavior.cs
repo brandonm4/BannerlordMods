@@ -1,5 +1,7 @@
 ﻿using BMTournamentPrize.Models;
+using BMTournamentPrizes.Extensions;
 using BMTournamentPrizes.Models;
+using BMTournamentPrizes.Patch;
 using HarmonyLib;
 
 using Helpers;
@@ -26,7 +28,7 @@ namespace BMTournamentXP
         {
             //        typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + bonusmoney);
 
-            campaignGameSystemStarter.AddGameMenuOption("town_arena", "bm_reroll_price", "{=LN09ZLXZ}Reroll Prize", new GameMenuOption.OnConditionDelegate(TournamentCampaignBehaviorPatch1.game_menu_reroll_tournament_reward_option), (MenuCallbackArgs args) => TournamentCampaignBehaviorPatch1.game_menu_reroll_tournament_reward(__instance), false, 2, false);
+            campaignGameSystemStarter.AddGameMenuOption("town_arena", "bm_reroll_price", "Re-roll Prize", new GameMenuOption.OnConditionDelegate(TournamentCampaignBehaviorPatch1.game_menu_reroll_tournament_reward_option), (MenuCallbackArgs args) => TournamentCampaignBehaviorPatch1.game_menu_reroll_tournament_reward(__instance), false, 2, false);
         }
 
         private static bool Prepare()
@@ -40,9 +42,28 @@ namespace BMTournamentXP
             {
                 return false;
             }
+
             bool flag;
             TextObject textObject;
+            TournamentPrizeSettings settings = new TournamentPrizeSettings();
+            TournamentPrizeExpansion.Instance.SettlementPrizes.TryGetValue(Settlement.CurrentSettlement.StringId, out settings);
+            if (settings == null)
+            {
+                settings = new TournamentPrizeSettings();
+                TournamentPrizeExpansion.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
+            }
             bool flag1 = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.JoinTournament, out flag, out textObject);
+           
+            if (settings.RemainingRerolls <=0)
+            {
+                flag = true;
+                flag1 = false;
+                textObject = new TextObject("Re-roll Attempts Exceeded");
+            }              
+            else
+            {
+                args.Text = new TextObject(String.Concat("Re-Roll Prize (Remaining: ", settings.RemainingRerolls.ToString(), ")"));
+            }
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
             return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
             //return false;
@@ -50,10 +71,16 @@ namespace BMTournamentXP
 
         public static void game_menu_reroll_tournament_reward(TournamentCampaignBehavior campaignBehavior)
         {
+            TournamentPrizeSettings settings = new TournamentPrizeSettings();                        
             TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
             // tournamentGame.Prize = TournamentCampaignBehaviorPatch1.GetTournamentPrize();
             ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
             TournamentPrizeExpansion.SetTournamentSelectedPrize(tournamentGame, prize);
+
+            TournamentPrizeExpansion.Instance.SettlementPrizes.TryGetValue(Settlement.CurrentSettlement.StringId, out settings);
+            settings.RemainingRerolls--;
+            TournamentPrizeExpansion.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
+
             try
             {
                 GameMenu.SwitchToMenu("town_arena");
@@ -61,7 +88,7 @@ namespace BMTournamentXP
             catch (Exception ex)
             {
                 FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
-                FileLog.Log(ex.Message.ToString());
+                FileLog.Log(ex.ToStringFull());
             }
         }
 
@@ -86,7 +113,7 @@ namespace BMTournamentXP
 
         public static bool game_menu_select_tournament_reward_option(MenuCallbackArgs args)
         {
-            if (!BMTournamentPrizeConfiguration.Instance.TournamentPrizeRerollEnabled)
+            if (!BMTournamentPrizeConfiguration.Instance.EnablePrizeSelection)
             {
                 return false;
             }
@@ -100,37 +127,41 @@ namespace BMTournamentXP
 
         public static void game_menu_select_tournament_reward(TournamentCampaignBehavior campaignBehavior)
         {
-            TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
-            // tournamentGame.Prize = TournamentCampaignBehaviorPatch1.GetTournamentPrize();
-            // ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
-            // TournamentPrizeExpansion.SetTournamentSelectedPrize(tournamentGame, prize);
-            //InformationManager.ShowInquiry(new InquiryData("Mercenary Contract Expired", "Your mercenary contract has expired. You may choose to renew the contract for an additional 30 days or end the contract and surrender any fiefs.", true, true, "Renew", "Expire", new Action(this.RenewMercContract), new Action(this.EndMercContract), ""), true);
+            TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);            
             List<InquiryElement> prizeElements = new List<InquiryElement>();
             TournamentPrizeSettings prizeSettings;
 
-            if (TournamentPrizeExpansion.Instance.SettlementPrizes.TryGetValue(Settlement.CurrentSettlement.StringId, out prizeSettings))
+            TournamentPrizeExpansion.Instance.SettlementPrizes.TryGetValue(Settlement.CurrentSettlement.StringId, out prizeSettings);
+            if (prizeSettings == null)
             {
-                foreach (var p in prizeSettings.Items)
-                {
-
-
-                    prizeElements.Add(new InquiryElement(p.StringId, p.Name.ToString(), new TaleWorlds.Core.ImageIdentifier(p), true, ""));
-                }
-
-
-                InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
-                        "Tournament Prize Selection", "You can choose from the following set of prizes to win from the tournament!", prizeElements, false, true, "OK", "Cancel",
-                        new Action<List<InquiryElement>>(OnSelectPrize), new Action<List<InquiryElement>>(OnDeSelectPrize)), true);
-                try
-                {
-                    GameMenu.SwitchToMenu("town_arena");
-                }
-                catch (Exception ex)
-                {
-                    FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
-                    FileLog.Log(ex.Message.ToString());
-                }
+                ItemObject prize = GetTournamentPrizePatch1.GenerateTournamentPrize(tournamentGame);
+                TournamentPrizeExpansion.SetTournamentSelectedPrize(tournamentGame, prize);
             }
+            TournamentPrizeExpansion.Instance.SettlementPrizes.TryGetValue(Settlement.CurrentSettlement.StringId, out prizeSettings);
+            if (prizeSettings.Items.Count < BMTournamentPrizeConfiguration.Instance.NumberOfPrizeOptions)
+            {
+                ItemObject prize = GetTournamentPrizePatch1.GenerateTournamentPrize(tournamentGame, prizeSettings.Items);
+            }
+
+            foreach (var p in prizeSettings.Items)
+            {
+                prizeElements.Add(new InquiryElement(p.StringId, p.Name.ToString(), new TaleWorlds.Core.ImageIdentifier(p), true, ""));
+            }
+
+
+            InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
+                    "Tournament Prize Selection", "You can choose an item from the list below as your reward if you win the tournament!", prizeElements, false, true, "OK", "Cancel",
+                    new Action<List<InquiryElement>>(OnSelectPrize), new Action<List<InquiryElement>>(OnDeSelectPrize)), true);
+            try
+            {
+                GameMenu.SwitchToMenu("town_arena");
+            }
+            catch (Exception ex)
+            {
+                FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                FileLog.Log(ex.ToStringFull());
+            }
+
         }
 
         static void OnSelectPrize(List<InquiryElement> prizeSelections)
@@ -146,7 +177,7 @@ namespace BMTournamentXP
                 catch (Exception ex)
                 {
                     FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
-                    FileLog.Log(ex.Message.ToString());
+                    FileLog.Log(ex.ToStringFull());
                 }
             }
         }
@@ -161,4 +192,6 @@ namespace BMTournamentXP
             return BMTournamentPrizeConfiguration.Instance.EnablePrizeSelection;
         }
     }
+
+
 }

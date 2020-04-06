@@ -58,11 +58,7 @@ namespace BMTournamentXP
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
             base.OnMissionBehaviourInitialize(mission);
-
-            if (BMTournamentXPConfiguration.Instance.IsArenaXPEnabled)
-            {
-                EnableArenaXP(mission);
-            }
+           
             if (BMTournamentXPConfiguration.Instance.IsTournamentXPEnabled)
             {
                 EnableTournamentXP(mission);
@@ -88,8 +84,7 @@ namespace BMTournamentXP
         private void EnableTournamentXP(Mission mission)
         {
             if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
-              (mission.HasMissionBehaviour<TournamentFightMissionController>()
-              || mission.HasMissionBehaviour<TournamentArcheryMissionController>()
+              (mission.HasMissionBehaviour<TournamentArcheryMissionController>()
               || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
               || mission.HasMissionBehaviour<TownHorseRaceMissionController>()))
             {
@@ -97,14 +92,14 @@ namespace BMTournamentXP
 
             }
         }
-        private void EnableArenaXP(Mission mission)
-        {
-            if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
-              mission.HasMissionBehaviour<ArenaPracticeFightMissionController>())
-            {
-                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPConfiguration.Instance.ArenaXPAdjustment));
-            }
-        }
+        //private void EnableArenaXP(Mission mission)
+        //{
+        //    if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
+        //      mission.HasMissionBehaviour<ArenaPracticeFightMissionController>())
+        //    {
+        //        mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPConfiguration.Instance.ArenaXPAdjustment));
+        //    }
+        //}
 
         private void DisplayVersionInfo(bool showpopup)
         {

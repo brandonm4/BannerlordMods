@@ -14,13 +14,14 @@ using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace BMTweakCollection
 {
     public class BMTweakCollectionMain : MBSubModuleBase
     {
-        
+
         public static BMRandomTweaksConfiguration Configuration { get; set; }
 
         protected override void OnSubModuleLoad()
@@ -57,7 +58,9 @@ namespace BMTweakCollection
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
-
+            FixPerkPeakForm();
+            //FixPerkDisciplinarian();
+            FixPerkHealthyScout();
 
             if (Configuration.RemoveAllEquippedHorses)
             {
@@ -82,7 +85,7 @@ namespace BMTweakCollection
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             base.OnGameStart(game, gameStarterObject);
-         
+
             CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
             if (campaignGameStarter != null)
             {
@@ -94,7 +97,7 @@ namespace BMTweakCollection
                 //{
                 //    this.ReplaceSmithingModel(campaignGameStarter);
                 //}
-            }           
+            }
         }
 
         private bool ReplaceTroopLimitModel(CampaignGameStarter starter)
@@ -153,6 +156,88 @@ namespace BMTweakCollection
                 flag = false;
             }
             return flag;
+        }
+
+        private void FixPerkPeakForm()
+        {
+            var _perk = PerkObject.FindFirst(x => x.Name.GetID() == "fBgGbxaw");
+            if (_perk.PrimaryBonus == 0f)
+            {
+                var textObjStrings = TextObject.ConvertToStringList(
+                   new List<TextObject> {
+                  _perk.Name,
+                  _perk.Description
+                   }
+                );
+
+                // most of the properties of skills have private setters, yet Initialize is public
+                _perk.Initialize(
+                  textObjStrings[0],
+                  textObjStrings[1],
+                  _perk.Skill,
+                  (int)_perk.RequiredSkillValue,
+                  _perk.AlternativePerk,
+                  _perk.PrimaryRole, 10f,
+                  _perk.SecondaryRole, _perk.SecondaryBonus,
+                  _perk.IncrementType
+                );
+            }
+        }
+
+        private void FixPerkDisciplinarian()
+        {
+            PerkObject _perk
+        = PerkObject.FindFirst(x => x.Name.GetID() == "ER3ieXOb");
+            if (_perk.PrimaryRole == SkillEffect.PerkRole.Personal)
+            {
+                var textObjStrings = TextObject.ConvertToStringList(
+            new List<TextObject> {
+          _perk.Name,
+          _perk.Description
+            }
+          );
+
+                // most of the properties of skills have private setters, yet Initialize is public
+                _perk.Initialize(
+                  textObjStrings[0],
+                  textObjStrings[1],
+                  _perk.Skill,
+                  (int)_perk.RequiredSkillValue,
+                  _perk.AlternativePerk,
+                  SkillEffect.PerkRole.PartyLeader, 0f,
+                  _perk.PrimaryRole, _perk.PrimaryBonus,
+                  _perk.IncrementType
+                );
+            }
+        }
+
+        private void FixPerkHealthyScout()
+        {
+            PerkObject _perk
+      = PerkObject.FindFirst(x => x.Name.GetID() == "dDKOoD3e");
+
+            if (_perk.PrimaryRole == SkillEffect.PerkRole.PartyMember
+        && _perk.PrimaryBonus == 0.15f)
+            {
+                var textObjStrings = TextObject.ConvertToStringList(
+           new List<TextObject> {
+          _perk.Name,
+          _perk.Description
+           }
+         );
+
+                // most of the properties of skills have private setters, yet Initialize is public
+                _perk.Initialize(
+                  textObjStrings[0],
+                  textObjStrings[1],
+                  _perk.Skill,
+                  (int)_perk.RequiredSkillValue,
+                  _perk.AlternativePerk,
+                  SkillEffect.PerkRole.Personal, 8f,
+                  _perk.SecondaryRole, _perk.SecondaryBonus,
+                  _perk.IncrementType
+                );
+            }
         }
     }
 }

@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMItemTweaksMain.cs" />
+    <Compile Include="ExceptionExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\BMRandomTweaksConfiguration.cs" />
     <Compile Include="Models\CustomSmithingModule.cs" />

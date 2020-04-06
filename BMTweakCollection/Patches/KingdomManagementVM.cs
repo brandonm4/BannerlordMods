@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using BMTournamentPrizes.Extensions;
 
 namespace BannerlordTweaks.Patches
 {
@@ -33,7 +34,7 @@ namespace BannerlordTweaks.Patches
             }
             catch (Exception ex)
             {
-             FileLog.Log($"An error occurred in the leaving Kingdom as mercenary fix:\n\n{ex.ToString()}");
+             FileLog.Log($"An error occurred in the leaving Kingdom as mercenary fix:\n\n{ex.ToStringFull()}");
             }
             return true;
         }

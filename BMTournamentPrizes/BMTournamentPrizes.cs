@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -36,6 +38,19 @@ namespace BMTournamentPrizes
                     BMTournamentPrizeConfiguration.Instance.TourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
                 }
             }
+
+            if (BMTournamentPrizeConfiguration.Instance.PrizeListMode.IndexOf("stock", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                BMTournamentPrizeConfiguration.Instance.TourneyItems = new List<string>();
+                BMTournamentPrizeConfiguration.Instance.TourneyItems = BMTournamentPrizeConfiguration.StockTourneyItems.ToList();
+            }
+            else if (BMTournamentPrizeConfiguration.Instance.PrizeListMode.IndexOf("townonly", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                BMTournamentPrizeConfiguration.Instance.TourneyItems = new List<string>();
+                BMTournamentPrizeConfiguration.Instance.TourneyItems = BMTournamentPrizeConfiguration.StockTourneyItems.ToList();
+            }
+
+
             try
             {
                 var h = new Harmony("com.darkspyre.bannerlord.tournament");
@@ -58,6 +73,64 @@ namespace BMTournamentPrizes
                 MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
             }
 
+        }
+
+        public override void OnGameInitializationFinished(Game game)
+        {
+            base.OnGameInitializationFinished(game);
+
+            if (BMTournamentPrizeConfiguration.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
+            {
+                List<string> tourneyItems = new List<string>();
+                List<string> problemids = new List<string>();
+                foreach (var id in BMTournamentPrizeConfiguration.Instance.TourneyItems)
+                {
+                    ItemObject item;
+
+                    try
+                    {
+                        item = Game.Current.ObjectManager.GetObject<ItemObject>(id);
+                    }
+                    catch (Exception ex)
+                    {
+                        item = null;
+                    }
+                    if (item == null || item.ItemType == ItemObject.ItemTypeEnum.Invalid)
+                    {
+                        problemids.Add(id);
+                        // MessageBox.Show("Tournament Prize System", String.Concat("Invalid Item Id detected in prize list.  Please remove from the list.  Ignoring problem item and continuing.\n\n", id));
+
+                        FileLog.Log(String.Concat("WARNING: Tournament Prize System\n", "Invalid Item Id detected in prize list.  Please remove from the list.  Ignoring problem item and continuing.\n\n", id));
+                    }
+
+                    if (item.Value >= BMTournamentPrizeConfiguration.Instance.TownPrizeMin && item.Value <= BMTournamentPrizeConfiguration.Instance.TownPrizeMax)
+                    {
+                        tourneyItems.Add(id);
+                    }
+                }
+                if (problemids.Count > 0)
+                { 
+                    string info = "Detected Errors in Custom Prize List.  Review list and correct or remove these entries:\n";
+                    foreach (var p in problemids)
+                    {
+                        info = String.Concat(info, p, "\n");
+                    }
+
+                    InformationManager.ShowInquiry(new InquiryData("Tournament Prize Errors",
+                        info,
+                        true, false, "Ok", "No", null, null, ""), false);
+
+                }
+
+                if (tourneyItems.Count > 0)
+                {
+                    BMTournamentPrizeConfiguration.Instance.TourneyItems = tourneyItems;
+                }
+                else
+                {
+                    MessageBox.Show("Tournament Prize System", "Tournament Item Restrictions to narrow.  Reverting to unfiltered list.");
+                }
+            }
         }
     }
 }

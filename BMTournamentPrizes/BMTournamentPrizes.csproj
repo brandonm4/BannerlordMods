@@ -63,6 +63,7 @@
     </Reference>
     <Reference Include="SandBox.ViewModelCollection">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.ViewModelCollection.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -95,10 +96,12 @@
     </Reference>
     <Reference Include="TaleWorlds.PlayerServices">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlayerServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMTournamentPrizes.cs" />
+    <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\BMTournamentPrizeConfiguration.cs" />
     <Compile Include="Models\TournamentPrizeExpansion.cs" />

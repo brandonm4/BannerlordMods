@@ -13,9 +13,11 @@ namespace BMTournamentPrize.Models
 {
     public class BMTournamentPrizeConfiguration
     {
-        
+        public static string LastXMLPath { get; set; } = "";
+
         public void LoadXML(string xmlpath = "")
         {
+            LastXMLPath = xmlpath;    
         
             if (!String.IsNullOrWhiteSpace(xmlpath))
             {
@@ -124,13 +126,36 @@ namespace BMTournamentPrize.Models
                                                 CompanionsWinPrizes = false;
                                             }
                                             break;
+                                        case "numberofprizeoptions":
+                                            NumberOfPrizeOptions = int.Parse(nc.InnerText.Trim());
+                                            break;
+                                        case "enableprizeselection":
+                                            if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                EnablePrizeSelection = true;
+                                            }
+                                            else
+                                            {
+                                                EnablePrizeSelection = false;
+                                            }
+                                            break;
+                                        case "maxnumberofrerollspertournament":
+                                            MaxNumberOfRerollsPerTournament = int.Parse(nc.InnerText.Trim());
+                                            break;
 
+                                        case "townprizeminmaxaffectsvanillaandcustomlistsaswell":
+                                            if (string.Equals(nc.InnerText, "true", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell = true;
+                                            }
+                                            else
+                                            {
+                                                TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell = false;
+                                            }
+                                            break;
                                     }
                                 }
                                 break;
-
-
-
                         }
                     }
                     xmlDocument = null;
@@ -158,7 +183,7 @@ namespace BMTournamentPrize.Models
                 //{
                 //    if (_instance.EnableConfigReloadRealTime)
                 //    {
-                //        _instance.LoadXML(_instance._xmlPath);
+                //        _instance.LoadXML(LastXMLPath);
                 //    }
                 //}
                 return _instance;
@@ -186,8 +211,11 @@ namespace BMTournamentPrize.Models
 
         public bool EnableConfigReloadRealTime { get; set; } = false;
 
-        public List<string> StockTourneyItems { get; set; } = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+        public static List<string> StockTourneyItems { get; } = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
 
         public bool CompanionsWinPrizes { get; set; } = false;
+        public int MaxNumberOfRerollsPerTournament { get; set; } = 3;
+
+        public bool TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell { get; set; } = false;
     }
 }

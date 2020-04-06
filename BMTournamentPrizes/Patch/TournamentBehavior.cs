@@ -13,33 +13,48 @@ using TaleWorlds.Library;
 
 namespace BMTweakCollection.Patches
 {
-    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
-#pragma warning disable RCS1102 // Make class static.
-    public class TournamentBehaviourPatchCharLevels
-#pragma warning restore RCS1102 // Make class static.
-    {
-        static bool Prefix(TournamentBehavior __instance, ref TournamentParticipant[] ____participants)
-        {
-            int numHeroLevels = 0;
-            int bonusMoney = 0;
+//    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
+//#pragma warning disable RCS1102 // Make class static.
+//    public class TournamentBehaviourPatchCharLevels
+//#pragma warning restore RCS1102 // Make class static.
+//    {
+//        static bool Prefix(TournamentBehavior __instance, ref TournamentParticipant[] ____participants)
+//        {
+//            int numHeroLevels = 0;
+//            int bonusMoney = 0;
 
-            foreach (var p in ____participants)
-            {
-                if (p.Character.IsHero && p.Character.HeroObject != null && p.Character.HeroObject != Hero.MainHero)
-                {
-                    numHeroLevels += p.Character.HeroObject.Level;
-                }
-            }
-            bonusMoney = numHeroLevels * BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel;
-            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + bonusMoney);
-            return true;
-        }
+//            foreach (var team in __instance.CurrentMatch.Teams)
+//            {
+//                var teamLevels = 0;
+//                var teamHasPlayer = false;
+//                foreach(var p in team.Participants)
+//                {
+//                    if (p.Character.IsHero && p.Character.HeroObject != null)
+//                    {
+//                        teamLevels += p.Character.Level;
+//                        if (p.Character.HeroObject == Hero.MainHero)
+//                        {
+//                            teamHasPlayer = true;
+//                            break;
+//                        }
+//                    }                    
+//                }
+//                if (!teamHasPlayer)
+//                {
+//                    numHeroLevels += teamLevels;
+//                }
+//            }
+            
+//            bonusMoney = numHeroLevels * BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel;
+//            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + bonusMoney);
+//            return true;
+//        }
 
-        static bool Prepare()
-        {
-            return BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel > 0;
-        }
-    }
+//        static bool Prepare()
+//        {
+//            return BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel > 0;
+//        }
+//    }
 
     [HarmonyPatch(typeof(TournamentBehavior), "CalculateBet")]
     public class TournamentBehaviorPatchCalculateBet
@@ -48,7 +63,7 @@ namespace BMTweakCollection.Patches
         {
 
             //var tb = Traverse.Create(__instance);
-            
+
             if (__instance.IsPlayerParticipating)
             {
                 if (__instance.CurrentRound.CurrentMatch == null)
@@ -56,7 +71,7 @@ namespace BMTweakCollection.Patches
                     //__instance.BetOdd = 0f;
                     //tb.Field("BetOdd").SetValue(0f);
                     typeof(TournamentBehavior).GetProperty("BetOdd").SetValue(__instance, 0f);
-                    
+
                     return false;
                 }
                 if (__instance.IsPlayerEliminated || !__instance.IsPlayerParticipating)
@@ -82,20 +97,20 @@ namespace BMTweakCollection.Patches
                         foreach (TournamentParticipant participant in team.Participants)
                         {
                             //level += (float)participant.Character.Level;
-                            level += (float)participant.Character.Level;                            
+                            level += (float)participant.Character.Level;
                             //If they are a named hero, increase their score a bit
                             if (participant.Character.IsHero)
                             {
                                 level += 50f;
                             }
                             //Tack on armor values
-                            level += participant.Character.GetArmArmorSum()*2 + participant.Character.GetBodyArmorSum()*3 + participant.Character.GetLegArmorSum()*2;
+                            level += participant.Character.GetArmArmorSum() * 2 + participant.Character.GetBodyArmorSum() * 3 + participant.Character.GetLegArmorSum() * 2;
                             //Get skills based 
-                            level += (float)participant.Character.GetSkillValue(DefaultSkills.Bow) 
+                            level += (float)participant.Character.GetSkillValue(DefaultSkills.Bow)
                                 + (float)participant.Character.GetSkillValue(DefaultSkills.OneHanded)
                                 + (float)participant.Character.GetSkillValue(DefaultSkills.TwoHanded)
                                 + (float)participant.Character.GetSkillValue(DefaultSkills.Throwing)
-                                + (float)participant.Character.GetSkillValue(DefaultSkills.Polearm) 
+                                + (float)participant.Character.GetSkillValue(DefaultSkills.Polearm)
                                 + (float)participant.Character.GetSkillValue(DefaultSkills.Riding);
                             //bool hasBow, hasTwoH, hasOneH, hasHorse = false;
 
@@ -148,7 +163,7 @@ namespace BMTweakCollection.Patches
                 }
                 float single3 = MathF.Clamp((float)Math.Sqrt((double)(matchScore / playerTeamScore)), 1.01f, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds);
                 //tb.Field("BetOdd").SetValue(Math.Min(single3, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds));                
-                typeof(TournamentBehavior).GetProperty("BetOdd").SetValue(__instance, Math.Min(single3, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds)); 
+                typeof(TournamentBehavior).GetProperty("BetOdd").SetValue(__instance, Math.Min(single3, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds));
             }
             return false;
         }
@@ -159,5 +174,21 @@ namespace BMTweakCollection.Patches
         }
     }
 
+
+    //[HarmonyPatch(typeof(TournamentBehavior), "GetTournamentPrize")]
+    //public class GetTournamentPrizePatchCompanionWins
+    //{
+    //    public static bool Prefix(ref TournamentBehavior __instance)
+    //    {
+    //        if (__instance.CurrentRound.CurrentMatch == null)
+    //        {
+    //            if (__instance.CurrentRoundIndex < 3)
+    //                return true;
+
+    //        }
+
+    //        return true;
+    //    }
+    //}
 
 }

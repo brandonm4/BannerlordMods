@@ -91,24 +91,34 @@ namespace BMSaveFixer
 
                             if (bHadIssue)
                             {
+                                //var urban = ((TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors.UrbanCharactersCampaignBehavior)campaign.GetCampaignBehavior<TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors.UrbanCharactersCampaignBehavior>());
+                                //List<CharacterObject> _companionTemplates = (List<CharacterObject>)Traverse.Create(urban).Field("_companionTemplates").GetValue();
+                                //var civEquip = (CharacterObject)Traverse.Create(c).Field("_civilianEquipmentTemplate").GetValue();
+                                // var batEquip = (CharacterObject)Traverse.Create(c).Field("_battleEquipmentTemplate").GetValue();
+                                //var _template = _companionTemplates.Where(x => x.Name == c.Name).FirstOrDefault();
+
+                                //Traverse.Create(c).Field("_heroObject").SetValue(HeroCreator.CreateSpecialHero(c.HeroObject.Template));
+                                var equipment = MBObjectManager.Instance.GetObject<CharacterObject>("tournament_template_battania_four_participant_set_v1").BattleEquipments.ToList();
+                                c.InitializeEquipmentsOnLoad(equipment);
+                                typeof(Hero).GetProperty("BattleEquipment").SetValue(c.HeroObject, equipment[0]);
                                 //   Traverse.Create(c.HeroObject).Method("SetInitialValuesFromCharacter").GetValue(new object[] { c });
                                 //Murder the char
                                 //c.HeroObject.IsDead = true;
-                                c.HeroObject.AlwaysDie = true;
+                                //c.HeroObject.AlwaysDie = true;
 
                                 //    c.HeroObject.ChangeState(Hero.CharacterStates.Dead);
                                 //KillCharacterAction.ApplyByRemove(c.HeroObject, true);
-                                if (c.HeroObject.CurrentSettlement != null)
-                                {
-                                    Traverse.Create(c.HeroObject.CurrentSettlement).Method("RemoveHero").GetValue(new object[] { c.HeroObject });
-                                }
+                                //         if (c.HeroObject.CurrentSettlement != null)
+                                //         {
+                                //            // Traverse.Create(c.HeroObject.CurrentSettlement).Method("RemoveHero").GetValue(new object[] { c.HeroObject });
+                                //         }
 
-                                ApplyInternal(c.HeroObject, null, KillCharacterAction.KillCharacterActionDetail.Lost, true);
+                                ////         ApplyInternal(c.HeroObject, null, KillCharacterAction.KillCharacterActionDetail.Lost, true);
 
-                                if (c.HeroObject.PartyBelongedTo != null)
-                                {
+                                //         if (c.HeroObject.PartyBelongedTo != null)
+                                //         {
 
-                                }
+                                //         }
                             }
 
                         }

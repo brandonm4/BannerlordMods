@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BMTweakCollection.Patches
 {
     [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
-    public class TournamentBehaviourPatch
+    public class TournamentBehaviourPatchBonusGold
     {
         static bool Prefix(TournamentBehavior __instance)
         {
@@ -17,4 +17,6 @@ namespace BMTweakCollection.Patches
             return true;
         }      
     }
-}
+
+ 
+    }

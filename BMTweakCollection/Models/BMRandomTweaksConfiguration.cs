@@ -17,7 +17,7 @@ namespace BMTweakCollection.Models
         public  bool CustomSmithingModelEnabled { get; set; } = true;
         public  int CustomSmithingXPDivisor { get; set; } = 8;
 
-        public  bool RemoveAllEquippedHorses { get; set; }
+        public bool RemoveAllEquippedHorses { get; set; } = false;
         public int BonusTournamentGold { get; set; } = 500;
 
         

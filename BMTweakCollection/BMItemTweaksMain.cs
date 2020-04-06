@@ -59,20 +59,19 @@ namespace BMTweakCollection
             base.OnGameInitializationFinished(game);
 
 
-
-            Campaign gameType = game.GameType as Campaign;
-            if (gameType != null)
+            if (Configuration.RemoveAllEquippedHorses)
             {
-                //if (BMTweakCollectionMain.Configuration.ItemMultiplayerToSinglePlayerEnabled)
-                //{
-                //    foreach (ItemObject i in gameType.Items)
-                //    {
-                //        if (!i.NotMerchandise)
-                //        {
-                //            typeof(ItemObject).GetProperty("MultiplayerItem").SetValue(i, false);
-                //        }
-                //    }
-                //}
+                Campaign gameType = game.GameType as Campaign;
+                if (gameType != null)
+                {
+                    foreach (var c in gameType.Characters)
+                    {
+                        if (c.HasMount())
+                        {
+                            //c.Equipment.GetEquipmentFromSlot(EquipmentIndex.Horse);
+                        }
+                    }
+                }
             }
 
             //InformationManager.ShowInquiry(new InquiryData("Tweak Collection Enabled",

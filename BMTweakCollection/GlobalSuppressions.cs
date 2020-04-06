@@ -5,3 +5,5 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviourPatch")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patch.TournamentFightMissionControllerRemoveSpearsFromTournament")]
+

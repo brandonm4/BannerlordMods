@@ -1,13 +1,8 @@
-﻿using BMTournamentPrize.Models;
-using BMTournamentPrizes.Models;
+﻿using BMTournamentPrizes.Models;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
+using TournamentLib.Models;
 
 namespace BMTournamentPrizes.Patch
 {
@@ -17,11 +12,11 @@ namespace BMTournamentPrizes.Patch
     {
         public static void Prefex(TournamentGame game)
         {
-            TournamentPrizeExpansion.ClearTournamentPrizes(game.Town.Settlement.StringId);
+            TournamentPrizeExpansion.Instance.ClearTournamentPrizes(game.Town.Settlement.StringId);
         }
         static bool Prepare()
         {
-            return (BMTournamentPrizeConfiguration.Instance.EnableConfigReloadRealTime || BMTournamentPrizeConfiguration.Instance.EnablePrizeSelection);
+            return (TournamentConfiguration.Instance.PrizeConfiguration.EnableConfigReloadRealTime || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection);
         }
     }
 
@@ -30,11 +25,11 @@ namespace BMTournamentPrizes.Patch
     {
         public static void Prefex(TournamentGame tournament)
         {
-            TournamentPrizeExpansion.ClearTournamentPrizes(tournament.Town.Settlement.StringId);
+            TournamentPrizeExpansion.Instance.ClearTournamentPrizes(tournament.Town.Settlement.StringId);
         }
         static bool Prepare()
         {
-            return (BMTournamentPrizeConfiguration.Instance.EnableConfigReloadRealTime || BMTournamentPrizeConfiguration.Instance.EnablePrizeSelection);
+            return (TournamentConfiguration.Instance.PrizeConfiguration.EnableConfigReloadRealTime || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection);
         }
     }
 }

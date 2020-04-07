@@ -1,19 +1,11 @@
-﻿using BMTournamentPrizes.Extensions;
-using BMTournamentPrize.Models;
-using BMTournamentPrizes.Models;
+﻿using BMTournamentPrizes.Models;
 using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
-using TaleWorlds.Core;
-using TaleWorlds.Localization;
-using Helpers;
 using System.Windows.Forms;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+using TournamentLib.Extensions;
+using TournamentLib.Models;
 
 namespace BMTournamentPrizes.Patch
 {
@@ -32,29 +24,29 @@ namespace BMTournamentPrizes.Patch
                     return true;
                 }
             }
-            catch(Exception ex)
-            {                
+            catch (Exception ex)
+            {
                 FileLog.Log("ERROR: Tournament Prize System");
                 FileLog.Log(ex.ToStringFull());
             }
             return false;
         }
 
-       
+
 
         private static bool Prepare()
         {
-            if (BMTournamentPrizeConfiguration.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
-                || BMTournamentPrizeConfiguration.Instance.EnablePrizeSelection
-                || BMTournamentPrizeConfiguration.Instance.TournamentPrizeRerollEnabled
-                || BMTournamentPrizeConfiguration.Instance.PrizeListMode.IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0
-                || BMTournamentPrizeConfiguration.Instance.PrizeListMode.IndexOf("town", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
+                || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
+                || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("town", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return true;
             }
             return false;
         }
 
-       
+
     }
 }

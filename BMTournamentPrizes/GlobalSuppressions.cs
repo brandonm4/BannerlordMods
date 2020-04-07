@@ -20,3 +20,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviorOnPlayerWinTournamentPatch4")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentPrizes.Patch.TournamentManagerPatchAddTournament1")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentPrizes.Patch.TournamentManagerPatchResolveTournament1")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentXP.TournamentCampaignBehaviorPatch2")]
+

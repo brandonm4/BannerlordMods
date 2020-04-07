@@ -1,18 +1,14 @@
-﻿using BMTournamentPrize.Models;
-using BMTournamentPrizes.Models;
-using BMTournamentPrizes.Patch;
+﻿using BMTournamentPrizes.Models;
 using HarmonyLib;
 using SandBox.TournamentMissions.Missions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TournamentLib.Models;
 
 namespace BMTweakCollection.Patches
 {
@@ -123,16 +119,16 @@ namespace BMTweakCollection.Patches
                         matchScore += level;
                     }
                 }
-                float single3 = MathF.Clamp((float)Math.Sqrt((double)(matchScore / playerTeamScore)), 1.01f, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds);
-                //tb.Field("BetOdd").SetValue(Math.Min(single3, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds));                
-                typeof(TournamentBehavior).GetProperty("BetOdd").SetValue(__instance, Math.Min(single3, BMTournamentPrizeConfiguration.Instance.MaximumBetOdds));
+                float single3 = MathF.Clamp((float)Math.Sqrt((double)(matchScore / playerTeamScore)), 1.01f, TournamentConfiguration.Instance.PrizeConfiguration.MaximumBetOdds);
+                //tb.Field("BetOdd").SetValue(Math.Min(single3, TournamentConfiguration.Instance.PrizeConfiguration.MaximumBetOdds));                
+                typeof(TournamentBehavior).GetProperty("BetOdd").SetValue(__instance, Math.Min(single3, TournamentConfiguration.Instance.PrizeConfiguration.MaximumBetOdds));
             }
             return false;
         }
 
         static bool Prepare()
         {
-            return BMTournamentPrizeConfiguration.Instance.OppenentDifficultyAffectsOdds;
+            return TournamentConfiguration.Instance.PrizeConfiguration.OppenentDifficultyAffectsOdds;
         }
     }
 
@@ -166,12 +162,76 @@ namespace BMTweakCollection.Patches
     {
         static bool Prefix(TournamentBehavior __instance)
         {
-            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + BMTournamentPrizeConfiguration.Instance.BonusTournamentMatchGold);
+            if (TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold > 0)
+            {
+                typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold);
+            }
+            if (TournamentConfiguration.Instance.PrizeConfiguration.EnableRenownPerTroopTier)
+            {
+                var renownbonus = 0f;
+                foreach (var team in __instance.LastMatch.Teams)
+                {
+                    var teambonus = 0f;
+                    foreach (var p in team.Participants)
+                    {
+                        teambonus += GetRenownValue(p.Character);
+                        if (p.Character.IsHero && p.Character.HeroObject == Hero.MainHero)
+                        {
+                            teambonus = 0;
+                            break;
+                        }
+                    }
+                    renownbonus += teambonus;
+                }
+                GainRenownAction.Apply(Hero.MainHero, renownbonus);
+            }
             return true;
         }
+
+        static float GetRenownValue(CharacterObject character)
+        {
+            var worth = 0f;
+            if (character.IsHero)
+            {
+                worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.HeroBase];
+                var hero = character.HeroObject;
+                if (hero != null)
+                {
+                    if (hero.IsNoble)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsNoble];
+                    }
+                    if (hero.IsNotable)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsNotable];
+                    }
+                    if (hero.IsCommander)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsCommander];
+                    }
+                    if (hero.IsMinorFactionHero)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                    }
+                    if (hero.IsFactionLeader)
+                    {
+                        if (hero.MapFaction.IsKingdomFaction)
+                            worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMajorFactionLeader];
+                        if (hero.MapFaction.IsMinorFaction)
+                            worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                    }
+                }
+            }
+            else
+            {
+                worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerTroopTier[character.Tier];
+            }
+            return worth;
+        }
+
         static bool Prepare()
         {
-            return BMTournamentPrizeConfiguration.Instance.BonusTournamentMatchGold > 0;
+            return (TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold > 0 || TournamentConfiguration.Instance.PrizeConfiguration.EnableRenownPerTroopTier);
         }
     }
     [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinTournament")]
@@ -180,12 +240,12 @@ namespace BMTweakCollection.Patches
         public static bool Prefix(ref TournamentBehavior __instance)
         {
 
-            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + BMTournamentPrizeConfiguration.Instance.BonusTournamentWinGold);
+            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinGold);
             return true;
         }
         static bool Prepare()
         {
-            return BMTournamentPrizeConfiguration.Instance.BonusTournamentWinGold > 0;
+            return TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinGold > 0;
         }
 
     }
@@ -194,12 +254,12 @@ namespace BMTweakCollection.Patches
     {
         public static bool Prefix(ref TournamentBehavior __instance)
         {
-            GainRenownAction.Apply(Hero.MainHero, BMTournamentPrizeConfiguration.Instance.BonusTournamentWinRenown, false);
+            GainRenownAction.Apply(Hero.MainHero, TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinRenown, false);
             return true;
         }
         static bool Prepare()
         {
-            return BMTournamentPrizeConfiguration.Instance.BonusTournamentWinRenown + 3 > 3;
+            return TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinRenown + 3 > 3;
 
         }
     }
@@ -208,12 +268,12 @@ namespace BMTweakCollection.Patches
     {
         public static bool Prefix(ref TournamentBehavior __instance)
         {
-            GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, BMTournamentPrizeConfiguration.Instance.BonusTournamentWinInfluence);
+            GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinInfluence);
             return true;
         }
         static bool Prepare()
         {
-            return BMTournamentPrizeConfiguration.Instance.BonusTournamentWinInfluence > 0;
+            return TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinInfluence > 0;
 
         }
 
@@ -270,13 +330,13 @@ namespace BMTweakCollection.Patches
 //                }
 //            }
 
-//            bonusMoney = numHeroLevels * BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel;
+//            bonusMoney = numHeroLevels * TournamentConfiguration.Instance.PrizeConfiguration.TournamentBonusMoneyBaseNamedCharLevel;
 //            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + bonusMoney);
 //            return true;
 //        }
 
 //        static bool Prepare()
 //        {
-//            return BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel > 0;
+//            return TournamentConfiguration.Instance.PrizeConfiguration.TournamentBonusMoneyBaseNamedCharLevel > 0;
 //        }
 //    }

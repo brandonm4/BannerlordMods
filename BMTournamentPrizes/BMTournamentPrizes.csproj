@@ -101,9 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMTournamentPrizes.cs" />
-    <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Models\BMTournamentPrizeConfiguration.cs" />
     <Compile Include="Models\TournamentPrizeExpansion.cs" />
     <Compile Include="Patch\PatchTournamentCampaignBehavior.cs" />
     <Compile Include="Patch\TournamentBehavior.cs" />
@@ -119,7 +117,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Extensions\" />
     <Folder Include="ModuleData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
+      <Project>{1f9e0b27-68dd-4fc3-9d8c-e132f32c9a31}</Project>
+      <Name>TournamentLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

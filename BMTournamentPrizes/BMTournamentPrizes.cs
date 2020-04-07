@@ -1,23 +1,25 @@
-﻿using BMTournamentPrize.Models;
-using BMTournamentPrizes.Models;
+﻿using BMTournamentPrizes.Models;
 using HarmonyLib;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TournamentLib.Models;
 
 namespace BMTournamentPrizes
 {
     public class BMTournamentPrizesMain : MBSubModuleBase
     {
+        private static void ShowMessage(string msg)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(msg));
+        }
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
@@ -27,28 +29,28 @@ namespace BMTournamentPrizes
             if (File.Exists(appSettings))
             {
                 //Configuration = new BMTournamentXPConfiguration(appSettings);                
-                BMTournamentPrizeConfiguration.Instance.LoadXML(appSettings);
+                TournamentConfiguration.Instance.LoadXML(appSettings);
             }
             ////Load tournament items
-            string tourneyitemsfile = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/", BMTournamentPrizeConfiguration.Instance.CustomPrizeFileName);
-            if (BMTournamentPrizeConfiguration.Instance.PrizeListMode.Trim().IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0)
+            string tourneyitemsfile = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/", TournamentConfiguration.Instance.PrizeConfiguration.CustomPrizeFileName);
+            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.Trim().IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 if (File.Exists(tourneyitemsfile))
                 {
                     var configtxt = File.ReadAllText(tourneyitemsfile);
-                    BMTournamentPrizeConfiguration.Instance.TourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+                    TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
                 }
             }
 
-            if (BMTournamentPrizeConfiguration.Instance.PrizeListMode.IndexOf("stock", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("stock", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                BMTournamentPrizeConfiguration.Instance.TourneyItems = new List<string>();
-                BMTournamentPrizeConfiguration.Instance.TourneyItems = BMTournamentPrizeConfiguration.StockTourneyItems.ToList();
+                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = new List<string>();
+                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = PrizeConfiguration.StockTourneyItems.ToList();
             }
-            else if (BMTournamentPrizeConfiguration.Instance.PrizeListMode.IndexOf("townonly", StringComparison.OrdinalIgnoreCase) >= 0)
+            else if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("townonly", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                BMTournamentPrizeConfiguration.Instance.TourneyItems = new List<string>();
-                BMTournamentPrizeConfiguration.Instance.TourneyItems = BMTournamentPrizeConfiguration.StockTourneyItems.ToList();
+                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = new List<string>();
+                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = PrizeConfiguration.StockTourneyItems.ToList();
             }
 
 
@@ -79,13 +81,13 @@ namespace BMTournamentPrizes
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
-            TournamentPrizeExpansion.Instance.SettlementPrizes = new Dictionary<string, TournamentPrizeSettings>();
+            TournamentPrizeExpansion.Instance.ClearAllTournamentPrizes();
 
-            if (BMTournamentPrizeConfiguration.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
+            if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
             {
                 List<string> tourneyItems = new List<string>();
                 List<string> problemids = new List<string>();
-                foreach (var id in BMTournamentPrizeConfiguration.Instance.TourneyItems)
+                foreach (var id in TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems)
                 {
                     ItemObject item;
 
@@ -93,7 +95,7 @@ namespace BMTournamentPrizes
                     {
                         item = Game.Current.ObjectManager.GetObject<ItemObject>(id);
                     }
-                    catch 
+                    catch
                     {
                         item = null;
                     }
@@ -105,13 +107,13 @@ namespace BMTournamentPrizes
                         FileLog.Log(String.Concat("WARNING: Tournament Prize System\n", "Invalid Item Id detected in prize list.  Please remove from the list.  Ignoring problem item and continuing.\n\n", id));
                     }
 
-                    if (item.Value >= BMTournamentPrizeConfiguration.Instance.TownPrizeMin && item.Value <= BMTournamentPrizeConfiguration.Instance.TownPrizeMax)
+                    if (item.Value >= TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMin && item.Value <= TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMax)
                     {
                         tourneyItems.Add(id);
                     }
                 }
                 if (problemids.Count > 0)
-                { 
+                {
                     string info = "Detected Errors in Custom Prize List.  Review list and correct or remove these entries:\n";
                     foreach (var p in problemids)
                     {
@@ -126,13 +128,40 @@ namespace BMTournamentPrizes
 
                 if (tourneyItems.Count > 0)
                 {
-                    BMTournamentPrizeConfiguration.Instance.TourneyItems = tourneyItems;
+                    TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = tourneyItems;
                 }
                 else
                 {
                     MessageBox.Show("Tournament Prize System", "Tournament Item Restrictions to narrow.  Reverting to unfiltered list.");
                 }
             }
+
+            /* Do some error handling */
+            foreach(var settlement in Campaign.Current.Settlements)
+            {
+                if (settlement.Town != null && settlement.HasTournament)
+                {
+                    var tournamenGame = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town);
+
+                    if (tournamenGame.Prize == null)
+                    {
+                        var prize = TournamentPrizeExpansion.GenerateTournamentPrize(tournamenGame);
+                        TournamentPrizeExpansion.SetTournamentSelectedPrize(tournamenGame, prize);
+                    }
+                }
+                
+            }
         }
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            base.OnBeforeInitialModuleScreenSetAsRoot();
+
+            ShowMessage("Tournament XPerience Prize Module Loaded");
+
+        }
+
+
+
+
     }
 }

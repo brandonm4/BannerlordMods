@@ -1,4 +1,5 @@
 ﻿using BMTournamentPrize.Models;
+using BMTournamentPrizes.Models;
 using HarmonyLib;
 using Newtonsoft.Json;
 using System;
@@ -78,6 +79,7 @@ namespace BMTournamentPrizes
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
+            TournamentPrizeExpansion.Instance.SettlementPrizes = new Dictionary<string, TournamentPrizeSettings>();
 
             if (BMTournamentPrizeConfiguration.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
             {
@@ -91,7 +93,7 @@ namespace BMTournamentPrizes
                     {
                         item = Game.Current.ObjectManager.GetObject<ItemObject>(id);
                     }
-                    catch (Exception ex)
+                    catch 
                     {
                         item = null;
                     }

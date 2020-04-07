@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace BMTweakCollection.Patches
 {
-    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
-    public class TournamentBehaviourPatchBonusGold
-    {
-        static bool Prefix(TournamentBehavior __instance)
-        {
-            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + BMTweakCollectionMain.Configuration.BonusTournamentGold);
-            return true;
-        }      
-    }
+    //[HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
+    //public class TournamentBehaviourPatchBonusGold
+    //{
+    //    static bool Prefix(TournamentBehavior __instance)
+    //    {
+    //        typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + BMTweakCollectionMain.Configuration.BonusTournamentGold);
+    //        return true;
+    //    }      
+    //}
 
  
     }

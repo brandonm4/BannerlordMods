@@ -71,15 +71,14 @@ namespace BMTweakCollection
                     {
                         if (c.HasMount())
                         {
-                            //c.Equipment.GetEquipmentFromSlot(EquipmentIndex.Horse);
+
+                            //EquipmentElement[] _itemSlots = typeof(Equipment).GetField("_itemSlots").GetValue(c.Equipment) as EquipmentElement[];
+                            //
                         }
                     }
                 }
             }
-
-            //InformationManager.ShowInquiry(new InquiryData("Tweak Collection Enabled",
-            //     "Tweak Collection Enabled",
-            //     true, false, "Ok", "No", null, null, ""), false);
+            
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -237,6 +236,25 @@ namespace BMTweakCollection
                   _perk.SecondaryRole, _perk.SecondaryBonus,
                   _perk.IncrementType
                 );
+            }
+        }
+
+        private void RemoveTournamentSpearFootSets(string[] templates)
+        {           
+            foreach (var t in templates)
+            {
+                foreach (Equipment battleEquipment in MBObjectManager.Instance.GetObject<CharacterObject>(t).BattleEquipments)
+                {
+                    if (battleEquipment.Horse.Item != null)
+                    {
+                        break;
+                    }
+                    if (battleEquipment.GetEquipmentFromSlot(EquipmentIndex.Weapon0).Item.ItemType == ItemObject.ItemTypeEnum.Polearm)
+                    {
+                        var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>("sturgia_sword_1_t2"));
+                        battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Weapon0, itemRoster.EquipmentElement);
+                    }
+                }
             }
         }
     }

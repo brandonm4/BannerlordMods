@@ -153,6 +153,18 @@ namespace BMTournamentPrize.Models
                                                 TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell = false;
                                             }
                                             break;
+                                        case "bonustournamentmatchgold":
+                                            BonusTournamentMatchGold = int.Parse(nc.InnerText.Trim());
+                                            break;
+                                        case "bonustournamentwingold":
+                                            BonusTournamentWinGold = int.Parse(nc.InnerText.Trim());
+                                            break;
+                                        case "bonustournamentwinrenown":
+                                            BonusTournamentWinRenown = int.Parse(nc.InnerText.Trim());
+                                            break;
+                                        case "bonustournamentwininfluence":
+                                            BonusTournamentWinInfluence = float.Parse(nc.InnerText.Trim());
+                                            break;
                                     }
                                 }
                                 break;
@@ -217,5 +229,11 @@ namespace BMTournamentPrize.Models
         public int MaxNumberOfRerollsPerTournament { get; set; } = 3;
 
         public bool TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell { get; set; } = false;
+
+        public int BonusTournamentMatchGold { get; set; } = 500;
+        public int BonusTournamentWinGold { get; set; } = 500;
+
+        public int BonusTournamentWinRenown { get; set; } = 3;
+        public float BonusTournamentWinInfluence { get; set; } = 1f;
     }
 }

@@ -1,26 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BMTournamentXP>
   <Tournament>
+    <!-- This just turns on/off XP features, does not affect rest of settings -->
     <Enable>true</Enable>
     <XPAdjustment>1.0</XPAdjustment>
+
+    <!-- Turn on/off ability to reroll the prize before a tournament -->
     <EnableReroll>true</EnableReroll>
+    <MaxNumberOfRerollsPerTournament>5</MaxNumberOfRerollsPerTournament>
+
+    <!-- turn on off the ability to get a popup of a pool of items to choose from -->
+    <!-- can be re-rolled if above is on -->
+    <EnablePrizeSelection>true</EnablePrizeSelection>
+    <!-- Number of prizes to show in the popup, more than 5 will go off the screen -->
+    <NumberOfPrizeOptions>3</NumberOfPrizeOptions>
+
     <!-- 
     PrizeListMode can be:
-    Stock - this will use the standard prizes
-    Custom - this will load the prizes from the BMTournamentPrizeList.json file - this will not include the stock prizes - however they are by default in the custom json file.
-    TownOnly - this will generate prizes based on the current towns inventory ONLY - it will not include the stock/custom prizes
-    TownStock - this will generate prizes based on the current towns inventory AND also allow options from Stock
+    Stock - this will use the standard prizes of the vanilla game - it will disable the prize selection code of the mod 
+    Custom - this will load the prizes from the BMTournamentPrizeList.json file - this will not include the standard prizes - however they are by default in the custom json file.
+    TownOnly - this will generate prizes based on the current towns inventory ONLY - it will not include the standard/custom prizes
+    TownStock - this will generate prizes based on the current towns inventory AND also allow options from Vanilla Game
     TownCustom - this will generate prizes based on the current towns inventory AND also allow options from Custom
     -->
     <PrizeListMode>TownCustom</PrizeListMode>
 
+
     <!-- Items below the minimum or over the maximum values are ignored -->
     <TownPrizeMin>1000</TownPrizeMin>
-    <TownPrizeMax>25000</TownPrizeMax>
-      
-    <!-- Award extra prize money for harder named opponents in the tournaments - amount is per character level, so the higher the opponent, the more money you'll get -->
-    <TournamentBonusMoneyBaseNamedCharLevel>10</TournamentBonusMoneyBaseNamedCharLevel>
-    <TournamentBonusMoneyBaseNamedCharLevelEnabled>true</TournamentBonusMoneyBaseNamedCharLevelEnabled>
+    <TownPrizeMax>10000</TownPrizeMax>
+    <!-- This setting will filter the vanilla or custom prize lists so that the items are also filtered on the above values -->
+    <TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell>false</TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell>
+
+    <!-- If you are customizing the Tournament Prizes put the name of the prize file here -->
+    <CustomPrizeFileName>BMTournamentPrizeListStock</CustomPrizeFileName>
 
     <!-- Only these items types are included in the list -->
     <IncludedTownPrizeTypes>
@@ -38,13 +51,38 @@
       <TownPrizeType>Thrown</TownPrizeType>
       <TownPrizeType>TwoHandedWeapon</TownPrizeType>
       <TownPrizeType>Cape</TownPrizeType>
+      <TownPrizeType>BodyArmor</TownPrizeType>
     </IncludedTownPrizeTypes>
 
-    <!-- Not Active Yet -->
-    <NumberOfPrizeOptions>1</NumberOfPrizeOptions>
-    <EnablePrizeSelection>false</EnablePrizeSelection>
+
+    <!-- Increases or Decreases the Betting Odds based on the Skills of the Opponents in each round -->
+    <!-- Vanilla is based on level only -->
+    <OppenentDifficultyAffectsOdds>true</OppenentDifficultyAffectsOdds>
+    <MaximumBetOdds>2</MaximumBetOdds>
+    <!-- Original Game / Vanilla is 2 -->
+    <!-- Currently only active if OpponentDifficulty is also active -->
+
+
+    <!-- Prize Money and Winnings -->
+    <!-- Set to 0 to disable -->
+    <!-- Bonus given for winning a round -->
+    <BonusTournamentMatchGold>0</BonusTournamentMatchGold>
+    <!-- Bonus given for winning the tournament -->
+    <BonusTournamentWinGold>0</BonusTournamentWinGold>
+    <!-- Bonus renown given for winning - this is added to the default 3 - int -->
+    <BonusTournamentWinRenown>0</BonusTournamentWinRenown>
+    <!-- Bonus influence given for winning - this is in addition to the default 1 - float -->
+    <BonusTournamentWinInfluence>0</BonusTournamentWinInfluence>
+
+
+    <!-- Not Active Yet / Ideas in Progress -->
     <TownPrizeLimitBasedOnSettlementProsperity>false</TownPrizeLimitBasedOnSettlementProsperity>
-    <OppenentDifficultyAffectsOdds>false</OppenentDifficultyAffectsOdds>
+    <!-- Award extra prize money for harder named opponents in the tournaments - amount is per character level, so the higher the opponent, the more money you'll get -->
+    <!-- Set to 0 to disable -->
+    <!-- broken calculations - would leave off and use a different tweak for increasing prize money for now. -->
+    <TournamentBonusMoneyBaseNamedCharLevel>0</TournamentBonusMoneyBaseNamedCharLevel>
+
+
   </Tournament>
   <Arena>
     <Enable>true</Enable>

@@ -11,4 +11,12 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentPrizes.Patch.TournamentVM1")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentXP.TournamentCampaignBehaviorPatch1")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentXP.TournamentCampaignBehaviorPatchPrizeSelection")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviorOnPlayerWinTournamentPatch1")]
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviourPatchBonusGold")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviorOnPlayerWinTournamentPatch2")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviorOnPlayerWinTournamentPatch3")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTweakCollection.Patches.TournamentBehaviorOnPlayerWinTournamentPatch4")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentPrizes.Patch.TournamentManagerPatchAddTournament1")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>", Scope = "type", Target = "~T:BMTournamentPrizes.Patch.TournamentManagerPatchResolveTournament1")]

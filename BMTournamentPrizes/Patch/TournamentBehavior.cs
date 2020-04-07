@@ -9,54 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace BMTweakCollection.Patches
 {
-//    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
-//#pragma warning disable RCS1102 // Make class static.
-//    public class TournamentBehaviourPatchCharLevels
-//#pragma warning restore RCS1102 // Make class static.
-//    {
-//        static bool Prefix(TournamentBehavior __instance, ref TournamentParticipant[] ____participants)
-//        {
-//            int numHeroLevels = 0;
-//            int bonusMoney = 0;
 
-//            foreach (var team in __instance.CurrentMatch.Teams)
-//            {
-//                var teamLevels = 0;
-//                var teamHasPlayer = false;
-//                foreach(var p in team.Participants)
-//                {
-//                    if (p.Character.IsHero && p.Character.HeroObject != null)
-//                    {
-//                        teamLevels += p.Character.Level;
-//                        if (p.Character.HeroObject == Hero.MainHero)
-//                        {
-//                            teamHasPlayer = true;
-//                            break;
-//                        }
-//                    }                    
-//                }
-//                if (!teamHasPlayer)
-//                {
-//                    numHeroLevels += teamLevels;
-//                }
-//            }
-            
-//            bonusMoney = numHeroLevels * BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel;
-//            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + bonusMoney);
-//            return true;
-//        }
-
-//        static bool Prepare()
-//        {
-//            return BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel > 0;
-//        }
-//    }
 
     [HarmonyPatch(typeof(TournamentBehavior), "CalculateBet")]
     public class TournamentBehaviorPatchCalculateBet
@@ -192,28 +152,131 @@ namespace BMTweakCollection.Patches
             }
             if (bDofix)
             {
-               var prize = GetTournamentPrizePatch1.GenerateTournamentPrize(__instance.TournamentGame);
+                var prize = TournamentPrizeExpansion.GenerateTournamentPrize(__instance.TournamentGame);
                 TournamentPrizeExpansion.SetTournamentSelectedPrize(__instance.TournamentGame, prize);
             }
             return true;
         }
 
-        
+
     }
-    //[HarmonyPatch(typeof(TournamentBehavior), "GetTournamentPrize")]
-    //public class GetTournamentPrizePatchCompanionWins
-    //{
-    //    public static bool Prefix(ref TournamentBehavior __instance)
-    //    {
-    //        if (__instance.CurrentRound.CurrentMatch == null)
-    //        {
-    //            if (__instance.CurrentRoundIndex < 3)
-    //                return true;
 
-    //        }
+    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
+    public class TournamentBehaviourPatchBonusGold
+    {
+        static bool Prefix(TournamentBehavior __instance)
+        {
+            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + BMTournamentPrizeConfiguration.Instance.BonusTournamentMatchGold);
+            return true;
+        }
+        static bool Prepare()
+        {
+            return BMTournamentPrizeConfiguration.Instance.BonusTournamentMatchGold > 0;
+        }
+    }
+    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinTournament")]
+    public class TournamentBehaviorOnPlayerWinTournamentPatch2
+    {
+        public static bool Prefix(ref TournamentBehavior __instance)
+        {
 
-    //        return true;
-    //    }
-    //}
+            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + BMTournamentPrizeConfiguration.Instance.BonusTournamentWinGold);
+            return true;
+        }
+        static bool Prepare()
+        {
+            return BMTournamentPrizeConfiguration.Instance.BonusTournamentWinGold > 0;
+        }
 
+    }
+    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinTournament")]
+    public class TournamentBehaviorOnPlayerWinTournamentPatch3
+    {
+        public static bool Prefix(ref TournamentBehavior __instance)
+        {
+            GainRenownAction.Apply(Hero.MainHero, BMTournamentPrizeConfiguration.Instance.BonusTournamentWinRenown, false);
+            return true;
+        }
+        static bool Prepare()
+        {
+            return BMTournamentPrizeConfiguration.Instance.BonusTournamentWinRenown + 3 > 3;
+
+        }
+    }
+    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinTournament")]
+    public class TournamentBehaviorOnPlayerWinTournamentPatch4
+    {
+        public static bool Prefix(ref TournamentBehavior __instance)
+        {
+            GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, BMTournamentPrizeConfiguration.Instance.BonusTournamentWinInfluence);
+            return true;
+        }
+        static bool Prepare()
+        {
+            return BMTournamentPrizeConfiguration.Instance.BonusTournamentWinInfluence > 0;
+
+        }
+
+    }
 }
+
+
+//[HarmonyPatch(typeof(TournamentBehavior), "GetTournamentPrize")]
+//public class GetTournamentPrizePatchCompanionWins
+//{
+//    public static bool Prefix(ref TournamentBehavior __instance)
+//    {
+//        if (__instance.CurrentRound.CurrentMatch == null)
+//        {
+//            if (__instance.CurrentRoundIndex < 3)
+//                return true;
+
+//        }
+
+//        return true;
+//    }
+//}
+
+
+//    [HarmonyPatch(typeof(TournamentBehavior), "OnPlayerWinMatch")]
+//#pragma warning disable RCS1102 // Make class static.
+//    public class TournamentBehaviourPatchCharLevels
+//#pragma warning restore RCS1102 // Make class static.
+//    {
+//        static bool Prefix(TournamentBehavior __instance, ref TournamentParticipant[] ____participants)
+//        {
+//            int numHeroLevels = 0;
+//            int bonusMoney = 0;
+
+//            foreach (var team in __instance.CurrentMatch.Teams)
+//            {
+//                var teamLevels = 0;
+//                var teamHasPlayer = false;
+//                foreach(var p in team.Participants)
+//                {
+//                    if (p.Character.IsHero && p.Character.HeroObject != null)
+//                    {
+//                        teamLevels += p.Character.Level;
+//                        if (p.Character.HeroObject == Hero.MainHero)
+//                        {
+//                            teamHasPlayer = true;
+//                            break;
+//                        }
+//                    }                    
+//                }
+//                if (!teamHasPlayer)
+//                {
+//                    numHeroLevels += teamLevels;
+//                }
+//            }
+
+//            bonusMoney = numHeroLevels * BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel;
+//            typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + bonusMoney);
+//            return true;
+//        }
+
+//        static bool Prepare()
+//        {
+//            return BMTournamentPrizeConfiguration.Instance.TournamentBonusMoneyBaseNamedCharLevel > 0;
+//        }
+//    }

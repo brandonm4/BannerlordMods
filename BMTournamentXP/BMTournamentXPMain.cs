@@ -17,14 +17,18 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TournamentLib.Models;
 
 namespace BMTournamentXP
 {
     public class BMTournamentXPMain : MBSubModuleBase
     {
-        public static string Version { get { return "e.1.1.2"; } }
+        public static string Version { get { return "e1.2.9"; } }
 
-
+        private static void ShowMessage(string msg)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(msg));
+        }
 
         protected override void OnSubModuleLoad()
         {
@@ -36,8 +40,8 @@ namespace BMTournamentXP
             if (File.Exists(appSettings))
             {
                 //Configuration = new BMTournamentXPConfiguration(appSettings);                
-                BMTournamentXPConfiguration.Instance.LoadXML(appSettings);
-            }
+                TournamentConfiguration.Instance.LoadXML(appSettings);
+            }            
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -55,19 +59,32 @@ namespace BMTournamentXP
             //}
         }
 
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            base.OnBeforeInitialModuleScreenSetAsRoot();
+
+            ShowMessage("Tournament XPerience XP Module Loaded");
+        }
+
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
             base.OnMissionBehaviourInitialize(mission);
            
-            if (BMTournamentXPConfiguration.Instance.IsTournamentXPEnabled)
-            {
-                EnableTournamentXP(mission);
-            }
+            //if (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled)
+            //{
+            //    //EnableTournamentXP(mission);
+            //}
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             base.OnGameStart(game, gameStarterObject);
+
+            //Need to find a better way
+            if (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled)
+            {
+                gameStarterObject.AddModel(new TournamentCombatXpModel());
+            }
 
             //InformationManager.DisplayMessage(new InformationMessage(string.Concat("Tournament XP Enabled ", _enableTournamentXP.ToString(), ".")));
             //InformationManager.DisplayMessage(new InformationMessage(string.Concat("Arena XP Enabled ", _enableArenaXP.ToString(), ".")));
@@ -88,7 +105,7 @@ namespace BMTournamentXP
               || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
               || mission.HasMissionBehaviour<TownHorseRaceMissionController>()))
             {
-                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPConfiguration.Instance.TournamentXPAdjustment));
+                mission.AddMissionBehaviour(new BMExperienceOnHitLogic(TournamentConfiguration.Instance.XPConfiguration.TournamentXPAdjustment));
 
             }
         }
@@ -97,7 +114,7 @@ namespace BMTournamentXP
         //    if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
         //      mission.HasMissionBehaviour<ArenaPracticeFightMissionController>())
         //    {
-        //        mission.AddMissionBehaviour(new BMExperienceOnHitLogic(BMTournamentXPConfiguration.Instance.ArenaXPAdjustment));
+        //        mission.AddMissionBehaviour(new BMExperienceOnHitLogic(TournamentConfiguration.Instance.XPConfiguration.ArenaXPAdjustment));
         //    }
         //}
 
@@ -105,20 +122,20 @@ namespace BMTournamentXP
         {
             string t = "Yes";
             string a = "Yes";
-            if (!BMTournamentXPConfiguration.Instance.IsTournamentXPEnabled)
+            if (!TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled)
             {
                 t = "No";
             }
-            if (!BMTournamentXPConfiguration.Instance.IsArenaXPEnabled)
+            if (!TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled)
             {
                 a = "No";
             }
 
 
             string info = String.Concat("Tournament Patch v", BMTournamentXPMain.Version, " Loaded\n", "Tournament XP Enabled:\t", t, "\n",
-                    "Tournament XP Amount:\t", (100 * BMTournamentXPConfiguration.Instance.TournamentXPAdjustment).ToString(), "%\n",
+                    "Tournament XP Amount:\t", (100 * TournamentConfiguration.Instance.XPConfiguration.TournamentXPAdjustment).ToString(), "%\n",
                     "Arena XP Enabled:\t", a, "\n",
-                    "Arena XP Amount:\t", (100 * BMTournamentXPConfiguration.Instance.ArenaXPAdjustment).ToString(), "%\n"
+                    "Arena XP Amount:\t", (100 * TournamentConfiguration.Instance.XPConfiguration.ArenaXPAdjustment).ToString(), "%\n"
                     );
 
             if (showpopup)

@@ -98,8 +98,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BMExperienceOnHit.cs" />
-    <Compile Include="Models\BMTournamentXPConfiguration.cs" />
     <Compile Include="BMTournamentXPMain.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Models\TournamentCombatXPModel.cs" />
+    <Compile Include="Patches\DefaultCombatXPModel.cs" />
     <Compile Include="Patches\TournamentMissionControllerPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -120,6 +122,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
+      <Project>{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}</Project>
+      <Name>TournamentLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

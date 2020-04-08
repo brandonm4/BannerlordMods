@@ -30,33 +30,10 @@ namespace BMTournamentPrizes
             {
                 //Configuration = new BMTournamentXPConfiguration(appSettings);                
                 TournamentConfiguration.Instance.LoadXML(appSettings);
-            }
-            ////Load tournament items
-            string tourneyitemsfile = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/", TournamentConfiguration.Instance.PrizeConfiguration.CustomPrizeFileName);
-            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.Trim().IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                if (File.Exists(tourneyitemsfile))
-                {
-                    var configtxt = File.ReadAllText(tourneyitemsfile);
-                    TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-                }
-            }
-
-            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("stock", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = new List<string>();
-                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = PrizeConfiguration.StockTourneyItems.ToList();
-            }
-            else if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("townonly", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = new List<string>();
-                TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = PrizeConfiguration.StockTourneyItems.ToList();
-            }
-
-
+            }          
             try
             {
-                var h = new Harmony("com.darkspyre.bannerlord.tournament");
+                var h = new Harmony("com.darkspyre.bannerlord.tournamentprizes");
                 h.PatchAll();
             }
             catch (Exception exception1)
@@ -87,7 +64,7 @@ namespace BMTournamentPrizes
             {
                 List<string> tourneyItems = new List<string>();
                 List<string> problemids = new List<string>();
-                foreach (var id in TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems)
+                foreach (var id in TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems)
                 {
                     ItemObject item;
 
@@ -128,7 +105,7 @@ namespace BMTournamentPrizes
 
                 if (tourneyItems.Count > 0)
                 {
-                    TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems = tourneyItems;
+                    TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems = tourneyItems;
                 }
                 else
                 {

@@ -260,7 +260,7 @@ namespace BMTournamentXP
         private static bool Prepare()
         {
 #if DEBUG
-            return true;
+    //        return true;
 #endif
             // return TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled;
             return false;  //currently joining anything but melee crashes game.

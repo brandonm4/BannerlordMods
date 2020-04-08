@@ -82,13 +82,18 @@
     <!-- Base Hero, IsNoble, IsNotable, IsCommander, IsMinorFactionLeader, IsMajorFactionLeader -->
     <RenownPerHeroProperty>.1, .3, .1, .1, .2, .5, 1.0</RenownPerHeroProperty>
 
+    <!-- Tournament Item Filtering -->
+    <!-- If enabled it swaps all foot based spear units in tournaments with swords -->
+    <!--Eventually plan to let you define your own swap filters-->
+    <TournamentEquipmentFilter>true</TournamentEquipmentFilter>
+
     <!-- Not Active Yet / Ideas in Progress -->
     <TownPrizeLimitBasedOnSettlementProsperity>false</TownPrizeLimitBasedOnSettlementProsperity>
     <!-- Award extra prize money for harder named opponents in the tournaments - amount is per character level, so the higher the opponent, the more money you'll get -->
     <!-- Set to 0 to disable -->
     <!-- broken calculations - would leave off and use a different tweak for increasing prize money for now. -->
     <TournamentBonusMoneyBaseNamedCharLevel>0</TournamentBonusMoneyBaseNamedCharLevel>
-    
+
   </Tournament>
   <Arena>
     <Enable>true</Enable>

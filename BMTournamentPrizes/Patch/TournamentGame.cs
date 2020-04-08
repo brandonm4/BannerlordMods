@@ -13,23 +13,24 @@ namespace BMTournamentPrizes.Patch
     public class GetTournamentPrizePatch1
     {
 
-        public static bool Prefix(TournamentGame __instance, ref ItemObject __result)
+        public static void Postfix(TournamentGame __instance, ref ItemObject __result)
         {
-            try
-            {
-                __result = TournamentPrizeExpansion.GenerateTournamentPrize(__instance);
-                if (__result == null)
+            //__result currently has stock item.          
+                try
                 {
-                    MessageBox.Show("Tournament Prize System", "Error generating Tournament Prize. Reverting to vanilla system.");
-                    return true;
+                    var prize = TournamentPrizeExpansion.GenerateTournamentPrize(__instance);
+                    if (prize == null)
+                    {
+                        MessageBox.Show("Tournament Prize System", "Error generating Tournament Prize. Reverting to vanilla system.");
+                        return;
+                    }
+                    __result = prize;
                 }
-            }
-            catch (Exception ex)
-            {
-                FileLog.Log("ERROR: Tournament Prize System");
-                FileLog.Log(ex.ToStringFull());
-            }
-            return false;
+                catch (Exception ex)
+                {
+                    FileLog.Log("ERROR: Tournament Prize System");
+                    FileLog.Log(ex.ToStringFull());
+                }            
         }
 
 
@@ -39,8 +40,7 @@ namespace BMTournamentPrizes.Patch
             if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
                 || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
                 || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.IndexOf("town", StringComparison.OrdinalIgnoreCase) >= 0)
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla)                
             {
                 return true;
             }

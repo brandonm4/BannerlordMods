@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TournamentLib.Models;
 
 namespace TournamentLib.Extensions
 {
@@ -24,6 +25,29 @@ namespace TournamentLib.Extensions
                 }
             }
             return false;
+        }
+
+        public static PrizeListMode ToPrizeListMode(this string s)
+        {
+            if (!String.IsNullOrWhiteSpace(s))
+            {
+                s = s.Trim().ToLower();
+                switch(s)
+                {
+                    case "vanilla":
+                    case "stock":
+                        return PrizeListMode.Vanilla;
+                    case "custom":
+                        return PrizeListMode.Custom;
+                    case "townstock":
+                    case "townvanilla":
+                        return PrizeListMode.TownVanilla;
+                    case "towncustom":
+                        return PrizeListMode.TownCustom;
+                }
+            }
+
+            return PrizeListMode.Vanilla;
         }
     }
 }

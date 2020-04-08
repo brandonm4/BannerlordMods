@@ -88,29 +88,35 @@ namespace BMTournamentPrizes.Models
         public static ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, List<ItemObject> existingPrizes = null)
         {
             ItemObject prize;
-            
+            var numItemsToGet = TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions;
             TournamentPrizeSettings prizeSettings = TournamentPrizeExpansion.Instance.GetPrizesSettingsForSettlement(tournamentGame.Town.Settlement.StringId);
 
-
+            //Get the town items if using that mode
             List<string> townitems = new List<string>();
-            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.Trim().IndexOf("town", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownCustom 
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownVanilla 
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownOnly)
             {
-                townitems = GetValidTownItems(tournamentGame.Town.Owner.ItemRoster, TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMin, TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMax, TournamentConfiguration.Instance.PrizeConfiguration.TownValidPrizeTypes);
+                townitems = GetValidTownItems(tournamentGame, TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMin, TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMax, TournamentConfiguration.Instance.PrizeConfiguration.TownValidPrizeTypes);
             }
 
-            var allitems = new List<string>();
-
-            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.Trim().IndexOf("custom", StringComparison.OrdinalIgnoreCase) >= 0
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode.Trim().IndexOf("stock", StringComparison.OrdinalIgnoreCase) >= 0)
+            //Now get the list items - either customized or vanilla system
+            List<string> listItems = new List<string>();
+            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.Custom 
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownCustom)
             {
-                allitems = townitems.Concat(TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems).ToList();
+                listItems = TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems;
             }
-            else
+            else if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownVanilla 
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.Vanilla)
             {
-                allitems = townitems;
+                listItems = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, numItemsToGet);
             }
-            var numItemsToGet = TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions;
 
+            //Now concat them together to get full list.
+            var allitems = townitems.Concat(listItems).ToList();
+          
+            //Add any existing items if we are filling in missing ones from an already generated pool
             var pickeditems = new List<string>();
             if (existingPrizes != null)
             {
@@ -129,7 +135,7 @@ namespace BMTournamentPrizes.Models
                 numItemsToGet = allitems.Count();
             }
 
-            while (pickeditems.Count < numItemsToGet && allitems.Count > 0)
+            while (pickeditems.Count < numItemsToGet && allitems.Count() > 0)
             {
                 var randomId = allitems.GetRandomElement<string>();
 
@@ -148,11 +154,11 @@ namespace BMTournamentPrizes.Models
             prize = prizeSettings.Items.Where(x => x.StringId == prizeSettings.itemid).Single();
             TournamentPrizeExpansion.Instance.UpdatePrizeSettings(tournamentGame.Town.Settlement.StringId, prizeSettings);
             return prize;
-
         }
 
-        private static List<string> GetValidTownItems(ItemRoster roster, int minValue, int maxValue, List<ItemObject.ItemTypeEnum> validtypes)
+        private static List<string> GetValidTownItems(TournamentGame tournamentGame, int minValue, int maxValue, List<ItemObject.ItemTypeEnum> validtypes)
         {
+            var roster = tournamentGame.Town.Owner.ItemRoster;
             roster.RemoveZeroCounts();
             var list = roster.Where(x =>
             x.Amount > 0
@@ -170,14 +176,62 @@ namespace BMTournamentPrizes.Models
             }
             if (list.Count == 0)
             {
-                list = TournamentConfiguration.Instance.PrizeConfiguration.TourneyItems;
+                list = TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems;
             }
             if (list.Count == 0)
             {
                 MessageBox.Show("Tournament Prize System", "Warning: The current town has no prizes available with your current defined filter.  Defaulting to Vanilla items.");
-                list = PrizeConfiguration.StockTourneyItems;
+                //list = PrizeConfiguration.StockTourneyItems;
+                list = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions);
             }
             return list;
+        }
+
+        public static ItemObject GetTournamentPrizeVanilla(Settlement settlement)
+        {
+            string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+            ItemObject obj = Game.Current.ObjectManager.GetObject<ItemObject>(strArray.GetRandomElement<string>());
+            ItemObject itemObject = MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) => {
+                if ((float)item.Value > 1000f * (item.IsMountable ? 0.5f : 1f))
+                {
+                    if ((float)item.Value < 5000f * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
+                    {
+                        return 1f;
+                    }
+                }
+                return 0f;
+            }) ?? MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) => {
+                if ((float)item.Value > 1000f * (item.IsMountable ? 0.5f : 1f))
+                {
+                    if ((float)item.Value < 5000f * (item.IsMountable ? 0.5f : 1f) && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
+                    {
+                        return 1f;
+                    }
+                }
+                return 0f;
+            });
+            if (itemObject == null)
+            {
+                return obj;
+            }
+            return itemObject;
+        }
+
+        public static List<string> GetVanillaSetOfPrizes(Settlement settlement, int count)
+        {
+            List<string> prizes = new List<string>();
+            int retryMax = 50;
+            int currentTry = 0;
+            while (prizes.Count < count && currentTry < retryMax)
+            {
+                var stringid = GetTournamentPrizeVanilla(settlement).StringId;
+                if (!prizes.Contains(stringid))
+                {
+                    prizes.Add(stringid);
+                }
+                currentTry++;
+            }
+            return prizes;
         }
     }
 

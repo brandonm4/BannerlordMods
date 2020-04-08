@@ -44,6 +44,8 @@ namespace TournamentLib.Extensions
                         return PrizeListMode.TownVanilla;
                     case "towncustom":
                         return PrizeListMode.TownCustom;
+                    case "townonly":
+                        return PrizeListMode.TownOnly;
                 }
             }
 

@@ -1,18 +1,8 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="System" #>
-<#@ import namespace="System.Reflection" #>
-<#@ import namespace="System.Runtime.CompilerServices" #>
-<#@ import namespace="System.Runtime.InteropServices" #>
-<#@ output extension=".xml" #>
-<?xml version="1.0" encoding="utf-8"?>
+﻿<#@ template debug="false" hostspecific="false" language="C#" #><#@ assembly name="System.Core" #><#@ import namespace="System.Linq" #><#@ import namespace="System.Text" #><#@ import namespace="System.Collections.Generic" #><#@ import namespace="System" #><#@ import namespace="System.Reflection" #><#@ import namespace="System.Runtime.CompilerServices" #><#@ import namespace="System.Runtime.InteropServices" #><#@ output extension=".xml" #><?xml version="1.0" encoding="utf-8"?>
 <Module>
   <Name value="Tournament XP"/>
   <Id value="BMTournamentXP"/>
-  <Version value="e1.2.0"/>
+  <Version value="<# RevisionNumber.ToString(); #>"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>
@@ -23,8 +13,7 @@
     <DependedModule Id="CustomBattle"/>
     <DependedModule Id="StoryMode" />
   </DependedModules>
-  <SubModules>
-    <SubModule>
+ <SubModule>
       <Name value="BMTournamentXP"/>
       <DLLName value="BMTournamentXP.dll"/>
       <SubModuleClassType value="BMTournamentXP.BMTournamentXPMain"/>
@@ -32,20 +21,27 @@
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />
       </Tags>
-    </SubModule>
-	<SubModule>
-      <Name value="BMTweakCollection"/>
-      <DLLName value="BMTweakCollection.dll"/>
+    </SubModule>	
+   <SubModule>
+      <Name value="BMTournamentPrizes"/>
+      <DLLName value="BMTournamentPrizes.dll"/>
       <SubModuleClassType value="BMTournamentPrizes.BMTournamentPrizesMain"/>
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />
       </Tags>
-    </SubModule>
-  </SubModules>
+    </SubModule>  
+	<SubModule>
+      <Name value="NoSpearsInTournaments"/>
+      <DLLName value="NoSpearsInTournaments.dll"/>
+      <SubModuleClassType value="NoSpearsInTournaments.NoSpearsInTournamentsMain"/>
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>    
   <Xmls/>
 </Module>
-
 <#+
-//string RevisionNumber = Assembly.LoadFile("G:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\BMTournamentXP\\bin\\Win64_Shipping_Client\\BMTournamentXP.dll").GetName().Version.ToString();     
+string RevisionNumber = "1.2.10";
 #>

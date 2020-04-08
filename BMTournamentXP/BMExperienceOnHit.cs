@@ -25,6 +25,8 @@ namespace BMTournamentXP
             _xpmod = xpmod;
         }
 
+        
+
         public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, int affectorWeaponKind, bool isBlocked, float damage, float movementSpeedDamageModifier, float hitDistance, AgentAttackType attackType, float shotDifficulty, int weaponUsageIndex)
         {            
             if (affectorAgent == null)

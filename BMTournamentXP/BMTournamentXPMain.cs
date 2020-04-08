@@ -25,7 +25,7 @@ namespace BMTournamentXP
     {
         public static string Version { get { return "e1.2.9"; } }
 
-        private static void ShowMessage(string msg)
+        internal static void ShowMessage(string msg)
         {
             InformationManager.DisplayMessage(new InformationMessage(msg));
         }
@@ -41,7 +41,29 @@ namespace BMTournamentXP
             {
                 //Configuration = new BMTournamentXPConfiguration(appSettings);                
                 TournamentConfiguration.Instance.LoadXML(appSettings);
-            }            
+            }
+
+            try
+            {
+                var h = new Harmony("com.darkspyre.bannerlord.xp");
+                h.PatchAll();
+            }
+            catch (Exception exception1)
+            {
+                string message;
+                Exception exception = exception1;
+                string str = exception.Message;
+                Exception innerException = exception.InnerException;
+                if (innerException != null)
+                {
+                    message = innerException.Message;
+                }
+                else
+                {
+                    message = null;
+                }
+                MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
+            }
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -83,7 +105,7 @@ namespace BMTournamentXP
             //Need to find a better way
             if (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled)
             {
-                gameStarterObject.AddModel(new TournamentCombatXpModel());
+               // gameStarterObject.AddModel(new TournamentCombatXpModel());  /* Harmony Patch against DefaultCombatXpModel is failing for some reason */
             }
 
             //InformationManager.DisplayMessage(new InformationMessage(string.Concat("Tournament XP Enabled ", _enableTournamentXP.ToString(), ".")));
@@ -107,8 +129,11 @@ namespace BMTournamentXP
             {
                 mission.AddMissionBehaviour(new BMExperienceOnHitLogic(TournamentConfiguration.Instance.XPConfiguration.TournamentXPAdjustment));
 
+               
             }
         }
+
+        
         //private void EnableArenaXP(Mission mission)
         //{
         //    if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&

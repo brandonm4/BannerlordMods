@@ -1,4 +1,5 @@
-﻿using BMTournamentPrizes.Models;
+﻿using BMTournamentPrizes;
+using BMTournamentPrizes.Models;
 using HarmonyLib;
 
 using Helpers;
@@ -46,9 +47,10 @@ namespace BMTournamentXP
                 return false;
             }
 
+            var tournamentPrizeExpansion = BMTournamentPrizesMain.TournamentPrizeExpansionModel;
             bool flag;
             TextObject textObject;
-            TournamentPrizeSettings settings = TournamentPrizeExpansion.Instance.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+            TournamentPrizePool settings = tournamentPrizeExpansion.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
             bool flag1 = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.JoinTournament, out flag, out textObject);
 
             if (settings.RemainingRerolls <= 0)
@@ -64,13 +66,13 @@ namespace BMTournamentXP
 
         public static void game_menu_reroll_tournament_reward(TournamentCampaignBehavior campaignBehavior)
         {
-            TournamentPrizeSettings settings = TournamentPrizeExpansion.Instance.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+            TournamentPrizePool settings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
             TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
             ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
-            TournamentPrizeExpansion.SetTournamentSelectedPrize(tournamentGame, prize);
+            BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(tournamentGame, prize);
 
             settings.RemainingRerolls--;
-            TournamentPrizeExpansion.Instance.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
+            BMTournamentPrizesMain.TournamentPrizeExpansionModel.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
 
             try
             {
@@ -110,13 +112,13 @@ namespace BMTournamentXP
         {
             List<InquiryElement> prizeElements = new List<InquiryElement>();
             TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
-            TournamentPrizeSettings prizeSettings = TournamentPrizeExpansion.Instance.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+            TournamentPrizePool prizeSettings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
 
             if (prizeSettings.Items.Count < TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions)
             {
-                ItemObject prize = TournamentPrizeExpansion.GenerateTournamentPrize(tournamentGame, prizeSettings.Items);
+                ItemObject prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(tournamentGame, prizeSettings.Items);
             }
-            prizeSettings = TournamentPrizeExpansion.Instance.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+            prizeSettings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
             foreach (var p in prizeSettings.Items)
             {
                 var ii = new ImageIdentifier(p.StringId, ImageIdentifierType.Item, p.Name.ToString());
@@ -142,7 +144,7 @@ namespace BMTournamentXP
         {
             if (prizeSelections.Count > 0)
             {
-                TournamentPrizeExpansion.Instance.SetTournamentSelectedPrize(Settlement.CurrentSettlement.StringId, prizeSelections.First().Identifier.ToString());
+                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(Settlement.CurrentSettlement.StringId, prizeSelections.First().Identifier.ToString());
 
                 try
                 {

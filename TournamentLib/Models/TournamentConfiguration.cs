@@ -15,6 +15,9 @@ namespace TournamentLib.Models
 {
     public class TournamentConfiguration
     {
+
+        public const string TournamentXPVersion = "1.2.10";
+
         public static string LastXMLPath { get; set; } = "";
         public bool HasLoaded = false;
 

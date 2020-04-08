@@ -11,29 +11,29 @@ using TournamentLib.Models;
 
 namespace BMTournamentPrizes.Models
 {
-    public class TournamentPrizeExpansion
-    {
-        private Dictionary<string, TournamentPrizeSettings> _settlementPrizes = new Dictionary<string, TournamentPrizeSettings>();
-        private static TournamentPrizeExpansion _instance;
+    public class TournamentPrizeExpansion : GameModel
+    {    
+        private Dictionary<string, TournamentPrizePool> _settlementPrizes = new Dictionary<string, TournamentPrizePool>();
+        //private static TournamentPrizeExpansion _instance;
 
-        public static TournamentPrizeExpansion Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new TournamentPrizeExpansion();
-                }
-                return _instance;
-            }
-        }
-        public static void SetTournamentSelectedPrize(TournamentGame tournamentGame, ItemObject prize)
+        //public static TournamentPrizeExpansion Instance
+        //{
+        //    get
+        //    {
+        //        if (_instance == null)
+        //        {
+        //            _instance = new TournamentPrizeExpansion();
+        //        }
+        //        return _instance;
+        //    }
+        //}
+        public void SetTournamentSelectedPrize(TournamentGame tournamentGame, ItemObject prize)
         {
             typeof(TournamentGame).GetProperty("Prize").SetValue(tournamentGame, prize);
         }
         public void SetTournamentSelectedPrize(string settlement_string_id, string prize_string_id)
         {
-            TournamentPrizeSettings settings;
+            TournamentPrizePool settings;
             if (_settlementPrizes.TryGetValue(settlement_string_id, out settings))
             {
                 try
@@ -49,16 +49,16 @@ namespace BMTournamentPrizes.Models
                 }
             }
         }
-        public TournamentPrizeSettings GetPrizesSettingsForSettlement(string settlement_string_id)
+        public TournamentPrizePool GetPrizesSettingsForSettlement(string settlement_string_id)
         {
-            TournamentPrizeSettings settings;
+            TournamentPrizePool settings;
             if (_settlementPrizes.ContainsKey(settlement_string_id))
             {
                 settings = _settlementPrizes[settlement_string_id];
             }
             else
             {
-                settings = new TournamentPrizeSettings();
+                settings = new TournamentPrizePool();
             }
             return settings;
         }
@@ -71,9 +71,9 @@ namespace BMTournamentPrizes.Models
         }
         public void ClearAllTournamentPrizes()
         {
-            _settlementPrizes = new Dictionary<string, TournamentPrizeSettings>();
+            _settlementPrizes = new Dictionary<string, TournamentPrizePool>();
         }
-        public void UpdatePrizeSettings(string settlement_string_id, TournamentPrizeSettings settings)
+        public void UpdatePrizeSettings(string settlement_string_id, TournamentPrizePool settings)
         {
             if (_settlementPrizes.ContainsKey(settlement_string_id))
             {
@@ -85,11 +85,11 @@ namespace BMTournamentPrizes.Models
             }
         }
 
-        public static ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, List<ItemObject> existingPrizes = null)
+        public ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, List<ItemObject> existingPrizes = null)
         {
             ItemObject prize;
             var numItemsToGet = TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions;
-            TournamentPrizeSettings prizeSettings = TournamentPrizeExpansion.Instance.GetPrizesSettingsForSettlement(tournamentGame.Town.Settlement.StringId);
+            TournamentPrizePool prizeSettings = GetPrizesSettingsForSettlement(tournamentGame.Town.Settlement.StringId);
 
             //Get the town items if using that mode
             List<string> townitems = new List<string>();
@@ -115,21 +115,27 @@ namespace BMTournamentPrizes.Models
 
             //Now concat them together to get full list.
             var allitems = townitems.Concat(listItems).ToList();
-          
+
             //Add any existing items if we are filling in missing ones from an already generated pool
             var pickeditems = new List<string>();
-            if (existingPrizes != null)
-            {
-                foreach (var existingPrize in existingPrizes)
+            try
+            {                
+                if (existingPrizes != null)
                 {
-                    pickeditems.Add(existingPrize.StringId);
-                    if (allitems.Contains(existingPrize.StringId))
+                    foreach (var existingPrize in existingPrizes)
                     {
-                        allitems.Remove(existingPrize.StringId);
+                        pickeditems.Add(existingPrize.StringId);
+                        if (allitems.Contains(existingPrize.StringId))
+                        {
+                            allitems.Remove(existingPrize.StringId);
+                        }
                     }
                 }
             }
-
+            catch(Exception ex)
+            {
+                FileLog.Log("ERROR: GetTournamentPrize existingprizes\n" + ex.ToStringFull());
+            }
             if (allitems.Count() < numItemsToGet)
             {
                 numItemsToGet = allitems.Count();
@@ -150,13 +156,13 @@ namespace BMTournamentPrizes.Models
             {
                 prizeSettings.Items.Add(Game.Current.ObjectManager.GetObject<ItemObject>(id));
             }
-            prizeSettings.itemid = prizeSettings.Items[MBRandom.RandomInt(prizeSettings.Items.Count - 1)].StringId;
-            prize = prizeSettings.Items.Where(x => x.StringId == prizeSettings.itemid).Single();
-            TournamentPrizeExpansion.Instance.UpdatePrizeSettings(tournamentGame.Town.Settlement.StringId, prizeSettings);
+            prizeSettings.Prize_StringId = prizeSettings.Items[MBRandom.RandomInt(prizeSettings.Items.Count - 1)].StringId;
+            prize = prizeSettings.Items.Where(x => x.StringId == prizeSettings.Prize_StringId).Single();
+           UpdatePrizeSettings(tournamentGame.Town.Settlement.StringId, prizeSettings);
             return prize;
         }
 
-        private static List<string> GetValidTownItems(TournamentGame tournamentGame, int minValue, int maxValue, List<ItemObject.ItemTypeEnum> validtypes)
+        private List<string> GetValidTownItems(TournamentGame tournamentGame, int minValue, int maxValue, List<ItemObject.ItemTypeEnum> validtypes)
         {
             var roster = tournamentGame.Town.Owner.ItemRoster;
             roster.RemoveZeroCounts();
@@ -187,23 +193,33 @@ namespace BMTournamentPrizes.Models
             return list;
         }
 
-        public static ItemObject GetTournamentPrizeVanilla(Settlement settlement)
+        public ItemObject GetTournamentPrizeVanilla(Settlement settlement)
         {
+            float minValue = 1000f;
+            float maxValue = 5000f;
+
+            if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
+            {
+                minValue = TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMin;
+                maxValue = TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMax;
+            }
+
             string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
-            ItemObject obj = Game.Current.ObjectManager.GetObject<ItemObject>(strArray.GetRandomElement<string>());
+
+            ItemObject obj = Game.Current.ObjectManager.GetObject<ItemObject>(strArray.GetRandomElement<string>());            
             ItemObject itemObject = MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) => {
-                if ((float)item.Value > 1000f * (item.IsMountable ? 0.5f : 1f))
+                if ((float)item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
                 {
-                    if ((float)item.Value < 5000f * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
+                    if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
                     {
                         return 1f;
                     }
                 }
                 return 0f;
             }) ?? MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) => {
-                if ((float)item.Value > 1000f * (item.IsMountable ? 0.5f : 1f))
+                if ((float)item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
                 {
-                    if ((float)item.Value < 5000f * (item.IsMountable ? 0.5f : 1f) && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
+                    if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
                     {
                         return 1f;
                     }
@@ -217,7 +233,7 @@ namespace BMTournamentPrizes.Models
             return itemObject;
         }
 
-        public static List<string> GetVanillaSetOfPrizes(Settlement settlement, int count)
+        public List<string> GetVanillaSetOfPrizes(Settlement settlement, int count)
         {
             List<string> prizes = new List<string>();
             int retryMax = 50;
@@ -235,10 +251,5 @@ namespace BMTournamentPrizes.Models
         }
     }
 
-    public class TournamentPrizeSettings
-    {
-        public List<ItemObject> Items { get; set; } = new List<ItemObject>();
-        public string itemid { get; set; } = "";
-        public int RemainingRerolls { get; set; } = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
-    }
+ 
 }

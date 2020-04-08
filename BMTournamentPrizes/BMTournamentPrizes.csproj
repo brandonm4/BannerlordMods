@@ -103,6 +103,7 @@
     <Compile Include="BMTournamentPrizes.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\TournamentPrizeExpansion.cs" />
+    <Compile Include="Models\TournamentPrizePool.cs" />
     <Compile Include="Patch\PatchTournamentCampaignBehavior.cs" />
     <Compile Include="Patch\TournamentBehavior.cs" />
     <Compile Include="Patch\TournamentGame.cs" />

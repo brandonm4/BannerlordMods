@@ -1,21 +1,24 @@
 ﻿using BMTournamentXP.Models;
 using HarmonyLib;
+using SandBox.TournamentMissions.Missions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TournamentLib.Models;
 
-namespace BMTournamentXPMain.Patch
-{
+namespace BMTournamentXPMain.Patches
+{    
+    [HarmonyPatch(typeof(DefaultCombatXpModel), "GetXpFromHit")]
     public class DefaultCombatXPModelPatchGetXpFromHit
-    {
-        [HarmonyPatch(typeof(DefaultCombatXpModel), "GetXpFromHit")]
-        public static bool Prefix(ref DefaultCombatXpModel __instance, 
+    {              
+        public static void Postfix(ref DefaultCombatXpModel __instance, 
             CharacterObject attackerTroop, 
             CharacterObject attackedTroop, 
             int damage, bool isFatal, 
@@ -23,7 +26,12 @@ namespace BMTournamentXPMain.Patch
             ref int xpAmount)
         {
             GetXpFromHit(attackerTroop, attackedTroop, damage, isFatal, missionType, out xpAmount);
-            return false;
+            //DefaultCombatXPModelPatchGetXpFromHit.ShowMethod("XP CALC");
+        }
+
+        private static void ShowMethod(string msg)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(msg));
         }
 
         private static void GetXpFromHit(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
@@ -46,8 +54,8 @@ namespace BMTournamentXPMain.Patch
 
         static bool Prepare()
         {
-            //    return (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled);
-            return false;
+           // return false; //For some reason it's not firing the GetXPFromHit function - reverting to model replacement method (bad form in my opinion)
+             return (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled);            
         }
     }
 }

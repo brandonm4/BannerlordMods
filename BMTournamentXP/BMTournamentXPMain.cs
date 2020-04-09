@@ -1,22 +1,16 @@
-﻿using BMTournamentXP.Models;
-using HarmonyLib;
-using Newtonsoft.Json;
+﻿using HarmonyLib;
+
 using SandBox;
 using SandBox.TournamentMissions.Missions;
+
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
+
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+
 using TournamentLib;
 using TournamentLib.Models;
 
@@ -24,8 +18,6 @@ namespace BMTournamentXP
 {
     public class BMTournamentXPMain : BMSubModuleBase
     {
-        
-
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
@@ -35,7 +27,7 @@ namespace BMTournamentXP
 
             if (File.Exists(appSettings))
             {
-                //Configuration = new BMTournamentXPConfiguration(appSettings);                
+                //Configuration = new BMTournamentXPConfiguration(appSettings);
                 TournamentConfiguration.Instance.LoadXML(appSettings);
             }
 
@@ -71,7 +63,6 @@ namespace BMTournamentXP
             //Campaign campaign = ((Campaign)game.GameType);
             //if (campaign != null)
             //{
-
             //    CorruptedCharFix(campaign);
 
             //}
@@ -87,7 +78,7 @@ namespace BMTournamentXP
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
             base.OnMissionBehaviourInitialize(mission);
-           
+
             //if (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled)
             //{
             //    //EnableTournamentXP(mission);
@@ -101,16 +92,17 @@ namespace BMTournamentXP
             //Need to find a better way
             if (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled)
             {
-               // gameStarterObject.AddModel(new TournamentCombatXpModel());  /* Harmony Patch against DefaultCombatXpModel is failing for some reason */
+                // gameStarterObject.AddModel(new TournamentCombatXpModel());  /* Harmony Patch against DefaultCombatXpModel is failing for some reason */
             }
 
             //InformationManager.DisplayMessage(new InformationMessage(string.Concat("Tournament XP Enabled ", _enableTournamentXP.ToString(), ".")));
             //InformationManager.DisplayMessage(new InformationMessage(string.Concat("Arena XP Enabled ", _enableArenaXP.ToString(), ".")));
         }
+
         public override void OnGameLoaded(Game game, object initializerObject)
         {
-
         }
+
         public override void OnCampaignStart(Game game, object starterObject)
         {
             base.OnCampaignStart(game, starterObject);
@@ -124,12 +116,9 @@ namespace BMTournamentXP
               || mission.HasMissionBehaviour<TownHorseRaceMissionController>()))
             {
                 mission.AddMissionBehaviour(new BMExperienceOnHitLogic(TournamentConfiguration.Instance.XPConfiguration.TournamentXPAdjustment));
-
-               
             }
         }
 
-        
         //private void EnableArenaXP(Mission mission)
         //{
         //    if (!mission.HasMissionBehaviour<BMExperienceOnHitLogic>() &&
@@ -151,7 +140,6 @@ namespace BMTournamentXP
             {
                 a = "No";
             }
-
 
             string info = String.Concat("Tournament Patch v", BMTournamentXPMain.Version, " Loaded\n", "Tournament XP Enabled:\t", t, "\n",
                     "Tournament XP Amount:\t", (100 * TournamentConfiguration.Instance.XPConfiguration.TournamentXPAdjustment).ToString(), "%\n",
@@ -250,7 +238,6 @@ namespace BMTournamentXP
 
         //                                if(c.HeroObject.PartyBelongedTo != null)
         //                                {
-
         //                                }
         //                            }
 
@@ -261,11 +248,11 @@ namespace BMTournamentXP
         //        }
 
         //        private static void ApplyInternal(Hero victim, Hero killer, KillCharacterAction.KillCharacterActionDetail actionDetail, bool showNotification)
-        //        {     
+        //        {
         //            if (!victim.IsAlive)
         //            {
         //                return;
-        //            }            
+        //            }
         //            //victim.EncyclopediaText = KillCharacterAction.CreateObituary(victim, actionDetail);
         //            victim.EncyclopediaText = (TextObject)Traverse.Create(typeof(KillCharacterAction)).Method("CreateObituary").GetValue(new object[] { victim, actionDetail });
         //            //KillCharacterAction.MakeDead(victim, true);

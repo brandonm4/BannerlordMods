@@ -120,7 +120,6 @@
     <Compile Include="Patches\DefaultSettlementFoodModel.cs" />
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
-    <Compile Include="Patches\KingdomManagementVM.cs" />
     <Compile Include="Patches\Mission.cs" />
     <Compile Include="Patches\PartyScreenLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

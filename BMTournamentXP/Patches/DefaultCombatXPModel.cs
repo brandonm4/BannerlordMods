@@ -1,29 +1,25 @@
-﻿using BMTournamentXP.Models;
-using HarmonyLib;
-using SandBox.TournamentMissions.Missions;
+﻿using HarmonyLib;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+
 using TournamentLib.Models;
 
 namespace BMTournamentXPMain.Patches
-{    
+{
     [HarmonyPatch(typeof(DefaultCombatXpModel), "GetXpFromHit")]
     public class DefaultCombatXPModelPatchGetXpFromHit
     {
         [HarmonyPriority(Priority.Low)]
-        public static void Postfix(ref DefaultCombatXpModel __instance, 
-            CharacterObject attackerTroop, 
-            CharacterObject attackedTroop, 
-            int damage, bool isFatal, 
-            CombatXpModel.MissionTypeEnum missionType, 
+        public static void Postfix(ref DefaultCombatXpModel __instance,
+            CharacterObject attackerTroop,
+            CharacterObject attackedTroop,
+            int damage, bool isFatal,
+            CombatXpModel.MissionTypeEnum missionType,
             ref int xpAmount)
         {
             GetXpFromHit(attackerTroop, attackedTroop, damage, isFatal, missionType, out xpAmount);
@@ -53,10 +49,10 @@ namespace BMTournamentXPMain.Patches
             }
         }
 
-        static bool Prepare()
+        private static bool Prepare()
         {
-           // return false; //For some reason it's not firing the GetXPFromHit function - reverting to model replacement method (bad form in my opinion)
-             return (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled);            
+            // return false; //For some reason it's not firing the GetXPFromHit function - reverting to model replacement method (bad form in my opinion)
+            return (TournamentConfiguration.Instance.XPConfiguration.IsTournamentXPEnabled || TournamentConfiguration.Instance.XPConfiguration.IsArenaXPEnabled);
         }
     }
 }

@@ -77,7 +77,65 @@ namespace BMTweakCollection.Patches
             return true;
         }
     }
+
+    [HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmithing")]
+    public class DefaultSmithingModelPatch5
+    {    
+        public static void Postfix(ref int __result)
+        {
+            __result = __result * 3;
+        }
+    }
+    [HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmelting")]
+    public class DefaultSmithingModelPatch6
+    {
+        public static void Postfix(ref int __result)
+        {
+            __result = __result * 5;
+        }
+    }
+    [HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForRefining")]
+    public class DefaultSmithingModelPatch7
+    {
+        public static void Postfix(ref int __result)
+        {
+            __result = __result * 5;
+        }
+    }
+    [HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmeltingItem")]
+    public class DefaultSmithingModelPatch8
+    {
+        public static void Postfix(ref int __result)
+        {
+            __result = __result * 5;
+        }
+    }
+    [HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmithingItem")]
+    public class DefaultSmithingModelPatch9
+    {
+        public static void Postfix(ref int __result)
+        {
+            __result = __result * 5;
+        }
+    }
 }
 
 
 
+/*
+ public override int GetSkillXpForRefining(ref Crafting.RefiningFormula refineFormula)
+        {
+            return MathF.Round(0.3f * (float)(this.GetCraftingMaterialItem(refineFormula.Output).Value * refineFormula.OutputCount));
+        }
+
+        public override int GetSkillXpForSmelting(ItemObject item)
+        {
+            return MathF.Round(0.02f * (float)item.Value);
+        }
+
+        public override int GetSkillXpForSmithing(ItemObject item)
+        {
+            return MathF.Round(0.1f * (float)item.Value);
+        }
+
+ */

@@ -1,14 +1,9 @@
 ﻿using SandBox.TournamentMissions.Missions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment.Managers;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace BMTournamentXP
@@ -17,7 +12,6 @@ namespace BMTournamentXP
     {
         private float _xpmod = 1;
 
-
         public override MissionBehaviourType BehaviourType { get { return MissionBehaviourType.Other; } }
 
         public BMExperienceOnHitLogic(float xpmod)
@@ -25,10 +19,8 @@ namespace BMTournamentXP
             _xpmod = xpmod;
         }
 
-        
-
         public override void OnScoreHit(Agent affectedAgent, Agent affectorAgent, int affectorWeaponKind, bool isBlocked, float damage, float movementSpeedDamageModifier, float hitDistance, AgentAttackType attackType, float shotDifficulty, int weaponUsageIndex)
-        {            
+        {
             if (affectorAgent == null)
             {
                 return;
@@ -44,7 +36,6 @@ namespace BMTournamentXP
             float single = damage / affectedAgent.HealthLimit;
             this.EnemyHitReward(affectedAgent, affectorAgent, movementSpeedDamageModifier, shotDifficulty, affectorWeaponKind, 0.5f * single, weaponUsageIndex, damage * _xpmod);
         }
-
 
         private static Hero GetCaptain(Agent affectorAgent)
         {
@@ -76,8 +67,8 @@ namespace BMTournamentXP
             {
                 SkillLevelingManager.OnCombatHit(characterObject, character, null, null, lastSpeedBonus, lastShotDifficulty, lastWeaponKind, hitpointRatio, CombatXpModel.MissionTypeEnum.Tournament, affectorAgent.MountAgent != null, affectorAgent.Team == affectedAgent.Team, false, weaponUsageIndex, damageAmount, affectedAgent.Health < 1f);
             }
-
         }
+
         public void StartMatch(TournamentMatch match, bool isLastRound)
         {
             //    throw new NotImplementedException();

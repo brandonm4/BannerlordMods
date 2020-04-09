@@ -167,7 +167,8 @@ namespace BMTweakCollection.Patches
             {
                 if (TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGoldImmediate)
                 {
-                    GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold, false);                    
+                    if (__instance.LastMatch.Winners.Where(x => x.Character.HeroObject == Hero.MainHero).Count() > 0)
+                        GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold, false);
                 }
                 else
                 {

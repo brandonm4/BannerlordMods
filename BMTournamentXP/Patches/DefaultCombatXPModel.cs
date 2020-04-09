@@ -17,7 +17,8 @@ namespace BMTournamentXPMain.Patches
 {    
     [HarmonyPatch(typeof(DefaultCombatXpModel), "GetXpFromHit")]
     public class DefaultCombatXPModelPatchGetXpFromHit
-    {              
+    {
+        [HarmonyPriority(Priority.Low)]
         public static void Postfix(ref DefaultCombatXpModel __instance, 
             CharacterObject attackerTroop, 
             CharacterObject attackedTroop, 

@@ -12,11 +12,18 @@ namespace BMTournamentPrizes.Patch
     {
         public static void Prefex(TournamentGame game)
         {
-            BMTournamentPrizesMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);
+            //BMTournamentPrizesMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);
+            if (game.Prize == null)
+            {
+                FileLog.Log("BMTournamentPrize: AddTournament Detected a missing prize.  Correcting with vanilla item.");
+                //Do a final check to make sure nothing is missing
+                var prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetTournamentPrizeVanilla(game.Town.Settlement);
+                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(game, prize);
+            }
         }
         static bool Prepare()
         {
-            return (TournamentConfiguration.Instance.PrizeConfiguration.EnableConfigReloadRealTime || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection);
+            return (TournamentConfiguration.Instance.PrizeConfiguration.EnableConfigReloadRealTime || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection);            
         }
     }
 

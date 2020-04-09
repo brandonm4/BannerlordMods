@@ -116,11 +116,13 @@
     <Compile Include="Models\BMRandomTweaksConfiguration.cs" />
     <Compile Include="Models\CustomSmithingModule.cs" />
     <Compile Include="Models\CustomTroopLimitModel.cs" />
+    <Compile Include="Patches\DefaultPartyHealingModel.cs" />
     <Compile Include="Patches\DefaultSettlementFoodModel.cs" />
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
     <Compile Include="Patches\KingdomManagementVM.cs" />
-    <Compile Include="Patches\LootCollector.cs" />
+    <Compile Include="Patches\Mission.cs" />
+    <Compile Include="Patches\PartyScreenLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StaticPropertyContractResolver.cs" />
   </ItemGroup>
@@ -131,6 +133,12 @@
     <None Include="app.config" />
     <None Include="ModuleData\BMTweakCollection.config.json" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
+      <Project>{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}</Project>
+      <Name>TournamentLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

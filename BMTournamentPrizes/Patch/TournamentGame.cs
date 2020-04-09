@@ -21,24 +21,24 @@ namespace BMTournamentPrizes.Patch
                 ItemObject prize;
                 if (TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
                     || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
-                    || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla)
+                    || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla                    )
                 {
-                    prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(__instance);
-                    if (prize == null)
-                    {
-                        MessageBox.Show("Tournament Prize System", "Error generating Tournament Prize. Reverting to vanilla system.");
-                        return;
-                    }
+                    prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(__instance);                  
                 }
                 else
                 {
                     prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetTournamentPrizeVanilla(__instance.Town.Settlement);
                 }
+                if (prize == null)
+                {
+                    MessageBox.Show("Tournament Prize System", "Error generating Tournament Prize. Reverting to vanilla system.");
+                    return;
+                }
                 __result = prize;
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: Tournament Prize System");
+                FileLog.Log("ERROR: Tournament Prize System: GetTournamentPrize");
                 FileLog.Log(ex.ToStringFull());
             }
         }
@@ -50,7 +50,8 @@ namespace BMTournamentPrizes.Patch
             if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
                 || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
                 || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla)
+                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla
+                || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeTypeFilterToLists)
             {
                 return true;
             }

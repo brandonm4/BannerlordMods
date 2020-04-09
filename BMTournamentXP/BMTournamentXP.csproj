@@ -102,7 +102,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\TournamentCombatXPModel.cs" />
     <Compile Include="Patches\DefaultCombatXPModel.cs" />
-    <Compile Include="Patches\TournamentMissionControllerPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

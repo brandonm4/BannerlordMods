@@ -16,7 +16,7 @@ namespace TournamentLib.Models
     public class TournamentConfiguration
     {
 
-        public const string TournamentXPVersion = "1.2.10";
+        public const string TournamentXPVersion = "1.3.1";
 
         public static string LastXMLPath { get; set; } = "";
         public bool HasLoaded = false;
@@ -159,6 +159,12 @@ namespace TournamentLib.Models
                                         case "tournamentequipmentfilter":
                                             TournamentTweaks.TournamentEquipmentFilter = nc.InnerText.ConvertToBool();
                                             break;
+                                        case "enableprizetypefiltertolists":
+                                            PrizeConfiguration.EnablePrizeTypeFilterToLists = nc.InnerText.ConvertToBool();
+                                            break;
+                                        case "bonustournamentmatchgoldimmediate":
+                                            PrizeConfiguration.BonusTournamentMatchGoldImmediate = nc.InnerText.ConvertToBool();
+                                            break;
                                     }
                                 }
                                 break;
@@ -221,8 +227,9 @@ namespace TournamentLib.Models
 
         public PrizeListMode PrizeListMode { get; set; } = PrizeListMode.TownCustom;
         public int TownPrizeMin { get; set; } = 1000;
-        public int TownPrizeMax { get; set; } = 10000;
+        public int TownPrizeMax { get; set; } = 5000;
         public bool TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell { get; set; } = false;
+        public bool EnablePrizeTypeFilterToLists { get; set; } = false;
         public List<ItemObject.ItemTypeEnum> TownValidPrizeTypes { get; set; } = new List<ItemObject.ItemTypeEnum>();
         public List<string> CustomTourneyItems { get; set; }
         public string CustomPrizeFileName { get; set; } = "";
@@ -233,15 +240,16 @@ namespace TournamentLib.Models
         public bool CompanionsWinPrizes { get; set; } = false;
 
         public bool OppenentDifficultyAffectsOdds { get; set; } = true;
-        public float MaximumBetOdds { get; set; } = 2;
-        public int BonusTournamentMatchGold { get; set; } = 500;
-        public int BonusTournamentWinGold { get; set; } = 500;
+        public float MaximumBetOdds { get; set; } = 3;
+        public int BonusTournamentMatchGold { get; set; } = 0;
+        public int BonusTournamentWinGold { get; set; } = 0;
+        public bool BonusTournamentMatchGoldImmediate { get; set; } = false;
 
-        public int BonusTournamentWinRenown { get; set; } = 3;
-        public float BonusTournamentWinInfluence { get; set; } = 1f;
+        public int BonusTournamentWinRenown { get; set; } = 0;
+        public float BonusTournamentWinInfluence { get; set; } = 0;
 
         public int TournamentBonusMoneyBaseNamedCharLevel { get; set; } = 0;
-        public bool EnableRenownPerTroopTier { get; set; } = true;
+        public bool EnableRenownPerTroopTier { get; set; } = false;
         public List<float> RenownPerTroopTier { get; set; } = new List<float>() { 0, 1, 1, 1, 2, 2, 2, 3 };
 
         /* Base, IsNoble, IsNotable, IsCommander, IsMinorFactionLeader, IsMajorFactionLeader */

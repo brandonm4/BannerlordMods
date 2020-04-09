@@ -8,29 +8,18 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TournamentLib;
 using TournamentLib.Models;
 
 namespace NoSpearsInTournaments
 {
-    public class NoSpearsInTournamentsMain : MBSubModuleBase
-    {
-        private static void ShowMessage(string msg)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(msg));
-        }
+    public class NoSpearsInTournamentsMain : BMSubModuleBase
+    {      
         public List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
 
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
-
-            string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournament.config.xml");
-
-            if (File.Exists(appSettings))
-            {
-                //Configuration = new BMTournamentXPConfiguration(appSettings);                
-                TournamentConfiguration.Instance.LoadXML(appSettings);
-            }
+            base.OnSubModuleLoad();          
 
             if (TournamentConfiguration.Instance.TournamentTweaks.TournamentEquipmentFilter)
             {

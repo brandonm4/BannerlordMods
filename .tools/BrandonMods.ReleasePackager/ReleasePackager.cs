@@ -23,24 +23,21 @@ namespace BannerLib.ReleasePackager
         //     Run this project.
 
         private const string c_MODULE_NAME = "BMTournamentXP";
-        private const string c_RELEASE_VER = "e1.1.2"; // v is required, major.minor.revision format.
+        private const string c_RELEASE_VER = "e1.2.11"; // v is required, major.minor.revision format.
         private const bool c_IS_SINGLEPLAYER_ONLY = true; // if this is false, the module can also be used in multiplayer, leave it false for now.
         
         private const string c_BIN_DIR = "bin/Win64_Shipping_Client";
         private const string c_SUBMODULE_XML_FILENAME = "SubModule.xml";
         
         private readonly List<string> m_subModuleProjectDirs = new List<string>();
-
+        private readonly List<string> validSubModuleDirs = new List<string>() { "BMTournamentXP", "BMTournamentPrizes", "NoSpearsInTournaments" };
         private void Run()
         {
             var asmDir = Path.GetDirectoryName(new Uri(typeof(ReleasePackager).Assembly.CodeBase).LocalPath);
             Environment.CurrentDirectory = new Uri(Path.Combine(asmDir, "..", "..", "..","..")).LocalPath;
             var subModules = Directory.GetDirectories(Environment.CurrentDirectory)
-                .Where(x => !Path.GetFileName(x).StartsWith("."))
-                .Where(x => !x.Contains(nameof(ReleasePackager)))
-                .Where(x => !x.Contains("BMSaveFix"))
-                .Where(x => !x.Contains("packages"));
-                
+                .Where(x => validSubModuleDirs.Contains(x));
+                                
             WriteLine($"Found {subModules.Count()} Submodules:");
             foreach (var directory in subModules)
             {
@@ -137,7 +134,7 @@ namespace BannerLib.ReleasePackager
             Directory.Delete(buildPath, true);
         }
 
-        private void BuildUnzipped(string buildPath, string subModDir)
+        private void BuildUnzipped(string buildPath)
         {
             const string binDir = "bin";
             const string binSubDirName = "Win64_Shipping_Client";

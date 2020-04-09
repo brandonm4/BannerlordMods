@@ -165,7 +165,14 @@ namespace BMTweakCollection.Patches
         {
             if (TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold > 0)
             {
-                typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold);
+                if (TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGoldImmediate)
+                {
+                    GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold, false);                    
+                }
+                else
+                {
+                    typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentMatchGold);
+                }
             }
             if (TournamentConfiguration.Instance.PrizeConfiguration.EnableRenownPerTroopTier)
             {

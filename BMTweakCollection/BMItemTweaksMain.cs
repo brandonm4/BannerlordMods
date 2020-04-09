@@ -1,4 +1,5 @@
 ﻿using BMTweakCollection.Models;
+using BMTweakCollection.Patches;
 using BMTweakCollection.Utility;
 using HarmonyLib;
 using Newtonsoft.Json;
@@ -16,10 +17,11 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TournamentLib;
 
 namespace BMTweakCollection
 {
-    public class BMTweakCollectionMain : MBSubModuleBase
+    public class BMTweakCollectionMain : BMSubModuleBase
     {
 
         public static BMRandomTweaksConfiguration Configuration { get; set; }
@@ -53,32 +55,27 @@ namespace BMTweakCollection
                 }
                 MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
             }
+
+           // LootCollectorPatch.DoPatching();
+
+
         }
 
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            base.OnBeforeInitialModuleScreenSetAsRoot();
+
+            ShowMessage("Brandon's Tweak Collection Module Loaded");
+        }
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
             FixPerkPeakForm();
-            //FixPerkDisciplinarian();
+
             FixPerkHealthyScout();
 
-            if (Configuration.RemoveAllEquippedHorses)
-            {
-                Campaign gameType = game.GameType as Campaign;
-                if (gameType != null)
-                {
-                    foreach (var c in gameType.Characters)
-                    {
-                        if (c.HasMount())
-                        {
 
-                            //EquipmentElement[] _itemSlots = typeof(Equipment).GetField("_itemSlots").GetValue(c.Equipment) as EquipmentElement[];
-                            //
-                        }
-                    }
-                }
-            }
-            
+
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -88,74 +85,11 @@ namespace BMTweakCollection
             CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
             if (campaignGameStarter != null)
             {
-                //if (BMTweakCollectionMain.Configuration.MaxHideoutTroopsEnabled)
-                //{
-                //    this.ReplaceTroopLimitModel(campaignGameStarter);
-                //}
-                //if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
-                //{
-                //    this.ReplaceSmithingModel(campaignGameStarter);
-                //}
+             
             }
         }
 
-        private bool ReplaceTroopLimitModel(CampaignGameStarter starter)
-        {
-            bool flag;
-            IList<GameModel> models = starter.Models as IList<GameModel>;
-            if (models != null)
-            {
-                int num = 0;
-                while (num < models.Count)
-                {
-                    if (!(models[num] is DefaultTroopCountLimitModel))
-                    {
-                        num++;
-                    }
-                    else
-                    {
-                        models[num] = new CustomTroopLimitModel();
-                        flag = true;
-                        return flag;
-                    }
-                }
-                flag = false;
-            }
-            else
-            {
-                flag = false;
-            }
-            return flag;
-        }
-
-        private bool ReplaceSmithingModel(CampaignGameStarter starter)
-        {
-            bool flag;
-            IList<GameModel> models = starter.Models as IList<GameModel>;
-            if (models != null)
-            {
-                int num = 0;
-                while (num < models.Count)
-                {
-                    if (!(models[num] is DefaultSmithingModel))
-                    {
-                        num++;
-                    }
-                    else
-                    {
-                        models[num] = new CustomSmithingModel();
-                        flag = true;
-                        return flag;
-                    }
-                }
-                flag = false;
-            }
-            else
-            {
-                flag = false;
-            }
-            return flag;
-        }
+        
 
         private void FixPerkPeakForm()
         {
@@ -239,23 +173,6 @@ namespace BMTweakCollection
             }
         }
 
-        private void RemoveTournamentSpearFootSets(string[] templates)
-        {           
-            foreach (var t in templates)
-            {
-                foreach (Equipment battleEquipment in MBObjectManager.Instance.GetObject<CharacterObject>(t).BattleEquipments)
-                {
-                    if (battleEquipment.Horse.Item != null)
-                    {
-                        break;
-                    }
-                    if (battleEquipment.GetEquipmentFromSlot(EquipmentIndex.Weapon0).Item.ItemType == ItemObject.ItemTypeEnum.Polearm)
-                    {
-                        var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>("sturgia_sword_1_t2"));
-                        battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Weapon0, itemRoster.EquipmentElement);
-                    }
-                }
-            }
-        }
+  
     }
 }

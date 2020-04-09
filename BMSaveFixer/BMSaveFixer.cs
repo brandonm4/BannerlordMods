@@ -24,7 +24,7 @@ namespace BMSaveFixer
             if (campaign != null)
             {
 
-                CorruptedCharFix(campaign);
+   //             CorruptedCharFix(campaign);
 
             }
         }

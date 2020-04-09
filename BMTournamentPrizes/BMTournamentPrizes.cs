@@ -10,16 +10,14 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TournamentLib;
 using TournamentLib.Models;
 
 namespace BMTournamentPrizes
 {
-    public class BMTournamentPrizesMain : MBSubModuleBase
+    public class BMTournamentPrizesMain : BMSubModuleBase
     {
-        private static void ShowMessage(string msg)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(msg));
-        }
+      
         public static TournamentPrizeExpansion TournamentPrizeExpansionModel
         {
             get
@@ -30,14 +28,7 @@ namespace BMTournamentPrizes
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-
-            string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournament.config.xml");
-
-            if (File.Exists(appSettings))
-            {
-                //Configuration = new BMTournamentXPConfiguration(appSettings);                
-                TournamentConfiguration.Instance.LoadXML(appSettings);
-            }          
+            
             try
             {
                 var h = new Harmony("com.darkspyre.bannerlord.tournamentprizes");

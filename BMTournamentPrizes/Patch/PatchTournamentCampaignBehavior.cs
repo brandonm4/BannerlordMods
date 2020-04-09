@@ -1,12 +1,13 @@
 ﻿using BMTournamentPrizes;
 using BMTournamentPrizes.Models;
+using BMTournamentPrizes.Extensions;
 using HarmonyLib;
 
 using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
@@ -66,21 +67,30 @@ namespace BMTournamentXP
 
         public static void game_menu_reroll_tournament_reward(TournamentCampaignBehavior campaignBehavior)
         {
-            TournamentPrizePool settings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
-            TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
-            ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
-            BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(tournamentGame, prize);
-
-            settings.RemainingRerolls--;
-            BMTournamentPrizesMain.TournamentPrizeExpansionModel.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
-
             try
             {
-                GameMenu.SwitchToMenu("town_arena");
+                TournamentPrizePool settings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+                TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
+                ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
+                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(tournamentGame, prize);
+
+                settings.RemainingRerolls--;
+                BMTournamentPrizesMain.TournamentPrizeExpansionModel.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
+
+                try
+                {
+                    GameMenu.SwitchToMenu("town_arena");
+                }
+                catch (Exception ex)
+                {
+                    FileLog.Log("ERROR: BMTournamentXP: Re-roll: Refreshing Arena Menu:");
+                    FileLog.Log(ex.ToStringFull());
+                }
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                MessageBox.Show("Tournament XPerience", "An error was detected re-rolling your prize pool.\nPlease zip up your save game (Documents folder)\nError log (harmony.log.txt on desktop)\nYour config file in BMTournamentXP\\ModuleData\nPut on google drive and message me link on Nexus.");
+                FileLog.Log("ERROR: BMTournamentXP: Re-roll Prize Pool");
                 FileLog.Log(ex.ToStringFull());
             }
         }
@@ -109,33 +119,59 @@ namespace BMTournamentXP
         }
 
         public static void game_menu_select_tournament_reward(TournamentCampaignBehavior campaignBehavior)
-        {
-            List<InquiryElement> prizeElements = new List<InquiryElement>();
-            TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
-            TournamentPrizePool prizeSettings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
-
-            if (prizeSettings.Items.Count < TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions)
-            {
-                ItemObject prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(tournamentGame, prizeSettings.Items);
-            }
-            prizeSettings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
-            foreach (var p in prizeSettings.Items)
-            {
-                var ii = new ImageIdentifier(p.StringId, ImageIdentifierType.Item, p.Name.ToString());
-
-
-                prizeElements.Add(new InquiryElement(p.StringId, p.Name.ToString(), ii, true, ""));
-            }
-            InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
-                    "Tournament Prize Selection", "You can choose an item from the list below as your reward if you win the tournament!", prizeElements, false, true, "OK", "Cancel",
-                    new Action<List<InquiryElement>>(OnSelectPrize), new Action<List<InquiryElement>>(OnDeSelectPrize)), true);
+        {            
             try
             {
-                GameMenu.SwitchToMenu("town_arena");
+                List<InquiryElement> prizeElements = new List<InquiryElement>();
+                TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
+                TournamentPrizePool prizeSettings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+
+                if (prizeSettings.Items.Count < TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions)
+                {
+                    ItemObject prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(tournamentGame, prizeSettings.Items);
+                }
+                prizeSettings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
+
+              //  InformationManager.Clear();
+                foreach (var p in prizeSettings.Items)
+                {
+                    try
+                    {                        
+                        var ii = new ImageIdentifier(p.StringId, ImageIdentifierType.Item, p.Name.ToString());                     
+                        prizeElements.Add(new InquiryElement(p.StringId, p.Name.ToString(), ii, true, p.ToToolTipTextObject().ToString()));
+                      //  InformationManager.AddTooltipInformation(typeof(ItemObject), new object[] { p });
+                    }
+                    catch(Exception ex)
+                    {
+                        FileLog.Log("ERROR: Tournament Prize System\nFailed to add prize element to display" + p.StringId);
+                        FileLog.Log(ex.ToStringFull());
+                    }
+                }
+                if (prizeElements.Count > 0)
+                {
+                    
+                    InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
+                            "Tournament Prize Selection", "You can choose an item from the list below as your reward if you win the tournament!", prizeElements, true, true, "OK", "Cancel",
+                            new Action<List<InquiryElement>>(OnSelectPrize), new Action<List<InquiryElement>>(OnDeSelectPrize)), true);
+                    try
+                    {
+                        GameMenu.SwitchToMenu("town_arena");
+                    }
+                    catch (Exception ex)
+                    {
+                        FileLog.Log("ERROR: BMTournamentXP: Select Prize: Refresh Menu");
+                        FileLog.Log(ex.ToStringFull());
+                    }
+                }
+                else
+                {
+                    InformationManager.ShowInquiry(new InquiryData("Tournament Prize Selection", "You should not be seeing this.  Something went wrong generating the prize list. Your item restrictions may be set too narrow.", true, false, "OK", "", null, null));
+                }
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                MessageBox.Show("Tournament XPerience", "An error was detected selecting your prize pool.\nPlease zip up your save game (Documents folder)\nError log (harmony.log.txt on desktop)\nYour config file in BMTournamentXP\\ModuleData\nPut on google drive and message me link on Nexus.");
+                FileLog.Log("ERROR: BMTournamentXP: Tournament Prize Selection");
                 FileLog.Log(ex.ToStringFull());
             }
         }
@@ -144,15 +180,22 @@ namespace BMTournamentXP
         {
             if (prizeSelections.Count > 0)
             {
-                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(Settlement.CurrentSettlement.StringId, prizeSelections.First().Identifier.ToString());
-
+                try
+                {
+                    BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(Settlement.CurrentSettlement.StringId, prizeSelections.First().Identifier.ToString());
+                }
+                catch(Exception ex)
+                {
+                    FileLog.Log("ERROR: BMTournamentXP: OnSelectPrize: Error setting Town Prize");
+                    FileLog.Log(ex.ToStringFull());
+                }
                 try
                 {
                     GameMenu.SwitchToMenu("town_arena");
                 }
                 catch (Exception ex)
                 {
-                    FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                    FileLog.Log("ERROR: BMTournamentXP: OnSelectPrize: Refresh Arena Menu");
                     FileLog.Log(ex.ToStringFull());
                 }
             }
@@ -176,7 +219,7 @@ namespace BMTournamentXP
         private static void Postfix(TournamentCampaignBehavior __instance, CampaignGameStarter campaignGameSystemStarter)
         {
             var text = new TextObject("Select Tournament Type");
-            campaignGameSystemStarter.AddGameMenuOption("town_arena", "bm_reroll_price", text.ToString(), new GameMenuOption.OnConditionDelegate(TournamentCampaignBehaviorPatch2.game_menu_reroll_tournament_select_option), (MenuCallbackArgs args) => TournamentCampaignBehaviorPatch2.game_menu_select_tournament_type(__instance), false, 2, false);
+            campaignGameSystemStarter.AddGameMenuOption("town_arena", "bm_reroll_tournytype", text.ToString(), new GameMenuOption.OnConditionDelegate(TournamentCampaignBehaviorPatch2.game_menu_reroll_tournament_select_option), (MenuCallbackArgs args) => TournamentCampaignBehaviorPatch2.game_menu_select_tournament_type(__instance), false, 2, false);
         }
 
         public static bool game_menu_reroll_tournament_select_option(MenuCallbackArgs args)
@@ -210,7 +253,7 @@ namespace BMTournamentXP
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                FileLog.Log("ERROR: BMTournamentXP: Select TournyType: Refreshing Arena Menu:");
                 FileLog.Log(ex.ToStringFull());
             }
 

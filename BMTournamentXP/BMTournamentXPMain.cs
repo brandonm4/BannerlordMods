@@ -17,18 +17,14 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TournamentLib;
 using TournamentLib.Models;
 
 namespace BMTournamentXP
 {
-    public class BMTournamentXPMain : MBSubModuleBase
+    public class BMTournamentXPMain : BMSubModuleBase
     {
-        public static string Version { get { return "e1.2.9"; } }
-
-        internal static void ShowMessage(string msg)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(msg));
-        }
+        
 
         protected override void OnSubModuleLoad()
         {

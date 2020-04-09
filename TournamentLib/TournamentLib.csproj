@@ -83,8 +83,12 @@
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TaleWorlds.MountAndBlade">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BMSubmodBase.cs" />
     <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="Extensions\StringHelpers.cs" />
     <Compile Include="Models\TournamentConfiguration.cs" />

@@ -71,11 +71,17 @@ namespace BMTournamentXP
             {
                 TournamentPrizePool settings = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetPrizesSettingsForSettlement(Settlement.CurrentSettlement.StringId);
                 TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
-                ItemObject prize = (ItemObject)Traverse.Create(tournamentGame).Method("GetTournamentPrize").GetValue();
-                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(tournamentGame, prize);
-
+                
+                //Clear old prizes
+                settings.Prize_StringId = "";
+                settings.Items = new List<ItemObject>();
                 settings.RemainingRerolls--;
                 BMTournamentPrizesMain.TournamentPrizeExpansionModel.UpdatePrizeSettings(Settlement.CurrentSettlement.StringId, settings);
+
+                //Generate New Prize
+               var prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(tournamentGame);                                                
+                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(tournamentGame, prize);
+
 
                 try
                 {

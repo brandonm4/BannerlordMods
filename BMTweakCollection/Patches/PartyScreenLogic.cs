@@ -64,5 +64,10 @@ namespace BMTweakCollection.Patches
                 }
             }
         }
+
+        static bool Prepare()
+        {
+            return false;
+        }
     }    
 }

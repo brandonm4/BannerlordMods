@@ -92,7 +92,7 @@ namespace BMTournamentPrizes.Models
             }
         }
 
-        public ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, List<ItemObject> existingPrizes = null)
+        public ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, List<ItemObject> existingPrizes = null, bool keepTownPrize = true)
         {
             ItemObject prize;
             var numItemsToGet = TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions;

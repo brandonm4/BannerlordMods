@@ -50,7 +50,7 @@ namespace BMTournamentXP
                 {
                     message = null;
                 }
-                MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
+                MessageBox.Show(string.Concat("Tournament XP Error patching:\n", str, " \n\n", message));
             }
         }
 

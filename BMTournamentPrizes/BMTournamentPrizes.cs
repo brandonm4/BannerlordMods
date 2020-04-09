@@ -48,7 +48,7 @@ namespace BMTournamentPrizes
                 {
                     message = null;
                 }
-                MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
+                MessageBox.Show(string.Concat("Tournament XP Prizes Error patching:\n", str, " \n\n", message));
             }
 
         }

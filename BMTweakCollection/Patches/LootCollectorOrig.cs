@@ -1,55 +1,74 @@
-﻿using HarmonyLib;
+using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
+using System.Runtime.CompilerServices;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
-namespace BMTweakCollection.Patches
+namespace TaleWorlds.CampaignSystem
 {
-
-    //public static class LootCollectorInfo
-    //{
-        //public static Type ClassType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-    //}
-
-
-  // [HarmonyPatch(Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))]
-  
-   // [HarmonyPatch(LootCollectorInfo.ClassType, "GetXpFromHit")]
-    public class LootCollectorPatch
+    internal class LootCollector
     {
-        // make sure DoPatching() is called at start either by
-        // the mod loader or by your injector
-        internal static Type LootCollectorType;
-
-        public static void DoPatching()
+        public TroopRoster CasualtiesInBattle
         {
-            var harmony = new Harmony("com.example.patch");
-            LootCollectorType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-            var mOriginal = AccessTools.Method(LootCollectorType, "GiveShareOfLootToParty");
-            var prefix = typeof(LootCollectorPatch).GetMethod("GiveShareOfLootToPartyPre");
-
-            // in general, add null checks here (new HarmonyMethod() does it for you too)
-
-            harmony.Patch(mOriginal, new HarmonyMethod(prefix));
+            get;
+            private set;
         }
 
-    
-        internal static bool GiveShareOfLootToPartyPre(PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount, 
-            ref TroopRoster ___LootedMembers,
-            ref ItemRoster ___LootedItems,
-            ref TroopRoster ___LootedPrisoners,
-            ref TroopRoster ___CasualtiesInBattle
-            )
+        internal ItemRoster LootedItems
+        {
+            get;
+            private set;
+        }
+
+        internal TroopRoster LootedMembers
+        {
+            get;
+            private set;
+        }
+
+        internal TroopRoster LootedPrisoners
+        {
+            get;
+            private set;
+        }
+
+        internal LootCollector()
+        {
+            this.LootedMembers = new TroopRoster();
+            this.LootedPrisoners = new TroopRoster();
+            this.LootedItems = new ItemRoster();
+            this.CasualtiesInBattle = new TroopRoster();
+        }
+
+        private static int ConvertLootToGold(IEnumerable<ItemRosterElement> lootedItemsRecoveredFromCasualties)
+        {
+            int num = 0;
+            foreach (ItemRosterElement lootedItemsRecoveredFromCasualty in lootedItemsRecoveredFromCasualties)
+            {
+                int amount = lootedItemsRecoveredFromCasualty.Amount;
+                EquipmentElement equipmentElement = lootedItemsRecoveredFromCasualty.EquipmentElement;
+                num = num + amount * MBMath.Round((float)equipmentElement.GetBaseValue() * 0.5f);
+            }
+            return num;
+        }
+
+        private static Equipment GetRandomEquipment(CharacterObject ch)
+        {
+            if (ch.IsHero)
+            {
+                return ch.FirstBattleEquipment;
+            }
+            return ch.BattleEquipments.ToList<Equipment>()[MBRandom.RandomInt(ch.BattleEquipments.Count<Equipment>())];
+        }
+
+        internal void GiveShareOfLootToParty(PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount)
         {
             bool flag = winnerParty == PartyBase.MainParty;
             List<TroopRosterElement> troopRosterElements = new List<TroopRosterElement>();
-            foreach (TroopRosterElement lootedMember in ___LootedMembers)
+            foreach (TroopRosterElement lootedMember in this.LootedMembers)
             {
                 int number = lootedMember.Number;
                 CharacterObject character = lootedMember.Character;
@@ -68,7 +87,7 @@ namespace BMTweakCollection.Patches
             }
             foreach (TroopRosterElement troopRosterElement1 in troopRosterElements)
             {
-                ___LootedMembers.AddToCounts(troopRosterElement1.Character, -1, false, 0, 0, true, -1);
+                this.LootedMembers.AddToCounts(troopRosterElement1.Character, -1, false, 0, 0, true, -1);
             }
             foreach (TroopRosterElement troopRosterElement2 in troopRosterElements)
             {
@@ -86,9 +105,9 @@ namespace BMTweakCollection.Patches
                 }
             }
             ICollection<ItemRosterElement> itemRosterElements = new List<ItemRosterElement>();
-            for (int j = ___LootedItems.Count<ItemRosterElement>() - 1; j >= 0; j--)
+            for (int j = this.LootedItems.Count<ItemRosterElement>() - 1; j >= 0; j--)
             {
-                ItemRosterElement elementCopyAtIndex = ___LootedItems.GetElementCopyAtIndex(j);
+                ItemRosterElement elementCopyAtIndex = this.LootedItems.GetElementCopyAtIndex(j);
                 int num = 0;
                 EquipmentElement equipmentElement = elementCopyAtIndex.EquipmentElement;
                 ItemObject item = equipmentElement.Item;
@@ -102,13 +121,13 @@ namespace BMTweakCollection.Patches
                         num++;
                     }
                 }
-                ___LootedItems.AddToCounts(itemRosterElement, -num, true);
+                this.LootedItems.AddToCounts(itemRosterElement, -num, true);
             }
             partyToReceiveLoot.ItemRoster.Add(itemRosterElements);
-            for (int l = ___LootedPrisoners.Count<TroopRosterElement>() - 1; l >= 0; l--)
+            for (int l = this.LootedPrisoners.Count<TroopRosterElement>() - 1; l >= 0; l--)
             {
-                int elementNumber = ___LootedPrisoners.GetElementNumber(l);
-                CharacterObject characterAtIndex = ___LootedPrisoners.GetCharacterAtIndex(l);
+                int elementNumber = this.LootedPrisoners.GetElementNumber(l);
+                CharacterObject characterAtIndex = this.LootedPrisoners.GetCharacterAtIndex(l);
                 int num1 = 0;
                 for (int m = 0; m < elementNumber; m++)
                 {
@@ -118,13 +137,13 @@ namespace BMTweakCollection.Patches
                         num1++;
                     }
                 }
-                ___LootedPrisoners.AddToCounts(characterAtIndex, -num1, false, 0, 0, true, -1);
+                this.LootedPrisoners.AddToCounts(characterAtIndex, -num1, false, 0, 0, true, -1);
             }
             ICollection<TroopRosterElement> troopRosterElements1 = new List<TroopRosterElement>();
-            for (int n = ___CasualtiesInBattle.Count<TroopRosterElement>() - 1; n >= 0; n--)
+            for (int n = this.CasualtiesInBattle.Count<TroopRosterElement>() - 1; n >= 0; n--)
             {
-                int elementNumber1 = ___CasualtiesInBattle.GetElementNumber(n);
-                CharacterObject characterObject = ___CasualtiesInBattle.GetCharacterAtIndex(n);
+                int elementNumber1 = this.CasualtiesInBattle.GetElementNumber(n);
+                CharacterObject characterObject = this.CasualtiesInBattle.GetCharacterAtIndex(n);
                 int num2 = 0;
                 TroopRosterElement troopRosterElement3 = new TroopRosterElement(characterObject);
                 for (int o = 0; o < elementNumber1; o++)
@@ -135,7 +154,7 @@ namespace BMTweakCollection.Patches
                         num2++;
                     }
                 }
-                ___CasualtiesInBattle.AddToCounts(characterObject, -num2, false, 0, 0, true, -1);
+                this.CasualtiesInBattle.AddToCounts(characterObject, -num2, false, 0, 0, true, -1);
             }
             ExplainedNumber explainedNumber = new ExplainedNumber(1f, null);
             if (winnerParty.MobileParty != null && winnerParty.MobileParty.Leader != null)
@@ -144,33 +163,16 @@ namespace BMTweakCollection.Patches
             }
             if (flag)
             {
-                //IEnumerable<ItemRosterElement> itemRosterElements1 = this.LootCasualties(troopRosterElements1, explainedNumber.ResultNumber);
-                LootCollectorType.GetMethod("LootCasualties").Invoke()
+                IEnumerable<ItemRosterElement> itemRosterElements1 = this.LootCasualties(troopRosterElements1, explainedNumber.ResultNumber);
                 partyToReceiveLoot.ItemRoster.Add(itemRosterElements1);
             }
             else if (partyToReceiveLoot.LeaderHero != null)
             {
-
-
-               // int gold = LootCollectorPatch.ConvertLootToGold(this.LootCasualties(troopRosterElements1, 0.5f));
+                int gold = LootCollector.ConvertLootToGold(this.LootCasualties(troopRosterElements1, 0.5f));
                 gold = MBMath.Round((float)gold * 0.5f * explainedNumber.ResultNumber);
                 GiveGoldAction.ApplyBetweenCharacters(null, partyToReceiveLoot.LeaderHero, gold, false);
-                return false;
+                return;
             }
-
-            return false;
-        }
-
-        private static int ConvertLootToGold(IEnumerable<ItemRosterElement> lootedItemsRecoveredFromCasualties)
-        {
-            int num = 0;
-            foreach (ItemRosterElement lootedItemsRecoveredFromCasualty in lootedItemsRecoveredFromCasualties)
-            {
-                int amount = lootedItemsRecoveredFromCasualty.Amount;
-                EquipmentElement equipmentElement = lootedItemsRecoveredFromCasualty.EquipmentElement;
-                num = num + amount * MBMath.Round((float)equipmentElement.GetBaseValue() * 0.5f);
-            }
-            return num;
         }
 
         private IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor)
@@ -243,6 +245,42 @@ namespace BMTweakCollection.Patches
                 }
             }
             return itemRosters;
+        }
+
+        internal void MakeFreedHeroesEscape(TroopRoster freedTroops)
+        {
+            for (int i = freedTroops.Count<TroopRosterElement>() - 1; i >= 0; i--)
+            {
+                CharacterObject characterAtIndex = freedTroops.GetCharacterAtIndex(i);
+                if (characterAtIndex.IsHero)
+                {
+                    if (!characterAtIndex.IsPlayerCharacter)
+                    {
+                        EndCaptivityAction.ApplyByReleasedAfterBattle(characterAtIndex.HeroObject, null, null);
+                    }
+                    freedTroops.RemoveTroop(characterAtIndex, 1, new UniqueTroopDescriptor(), 0);
+                }
+            }
+        }
+
+        public void MakePrisonerHeroesEscape(float escapeChance)
+        {
+            foreach (TroopRosterElement troopRosterElement in this.LootedMembers.RemoveIf((TroopRosterElement lordElement) => {
+                if (!lordElement.Character.IsHero || lordElement.Character.HeroObject.IsHumanPlayerCharacter)
+                {
+                    return false;
+                }
+                if (lordElement.Character.HeroObject.NeverBecomePrisoner)
+                {
+                    return true;
+                }
+                return MBRandom.RandomFloat < escapeChance;
+            }))
+            {
+                MakeHeroFugitiveAction.Apply(troopRosterElement.Character.HeroObject);
+                troopRosterElement.Character.HeroObject.DaysLeftToRespawn = 2;
+                Debug.Print(String.Concat((object)"[OZANDEBUG] ", troopRosterElement.Character.HeroObject.Name, (object)" is escaped and now fugitive."), 0, Debug.DebugColor.DarkRed, (ulong)256);
+            }
         }
     }
 }

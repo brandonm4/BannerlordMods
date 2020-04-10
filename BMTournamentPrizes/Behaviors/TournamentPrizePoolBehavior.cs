@@ -425,6 +425,8 @@ namespace BMTournamentPrizes.Behaviors
                 try
                 {
                     TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
+                    TournamentPrizePool currentPool = GetTournamentPrizePool(Settlement.CurrentSettlement);
+                    currentPool.SelectedPrizeStringId = prizeSelections.First().Identifier.ToString();
                     var prize = Game.Current.ObjectManager.GetObject<ItemObject>(prizeSelections.First().Identifier.ToString());
                     SetTournamentSelectedPrize(tournamentGame, prize);
                 }

@@ -20,6 +20,8 @@ namespace BMTournamentPrizes.Extensions
 
             if (item.IsCraftedWeapon)
             {
+                desc += "{WEAPON_TYPE}\n";
+                keyValues.Add("WEAPON_TYPE", item.PrimaryWeapon.WeaponClass.ToString());
                 if (item.PrimaryWeapon.SwingSpeed > 0)
                 {
                     desc += "Swing Speed: {SWING_SPEED}\n";
@@ -57,7 +59,7 @@ namespace BMTournamentPrizes.Extensions
                 }
             }
             if (item.ArmorComponent != null)
-            {
+            {                
                 if (item.ArmorComponent.HeadArmor > 0)
                 {
                     desc += "Head Armor: {HEAD_ARMOR}\n";
@@ -82,6 +84,10 @@ namespace BMTournamentPrizes.Extensions
             if (item.IsMountable)
             {
                 desc += mountdesc;
+                keyValues.Add("SPEED", item.HorseComponent.Speed.ToString());
+                keyValues.Add("MANEUVER", item.HorseComponent.Maneuver.ToString());
+                keyValues.Add("HEALTH", item.HorseComponent.HitPoints.ToString());
+
             }            
             
             TextObject toolTip = new TextObject(desc);

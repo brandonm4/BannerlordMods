@@ -50,15 +50,16 @@ namespace BMTournamentPrizes.Behaviors
         #region Events
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
+
+            starter.AddGameMenuOption("town_arena", "bm_select_prize", "Select Prize",
+             new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
+             new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 0, true);
+
             var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
             starter.AddGameMenuOption("town_arena", "bm_reroll_price", text.ToString(),
                 new GameMenuOption.OnConditionDelegate(RerollCondition),
                 new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
-                false, 2, true);
-
-            starter.AddGameMenuOption("town_arena", "bm_select_prize", "Select Prize",
-                new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
-                new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 3, true);
+                false, 0, true);                  
         }
         #endregion
 

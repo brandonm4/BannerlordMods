@@ -1,4 +1,5 @@
-﻿using BMTournamentPrizes.Models;
+﻿using BMTournamentPrizes.Behaviors;
+using BMTournamentPrizes.Models;
 using HarmonyLib;
 using System;
 using System.Windows.Forms;
@@ -23,11 +24,11 @@ namespace BMTournamentPrizes.Patch
                     || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
                     || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla                    )
                 {
-                    prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(__instance);                  
+                    prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance);                  
                 }
                 else
                 {
-                    prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GetTournamentPrizeVanilla(__instance.Town.Settlement);
+                    prize = TournamentPrizePoolBehavior.GetTournamentPrizeVanilla(__instance.Town.Settlement);
                 }
                 if (prize == null)
                 {

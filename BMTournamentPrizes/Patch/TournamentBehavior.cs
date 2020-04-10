@@ -1,4 +1,5 @@
 ﻿using BMTournamentPrizes;
+using BMTournamentPrizes.Behaviors;
 using BMTournamentPrizes.Models;
 using HarmonyLib;
 using SandBox.TournamentMissions.Missions;
@@ -161,8 +162,8 @@ namespace BMTweakCollection.Patches
             }
             if (bDofix)
             {
-                var prize = BMTournamentPrizesMain.TournamentPrizeExpansionModel.GenerateTournamentPrize(__instance.TournamentGame);
-                BMTournamentPrizesMain.TournamentPrizeExpansionModel.SetTournamentSelectedPrize(__instance.TournamentGame, prize);
+                var prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance.TournamentGame);
+                TournamentPrizePoolBehavior.SetTournamentSelectedPrize(__instance.TournamentGame, prize);
             }
             return true;
         }

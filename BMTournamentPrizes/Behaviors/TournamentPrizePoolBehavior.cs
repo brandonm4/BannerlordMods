@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
+using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TournamentLib.Extensions;
@@ -51,15 +52,19 @@ namespace BMTournamentPrizes.Behaviors
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
             var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
-            starter.AddGameMenuOption("town_arena", "bm_reroll_price", text.ToString(),
+            starter.AddGameMenuOption("town_arena", "bm_reroll_tournamentprize", text.ToString(),
                 new GameMenuOption.OnConditionDelegate(RerollCondition),
                 new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
                 false, -1, true);
 
-            starter.AddGameMenuOption("town_arena", "bm_select_prize", "Select Prize",
+            starter.AddGameMenuOption("town_arena", "bm_select_tournamentprize", "Select Prize",
              new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
              new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, -1, true);
-                     
+
+            starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", "Select Tournament Style",
+             new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
+             new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, -1, true);
+
         }
         #endregion
 
@@ -347,7 +352,7 @@ namespace BMTournamentPrizes.Behaviors
                 {
                     ItemObject p = ire.EquipmentElement.Item;
                     try
-                    {                      
+                    {
                         var ii = new ImageIdentifier(p.StringId, ImageIdentifierType.Item, p.Name.ToString());
                         prizeElements.Add(new InquiryElement(p.StringId, p.Name.ToString(), ii, true, p.ToToolTipTextObject().ToString()));
                         //  InformationManager.AddTooltipInformation(typeof(ItemObject), new object[] { p });
@@ -413,6 +418,92 @@ namespace BMTournamentPrizes.Behaviors
             }
         }
         static void OnDeSelectPrize(List<InquiryElement> prizeSelections)
+        {
+
+        }
+
+        public static bool TournamentTypeSelectCondition(MenuCallbackArgs args)
+        {
+            if (!TournamentConfiguration.Instance.EnableTournamentTypeSelection)
+            {
+                return false;
+            }
+            bool flag;
+            TextObject textObject;
+            bool flag1 = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.JoinTournament, out flag, out textObject);
+            args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
+            return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
+        }
+        public static void TournamentTypeSelectConsequence(MenuCallbackArgs args)
+        {
+            List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
+            tournamentTypeElements.Add(new InquiryElement("melee", "Standard Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("melee2", "Alternate Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("race", "Horse Racing Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
+
+            InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
+                    "Tournament Type Selection", "What kind of Tournament would you like to compete in today?", tournamentTypeElements, true, true, "OK", "Cancel",
+                    new Action<List<InquiryElement>>(OnSelectTournamentStyle), new Action<List<InquiryElement>>(OnSelectDoNothing)), true);
+            try
+            {
+                GameMenu.SwitchToMenu("town_arena");
+            }
+            catch (Exception ex)
+            {
+                FileLog.Log("ERROR: BMTournamentXP: Select TournyType: Refreshing Arena Menu:");
+                FileLog.Log(ex.ToStringFull());
+            }
+
+        }
+
+        static void OnSelectTournamentStyle(List<InquiryElement> selectedTypes)
+        {
+            if (selectedTypes.Count > 0)
+            {
+                var town = Settlement.CurrentSettlement.Town;
+                TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
+                TournamentGame tournamentGame;
+                TournamentGame currentGame = tournamentManager.GetTournamentGame(town);
+            
+                switch (selectedTypes.First().Identifier.ToString())
+                {
+                    case "melee":
+                        tournamentGame = new FightTournamentGame(town);
+                        break;
+                    case "archery":
+                        tournamentGame = new ArcheryTournamentGame(town);
+                        break;
+                    case "joust":
+                        tournamentGame = new JoustingTournamentGame(town);
+                        break;
+                    case "race":
+                        tournamentGame = new HorseRaceTournamentGame(town);
+                        break;
+                    default:
+                        tournamentGame = new FightTournamentGame(town);
+                        break;
+                }
+
+                if (tournamentGame.GetType() != currentGame.GetType())
+                {
+                    ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tournamentGame);
+                    tournamentManager.AddTournament(tournamentGame);
+                }
+
+                try
+                {
+                    GameMenu.SwitchToMenu("town_arena");
+                }
+                catch (Exception ex)
+                {
+                    FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                    FileLog.Log(ex.ToStringFull());
+                }
+            }
+        }
+        static void OnSelectDoNothing(List<InquiryElement> prizeSelections)
         {
 
         }

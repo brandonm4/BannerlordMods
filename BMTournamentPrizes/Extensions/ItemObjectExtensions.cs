@@ -11,7 +11,7 @@ namespace BMTournamentPrizes.Extensions
     public static class ItemObjectExtensions
     {
         public static TextObject ToToolTipTextObject(this ItemObject item)
-        {            
+        {
             string mountdesc = "Speed: {SPEED}\nManeuver: {MANEUVER}\nHealth: {HEALTH}\n";
 
             string desc = "{NAME}\n";
@@ -20,6 +20,8 @@ namespace BMTournamentPrizes.Extensions
 
             if (item.IsCraftedWeapon)
             {
+                desc += "{WEAPON_TYPE}\n";
+                keyValues.Add("WEAPON_TYPE", item.PrimaryWeapon.WeaponClass.ToString());
                 if (item.PrimaryWeapon.SwingSpeed > 0)
                 {
                     desc += "Swing Speed: {SWING_SPEED}\n";
@@ -28,7 +30,7 @@ namespace BMTournamentPrizes.Extensions
                 if (item.PrimaryWeapon.SwingSpeed > 0)
                 {
                     desc += "Swing Damage: {SWING_DAMAGE}\n";
-                    keyValues.Add("SWING_DAMAGE", item.WeaponComponent.PrimaryWeapon.SwingDamage.ToString() + item.PrimaryWeapon.SwingDamageType.ToString().Substring(0,1));
+                    keyValues.Add("SWING_DAMAGE", item.WeaponComponent.PrimaryWeapon.SwingDamage.ToString() + item.PrimaryWeapon.SwingDamageType.ToString().Substring(0, 1));
                 }
                 if (item.PrimaryWeapon.ThrustSpeed > 0)
                 {
@@ -77,15 +79,19 @@ namespace BMTournamentPrizes.Extensions
                 {
                     desc += "Leg Armor: {LEG_ARMOR}\n";
                     keyValues.Add("LEG_ARMOR", item.ArmorComponent.LegArmor.ToString());
-                }                                                
+                }
             }
             if (item.IsMountable)
             {
                 desc += mountdesc;
-            }            
-            
+                keyValues.Add("SPEED", item.HorseComponent.Speed.ToString());
+                keyValues.Add("MANEUVER", item.HorseComponent.Maneuver.ToString());
+                keyValues.Add("HEALTH", item.HorseComponent.HitPoints.ToString());
+
+            }
+
             TextObject toolTip = new TextObject(desc);
-            foreach(var k in keyValues.Keys)
+            foreach (var k in keyValues.Keys)
             {
                 toolTip.SetTextVariable(k, keyValues[k]);
             }

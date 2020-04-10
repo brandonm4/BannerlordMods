@@ -16,16 +16,25 @@ namespace BMTweakCollection.Models
     public class DefaultSettlementFoodModelPatch1
     {
         public static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
+        {            
+            if (!(town.Settlement.SiegeEvent != null && town.IsUnderSiege &&
+                town.Settlement.SiegeEvent.BesiegerCamp.SiegeParties.Any<PartyBase>((PartyBase party) => party.MobileParty == Hero.MainHero.PartyBelongedTo)))
+            {
+                ExplainedNumber en = new ExplainedNumber(__result, explanation);
+                explanation?.Lines.Remove(explanation.Lines.Last());
+
+                if (town.IsCastle)
+                    en.Add(2.0f, new TextObject("Military rations"));
+                else if (town.IsTown)
+                    en.Add(4.0f, new TextObject("Citizen food drive"));
+
+                __result = en.ResultNumber;
+            }            
+        }
+
+        static bool Prepare()
         {
-            ExplainedNumber en = new ExplainedNumber(__result, explanation);
-            explanation?.Lines.Remove(explanation.Lines.Last());
-
-            if (town.IsCastle)
-                en.Add(2.0f, new TextObject("Military rations"));
-            else if (town.IsTown)
-                en.Add(4.0f, new TextObject("Citizen food drive"));
-
-            __result = en.ResultNumber;
+            return true;
         }
     }
 

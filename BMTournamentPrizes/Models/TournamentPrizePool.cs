@@ -25,6 +25,16 @@ namespace BMTournamentPrizes.Models
             get;
             set;
         }
+
+        public ItemRosterElement SelectPrizeItemRosterElement
+        {
+            get
+            {
+                return Prizes.Where(x => x.EquipmentElement.Item.StringId == SelectedPrizeStringId).FirstOrDefault();
+            }
+        }
+        
+
         public TournamentPrizePool()
         {
             Prizes = new ItemRoster();

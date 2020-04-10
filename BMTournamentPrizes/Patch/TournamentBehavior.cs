@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TournamentLib.Extensions;
 using TournamentLib.Models;
 
 namespace BMTweakCollection.Patches
@@ -165,7 +166,40 @@ namespace BMTweakCollection.Patches
                 var prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance.TournamentGame);
                 TournamentPrizePoolBehavior.SetTournamentSelectedPrize(__instance.TournamentGame, prize);
             }
-            return true;
+
+
+            //Override Standard behavior
+            if (Campaign.Current.GameMode != CampaignGameMode.Campaign)
+            {
+                return false;
+            }
+            GainRenownAction.Apply(Hero.MainHero, __instance.TournamentGame.TournamentWinRenown, false);
+            if (Hero.MainHero.MapFaction.IsKingdomFaction && Hero.MainHero.MapFaction.Leader != Hero.MainHero)
+            {
+                GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, 1f);
+            }
+            //Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(this._tournamentGame.Prize, 1, true);
+            var currentPool = TournamentPrizePoolBehavior.GetSettlementPrizePool(__instance.Settlement.StringId);
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(currentPool.SelectedPrizeStringId))
+                {
+                    Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.SelectPrizeItemRosterElement, 1, true);
+                }
+            }
+            catch(Exception ex)
+            {
+                FileLog.Log("Tournament XP Error Giving Prize:\n" + ex.ToStringFull());
+                Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
+            }
+            
+            if (__instance.OverallExpectedDenars > 0)
+            {
+                GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, __instance.OverallExpectedDenars, false);
+            }
+            Campaign.Current.TournamentManager.OnPlayerWinTournament(__instance.TournamentGame.GetType());
+
+            return false;
         }
 
 

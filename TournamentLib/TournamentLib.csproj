@@ -92,6 +92,7 @@
     <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="Extensions\StringHelpers.cs" />
     <Compile Include="Models\TournamentConfiguration.cs" />
+    <Compile Include="Models\TournamentSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +100,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BannerlordTweaks\ModLib\ModLib.csproj">
+      <Project>{002dc1e4-aef3-4080-8e71-a8c23d05c0b7}</Project>
+      <Name>ModLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

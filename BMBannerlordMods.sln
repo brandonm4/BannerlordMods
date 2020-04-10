@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3B5DD3A8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OtherModules", "OtherModules", "{1BC03B8D-831F-4B08-A2A7-774344AF767A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModLib", "..\BannerlordTweaks\ModLib\ModLib.csproj", "{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,9 +67,20 @@ Global
 		{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}.Release|x64.ActiveCfg = Release|x64
 		{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}.Release|x64.Build.0 = Release|x64
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|x64.Build.0 = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|x64.ActiveCfg = Release|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7} = {1BC03B8D-831F-4B08-A2A7-774344AF767A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5926C1A4-2DF6-4F00-BFA0-9DC86F966980}

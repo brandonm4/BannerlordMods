@@ -45,7 +45,7 @@ namespace BMTournamentPrizes.Behaviors
         {
             var currentPool = GetTournamentPrizePool(settlement);
             currentPool.Prizes = new ItemRoster();
-            currentPool.SelectedPrizeStringId = "";
+            currentPool.SelectedPrizeStringId = null;
             currentPool.RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
         }
         #region Events
@@ -147,9 +147,36 @@ namespace BMTournamentPrizes.Behaviors
             }
             currentPool.Prizes = new ItemRoster();
             foreach (var id in pickeditems)
-            {
-                ItemModifier imod = new ItemModifier();  //Maybe make a random itemmodifer generator thingy                
-                currentPool.Prizes.Add(new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(id), 1, null));
+            {                        
+                ItemModifier itemModifier = null;
+                var pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(id);
+            
+                if (pickedPrize.HasArmorComponent)
+                {
+                    ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
+                    if (itemModifierGroup != null)
+                    {
+                        itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                    }
+                    else
+                    {
+                        itemModifier = null;
+                    }                    
+                }
+                else if (pickedPrize.HasHorseComponent)
+                {
+                    ItemModifierGroup itemModifierGroup1 = pickedPrize.HorseComponent.ItemModifierGroup;
+                    if (itemModifierGroup1 != null)
+                    {
+                        itemModifier = itemModifierGroup1.GetRandomItemModifier(1f);
+                    }
+                    else
+                    {
+                        itemModifier = null;
+                    }                    
+                }
+                currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
+             //   currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null));
             }
 
             if (!keepTownPrize)
@@ -158,7 +185,7 @@ namespace BMTournamentPrizes.Behaviors
                 currentPool.SelectedPrizeStringId = selected.EquipmentElement.Item.StringId;
                 SetTournamentSelectedPrize(tournamentGame, selected.EquipmentElement.Item);
             }
-            return Game.Current.ObjectManager.GetObject<ItemObject>(currentPool.SelectedPrizeStringId);
+            return currentPool.SelectPrizeItemRosterElement.EquipmentElement.Item;
         }
         internal static List<string> GetValidTownItems(TournamentGame tournamentGame, int minValue, int maxValue, List<ItemObject.ItemTypeEnum> validtypes)
         {
@@ -293,7 +320,7 @@ namespace BMTournamentPrizes.Behaviors
                 TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
 
                 //Clear old prizes
-                settings.SelectedPrizeStringId = "";
+                settings.SelectedPrizeStringId  = null;
                 settings.Prizes = new ItemRoster();
                 settings.RemainingRerolls--;
 

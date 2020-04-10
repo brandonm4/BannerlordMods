@@ -16,16 +16,25 @@ namespace BMTweakCollection.Models
     public class DefaultSettlementFoodModelPatch1
     {
         public static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
+        {            
+            if (!(town.Settlement.SiegeEvent != null && town.IsUnderSiege &&
+                town.Settlement.SiegeEvent.BesiegerCamp.SiegeParties.Any<PartyBase>((PartyBase party) => party.MobileParty == Hero.MainHero.PartyBelongedTo)))
+            {
+                ExplainedNumber en = new ExplainedNumber(__result, explanation);
+                explanation?.Lines.Remove(explanation.Lines.Last());
+
+                if (town.IsCastle)
+                    en.Add(2.0f, new TextObject("Military rations"));
+                else if (town.IsTown)
+                    en.Add(4.0f, new TextObject("Citizen food drive"));
+
+                __result = en.ResultNumber;
+            }            
+        }
+
+        static bool Prepare()
         {
-            ExplainedNumber en = new ExplainedNumber(__result, explanation);
-            explanation?.Lines.Remove(explanation.Lines.Last());
-
-            if (town.IsCastle)
-                en.Add(2.0f, new TextObject("Military rations"));
-            else if (town.IsTown)
-                en.Add(4.0f, new TextObject("Citizen food drive"));
-
-            __result = en.ResultNumber;
+            return true;
         }
     }
 
@@ -48,19 +57,25 @@ namespace BMTweakCollection.Models
                             mod = 0.1f;
 
                         mod = MBRandom.RandomFloatRanged(mod, 1.0f);
-
+                        var orig = __result;
                         __result = __result * mod;
                         ExplainedNumber en = new ExplainedNumber(__result, explainer);
                         explainer?.Lines.Remove(explainer.Lines.Last());
-                        var textObject = new TextObject("{FIRST_NAME} scouted for food. Consumption reduced to {REDUCTION_PERCENT}%", null);
+                        var textObject = new TextObject("{FIRST_NAME} scouted for food. Consumption reduced by {REDUCTION_AMOUNT}", null);
                         textObject.SetTextVariable("FIRST_NAME", party.Scout.FirstName);
-                        textObject.SetTextVariable("REDUCTION_PERCENT", mod.ToString());
+                        textObject.SetTextVariable("REDUCTION_PERCENT", (orig-__result).ToString());
                         en.Add(__result, textObject);
                     }
                 }
             }
         }
+        static bool Prepare()
+        {
+            return true;
+        }
 
+
+        
     }
     
 }

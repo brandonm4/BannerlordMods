@@ -8,12 +8,18 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TournamentLib.Extensions;
 using TournamentLib.Models;
-
+using TaleWorlds.SaveSystem;
 namespace BMTournamentPrizes.Models
 {
+    //[SaveableClass(900500)]
     public class TournamentPrizeExpansion : GameModel
     {
+       
         private Dictionary<string, TournamentPrizePool> _settlementPrizes = new Dictionary<string, TournamentPrizePool>();
+
+       // [SaveableProperty(101)]
+        public Dictionary<string, TournamentPrizePool> SettlementPrizes { get => _settlementPrizes; set => _settlementPrizes = value; }
+
         //private static TournamentPrizeExpansion _instance;
 
         //public static TournamentPrizeExpansion Instance
@@ -34,7 +40,7 @@ namespace BMTournamentPrizes.Models
         public void SetTournamentSelectedPrize(string settlement_string_id, string prize_string_id)
         {
             TournamentPrizePool settings;
-            if (_settlementPrizes.TryGetValue(settlement_string_id, out settings))
+            if (SettlementPrizes.TryGetValue(settlement_string_id, out settings))
             {
                 try
                 {
@@ -52,9 +58,9 @@ namespace BMTournamentPrizes.Models
         public TournamentPrizePool GetPrizesSettingsForSettlement(string settlement_string_id)
         {
             TournamentPrizePool settings;
-            if (_settlementPrizes.ContainsKey(settlement_string_id))
+            if (SettlementPrizes.ContainsKey(settlement_string_id))
             {
-                settings = _settlementPrizes[settlement_string_id];
+                settings = SettlementPrizes[settlement_string_id];
             }
             else
             {
@@ -71,24 +77,24 @@ namespace BMTournamentPrizes.Models
         }
         public void ClearTournamentPrizes(string settlement_string_id)
         {
-            if (_settlementPrizes.ContainsKey(settlement_string_id))
+            if (SettlementPrizes.ContainsKey(settlement_string_id))
             {
-                _settlementPrizes.Remove(settlement_string_id);
+                SettlementPrizes.Remove(settlement_string_id);
             }
         }
         public void ClearAllTournamentPrizes()
         {
-            _settlementPrizes = new Dictionary<string, TournamentPrizePool>();
+            SettlementPrizes = new Dictionary<string, TournamentPrizePool>();
         }
         public void UpdatePrizeSettings(string settlement_string_id, TournamentPrizePool settings)
         {
-            if (_settlementPrizes.ContainsKey(settlement_string_id))
+            if (SettlementPrizes.ContainsKey(settlement_string_id))
             {
-                _settlementPrizes[settlement_string_id] = settings;
+                SettlementPrizes[settlement_string_id] = settings;
             }
             else
             {
-                _settlementPrizes.Add(settlement_string_id, settings);
+                SettlementPrizes.Add(settlement_string_id, settings);
             }
         }
 

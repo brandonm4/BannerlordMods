@@ -208,9 +208,23 @@ namespace TournamentLib.Models
             }
         }
 
+
+        public bool EnableTournamentTypeSelection
+        {
+            get
+            {
+#if DEBUG
+                    return true;
+#endif
+                return false;
+            }
+        }
+
         public PrizeConfiguration PrizeConfiguration { get; set; } = new PrizeConfiguration();
         public XPConfiguration XPConfiguration { get; set; } = new XPConfiguration();
         public TournamentTweaks TournamentTweaks { get; set; } = new TournamentTweaks();
+
+
     }
 
     public class Config

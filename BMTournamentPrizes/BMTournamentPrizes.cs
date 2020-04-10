@@ -1,4 +1,5 @@
-﻿using BMTournamentPrizes.Models;
+﻿using BMTournamentPrizes.Behaviors;
+using BMTournamentPrizes.Models;
 using HarmonyLib;
 using Newtonsoft.Json;
 using System;
@@ -29,27 +30,7 @@ namespace BMTournamentPrizes
         {
             base.OnSubModuleLoad();
             
-            try
-            {
-                var h = new Harmony("com.darkspyre.bannerlord.tournamentprizes");
-                h.PatchAll();
-            }
-            catch (Exception exception1)
-            {
-                string message;
-                Exception exception = exception1;
-                string str = exception.Message;
-                Exception innerException = exception.InnerException;
-                if (innerException != null)
-                {
-                    message = innerException.Message;
-                }
-                else
-                {
-                    message = null;
-                }
-                MessageBox.Show(string.Concat("Tournament XP Prizes Error patching:\n", str, " \n\n", message));
-            }
+          
 
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -60,21 +41,47 @@ namespace BMTournamentPrizes
 
         }
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-        {
-
-            CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
+        {            
             if (game.GameType is Campaign)
             {
-                gameStarterObject.AddModel(new TournamentPrizeExpansion());              
+                CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
+                //gameStarterObject.AddModel(new TournamentPrizeExpansion());              
+                MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);                
+                if (campaignGameStarter != null)
+                {
+                    campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
+                }
+
+                try
+                {
+                    var h = new Harmony("com.darkspyre.bannerlord.tournamentprizes");
+                    h.PatchAll();
+                }
+                catch (Exception exception1)
+                {
+                    string message;
+                    Exception exception = exception1;
+                    string str = exception.Message;
+                    Exception innerException = exception.InnerException;
+                    if (innerException != null)
+                    {
+                        message = innerException.Message;
+                    }
+                    else
+                    {
+                        message = null;
+                    }
+                    MessageBox.Show(string.Concat("Tournament XP Prizes Error patching:\n", str, " \n\n", message));
+                }
             }
         }
         public override void OnGameInitializationFinished(Game game)
         {
-            Campaign gameType = game.GameType as Campaign;
-            if (gameType != null)
-            {
-                TournamentPoolInitialization(gameType);
-            }
+            //Campaign gameType = game.GameType as Campaign;
+            //if (gameType != null)
+            //{
+            //    TournamentPoolInitialization(gameType);
+            //}
         }
 
 

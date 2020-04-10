@@ -14,6 +14,16 @@ using TournamentLib.Models;
 namespace BMTweakCollection.Patches
 {
 
+    //[HarmonyPatch(typeof(TournamentBehavior), "get_MaximumBetOdds")]
+    //public class TournamentBehaviorPatchMaximumBetOdds
+    //{
+    //    [HarmonyPostfix]
+    //    static float Postfix(float value)
+    //    {
+    //        return TournamentConfiguration.Instance.PrizeConfiguration.MaximumBetOdds;
+    //    }
+    //}
+    
 
     [HarmonyPatch(typeof(TournamentBehavior), "CalculateBet")]
     public class TournamentBehaviorPatchCalculateBet
@@ -21,6 +31,8 @@ namespace BMTweakCollection.Patches
         public static bool Prefix(ref TournamentBehavior __instance)
         {
 
+            
+            
             //var tb = Traverse.Create(__instance);
 
             if (__instance.IsPlayerParticipating)

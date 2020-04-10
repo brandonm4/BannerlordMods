@@ -89,5 +89,9 @@ namespace BMTournamentXP
         {
             //   throw new NotImplementedException();
         }
+        protected override void OnEndMission()
+        {
+            base.OnEndMission();
+        }
     }
 }

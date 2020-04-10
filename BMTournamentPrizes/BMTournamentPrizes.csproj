@@ -98,8 +98,13 @@
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlayerServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TaleWorlds.SaveSystem">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
     <Compile Include="BMTournamentPrizes.cs" />
     <Compile Include="Extensions\ItemObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -121,7 +121,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
       <Project>{1f9e0b27-68dd-4fc3-9d8c-e132f32c9a31}</Project>

@@ -427,7 +427,6 @@ namespace BMTournamentPrizes.Behaviors
 
         public override void SyncData(IDataStore dataStore)
         {
-            throw new NotImplementedException();
         }
     }
 }

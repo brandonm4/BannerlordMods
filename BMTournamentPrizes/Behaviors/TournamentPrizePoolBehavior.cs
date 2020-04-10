@@ -50,16 +50,16 @@ namespace BMTournamentPrizes.Behaviors
         #region Events
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
-
-            starter.AddGameMenuOption("town_arena", "bm_select_prize", "Select Prize",
-             new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
-             new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 0, true);
-
             var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
             starter.AddGameMenuOption("town_arena", "bm_reroll_price", text.ToString(),
                 new GameMenuOption.OnConditionDelegate(RerollCondition),
                 new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
-                false, 0, true);                  
+                false, -1, true);
+
+            starter.AddGameMenuOption("town_arena", "bm_select_prize", "Select Prize",
+             new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
+             new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, -1, true);
+                     
         }
         #endregion
 
@@ -144,7 +144,7 @@ namespace BMTournamentPrizes.Behaviors
             foreach (var id in pickeditems)
             {
                 ItemModifier imod = new ItemModifier();  //Maybe make a random itemmodifer generator thingy                
-                currentPool.Prizes.Add(new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(id), 1, imod));
+                currentPool.Prizes.Add(new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(id), 1, null));
             }
 
             if (!keepTownPrize)

@@ -10,16 +10,16 @@ using TournamentLib.Models;
 
 namespace BMTournamentPrizes.Models
 {
-    //[SaveableClass(4106000)]
+    [SaveableClass(4106000)]
     public class TournamentPrizePool : MBObjectBase
     {
-      // [SaveableProperty(300)]
-        public ItemRoster Prizes { get; set; } 
-    // [SaveableProperty(100)]
-        public string SelectedPrizeStringId { get; set; } 
-     // [SaveableProperty(200)]
-        public int RemainingRerolls { get; set; } 
-     // [SaveableProperty(20)]
+        [SaveableProperty(300)]
+        public ItemRoster Prizes { get; set; }
+        [SaveableProperty(100)]
+        public string SelectedPrizeStringId { get; set; }
+        [SaveableProperty(200)]
+        public int RemainingRerolls { get; set; }
+        [SaveableProperty(20)]
         public Town Town
         {
             get;
@@ -29,7 +29,7 @@ namespace BMTournamentPrizes.Models
         {
             Prizes = new ItemRoster();
             SelectedPrizeStringId = "";
-            RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;            
+            RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
         }
         public TournamentPrizePool(int rerolls = -1)
         {
@@ -39,7 +39,7 @@ namespace BMTournamentPrizes.Models
             if (rerolls >= 0)
             {
                 RemainingRerolls = rerolls;
-            }            
+            }
         }
 
     }

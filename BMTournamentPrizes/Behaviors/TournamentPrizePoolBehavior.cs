@@ -424,10 +424,10 @@ namespace BMTournamentPrizes.Behaviors
 
         public static bool TournamentTypeSelectCondition(MenuCallbackArgs args)
         {
-            if (!TournamentConfiguration.Instance.EnableTournamentTypeSelection)
-            {
-                return false;
-            }
+            //if (!TournamentConfiguration.Instance.EnableTournamentTypeSelection)
+            //{
+            //    return false;
+            //}
             bool flag;
             TextObject textObject;
             bool flag1 = Campaign.Current.Models.SettlementAccessModel.CanMainHeroDoSettlementAction(Settlement.CurrentSettlement, SettlementAccessModel.SettlementAction.JoinTournament, out flag, out textObject);
@@ -438,11 +438,12 @@ namespace BMTournamentPrizes.Behaviors
         {
             List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
             tournamentTypeElements.Add(new InquiryElement("melee", "Standard Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
-            tournamentTypeElements.Add(new InquiryElement("melee2", "Alternate Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
-            //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
-            //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
-            //tournamentTypeElements.Add(new InquiryElement("race", "Horse Racing Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
-
+            tournamentTypeElements.Add(new InquiryElement("melee2", "Individual Only Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+#if DEBUG
+            tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("race", "Horse Racing Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
+#endif
             InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
                     "Tournament Type Selection", "What kind of Tournament would you like to compete in today?", tournamentTypeElements, true, true, "OK", "Cancel",
                     new Action<List<InquiryElement>>(OnSelectTournamentStyle), new Action<List<InquiryElement>>(OnSelectDoNothing)), true);
@@ -472,6 +473,9 @@ namespace BMTournamentPrizes.Behaviors
                     case "melee":
                         tournamentGame = new FightTournamentGame(town);
                         break;
+                    case "melee2":
+                        tournamentGame = new Fight2TournamentGame(town);
+                        break;
                     case "archery":
                         tournamentGame = new ArcheryTournamentGame(town);
                         break;
@@ -488,7 +492,7 @@ namespace BMTournamentPrizes.Behaviors
 
                 if (tournamentGame.GetType() != currentGame.GetType())
                 {
-                    ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tournamentGame);
+                    ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(currentGame);
                     tournamentManager.AddTournament(tournamentGame);
                 }
 
@@ -509,7 +513,7 @@ namespace BMTournamentPrizes.Behaviors
         }
 
 
-        #endregion
+#endregion
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));

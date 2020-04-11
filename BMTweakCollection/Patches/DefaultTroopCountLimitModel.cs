@@ -18,9 +18,9 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionMain.Configuration.MaxHideoutTroopsEnabled)
+            if (BMTweakCollectionSubModule.Configuration.MaxHideoutTroopsEnabled)
             {
-                __result = BMTweakCollectionMain.Configuration.MaxHideoutTroops;
+                __result = BMTweakCollectionSubModule.Configuration.MaxHideoutTroops;
                 return false; // make sure you only skip if really necessary
             }
             return false;

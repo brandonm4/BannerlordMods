@@ -13,21 +13,20 @@ namespace TournamentLib
 {
     public class BMSubModuleBase : MBSubModuleBase
     {
-        public static string Version { get { return TournamentConfiguration.TournamentXPVersion; } }
-
-        public  static void ShowMessage(string msg)
+        public  static void ShowMessage(string msg, Color? color =null)
         {
-            InformationManager.DisplayMessage(new InformationMessage(msg));
+            if (color == null)
+                color = Color.White;
+
+            InformationManager.DisplayMessage(new InformationMessage(msg,(Color)color));
         }
 
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
             string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournament.config.xml");
 
             if (File.Exists(appSettings))
-            {
-                //Configuration = new BMTournamentXPConfiguration(appSettings);                
+            {                        
                 TournamentConfiguration.Instance.LoadXML(appSettings);
             }
         }

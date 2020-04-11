@@ -37,6 +37,10 @@ namespace BMTweakCollection.Patches
             }
             //return GameTexts.FindText("str_execute_prisoner", null).ToString();
         }
+        static bool Prepare()
+        {
+            return false;
+        }
     }
 
 

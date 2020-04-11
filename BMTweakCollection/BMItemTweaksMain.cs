@@ -21,9 +21,9 @@ using TournamentLib;
 
 namespace BMTweakCollection
 {
-    public class BMTweakCollectionMain : BMSubModuleBase
+    public class BMTweakCollectionSubModule : BMSubModuleBase
     {
-
+        
         public static BMRandomTweaksConfiguration Configuration { get; set; }
 
         protected override void OnSubModuleLoad()
@@ -32,12 +32,50 @@ namespace BMTweakCollection
 
             string appSettings = String.Concat(BasePath.Name, "Modules/BMTweakCollection/ModuleData/BMTweakCollection.config.json");
             var configtxt = File.ReadAllText(appSettings);
-            BMTweakCollectionMain.Configuration = JsonConvert.DeserializeObject<BMRandomTweaksConfiguration>(configtxt);
+            BMTweakCollectionSubModule.Configuration = JsonConvert.DeserializeObject<BMRandomTweaksConfiguration>(configtxt);
 
+            //Stupid way to do this
+         
+            //Configuration.MainPartySkillMods.Add(DefaultSkills.Crafting, 3.0f);
+
+
+           
+           // LootCollectorPatch.DoPatching();
+
+
+        }
+
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            base.OnBeforeInitialModuleScreenSetAsRoot();
+
+            ShowMessage("Brandon's Tweak Collection Module Loaded");
+        }
+        public override void OnGameInitializationFinished(Game game)
+        {
+            base.OnGameInitializationFinished(game);
+            FixPerkPeakForm();
+            FixPerkHealthyScout();
+
+            Configuration.MainPartySkillMods = new Dictionary<SkillObject, float>();
+            Configuration.MainPartySkillMods.Add(DefaultSkills.Charm, 3.0f);
+            Configuration.MainPartySkillMods.Add(DefaultSkills.Leadership, 3.0f);          
+        }
+
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
+            CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
+            if (campaignGameStarter != null)
+            {
+                
+            }
             try
             {
-                var h = new Harmony("com.darkspyre.bannerlord.tweakcol");
-                h.PatchAll();
+                //LootCollectorPatch.DoPatching();
+                var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol");
+                _harmony.PatchAll();
+
+                //LootCollectorPatch.DoPatching();
             }
             catch (Exception exception1)
             {
@@ -56,40 +94,9 @@ namespace BMTweakCollection
                 MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
             }
 
-           // LootCollectorPatch.DoPatching();
-
-
         }
 
-        protected override void OnBeforeInitialModuleScreenSetAsRoot()
-        {
-            base.OnBeforeInitialModuleScreenSetAsRoot();
 
-            ShowMessage("Brandon's Tweak Collection Module Loaded");
-        }
-        public override void OnGameInitializationFinished(Game game)
-        {
-            base.OnGameInitializationFinished(game);
-            FixPerkPeakForm();
-
-            FixPerkHealthyScout();
-
-
-
-        }
-
-        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-        {
-            base.OnGameStart(game, gameStarterObject);
-
-            CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
-            if (campaignGameStarter != null)
-            {
-             
-            }
-        }
-
-        
 
         private void FixPerkPeakForm()
         {

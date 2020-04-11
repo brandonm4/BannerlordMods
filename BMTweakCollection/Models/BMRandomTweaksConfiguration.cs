@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.Core;
 
 namespace BMTweakCollection.Models
 {
@@ -20,6 +21,7 @@ namespace BMTweakCollection.Models
         public bool RemoveAllEquippedHorses { get; set; } = false;
         public int BonusTournamentGold { get; set; } = 500;
 
-        
+        public Dictionary<SkillObject, float> MainPartySkillMods = new Dictionary<SkillObject, float>() { };
+
     }
 }

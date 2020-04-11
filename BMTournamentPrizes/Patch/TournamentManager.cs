@@ -33,7 +33,7 @@ namespace BMTournamentPrizes.Patch
     {
         public static void Prefex(TournamentGame tournament)
         {
-            TournamentPrizePoolBehavior.ClearTournamentPrizes(tournament.Town.Settlement.StringId);
+            TournamentPrizePoolBehavior.ClearTournamentPrizes(tournament.Town.Settlement);
         }
         static bool Prepare()
         {

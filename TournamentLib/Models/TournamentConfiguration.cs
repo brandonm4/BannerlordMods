@@ -254,7 +254,7 @@ namespace TournamentLib.Models
         public bool CompanionsWinPrizes { get; set; } = false;
 
         public bool OppenentDifficultyAffectsOdds { get; set; } = true;
-        public float MaximumBetOdds { get; set; } = 3;
+        public float MaximumBetOdds { get; set; } = 4;
         public int BonusTournamentMatchGold { get; set; } = 0;
         public int BonusTournamentWinGold { get; set; } = 0;
         public bool BonusTournamentMatchGoldImmediate { get; set; } = false;

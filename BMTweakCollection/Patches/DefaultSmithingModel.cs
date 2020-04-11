@@ -17,7 +17,7 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
+            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
             {
                 __result = 1;
                 return false; // make sure you only skip if really necessary
@@ -34,7 +34,7 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
+            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
             {
                 __result = 1;
                 return false; // make sure you only skip if really necessary
@@ -51,7 +51,7 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
+            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
             {
                 __result = 1;
                 return false; // make sure you only skip if really necessary
@@ -69,10 +69,10 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result, int count)
         {
-            if (BMTweakCollectionMain.Configuration.CustomSmithingModelEnabled)
+            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
             {
-                __result = (count * count + 12) / BMTweakCollectionMain.Configuration.CustomSmithingXPDivisor;
-                return false; // make sure you only skip if really necessary
+                __result = (count * count + 12) / BMTweakCollectionSubModule.Configuration.CustomSmithingXPDivisor;
+                return false; 
             }
             return true;
         }

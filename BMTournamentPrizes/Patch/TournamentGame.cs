@@ -24,7 +24,8 @@ namespace BMTournamentPrizes.Patch
                     || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
                     || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla                    )
                 {
-                    prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance);                  
+                    TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Town.Settlement, __result);
+                    prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance,null,false);                  
                 }
                 else
                 {

@@ -22,18 +22,24 @@ namespace BMTournamentPrizes.Behaviors
     {
         public TournamentPrizePoolBehavior() { }
 
-        public static TournamentPrizePool GetSettlementPrizePool(string settlementStringId)
+        public static TournamentPrizePool GetTournamentPrizePool(string settlementStringId)
         {
             return GetTournamentPrizePool(Campaign.Current.Settlements.Where(x => x.StringId == settlementStringId).Single());
         }
-        public static TournamentPrizePool GetTournamentPrizePool(Settlement settlement)
+        public static TournamentPrizePool GetTournamentPrizePool(Settlement settlement, ItemObject prize = null)
         {
             Town component = settlement.Town;
             TournamentPrizePool obj = MBObjectManager.Instance.GetObject<TournamentPrizePool>((TournamentPrizePool x) => x.Town == component);
             if (obj == null)
             {
-                obj = MBObjectManager.Instance.CreateObject<TournamentPrizePool>();
-                obj.Town = component;
+                obj = MBObjectManager.Instance.CreateObject<TournamentPrizePool>();               
+                obj.Town = component;             
+            }            
+            if (prize != null)
+            {
+                obj.Prizes = new ItemRoster();
+                obj.Prizes.Add(new ItemRosterElement(prize, 1));
+                obj.SelectedPrizeStringId = prize.StringId;
             }
             return obj;
         }
@@ -45,25 +51,32 @@ namespace BMTournamentPrizes.Behaviors
         {
             var currentPool = GetTournamentPrizePool(settlement);
             currentPool.Prizes = new ItemRoster();
-            currentPool.SelectedPrizeStringId = null;
+            currentPool.SelectedPrizeStringId = "";
             currentPool.RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
         }
         #region Events
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
-            var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
-            starter.AddGameMenuOption("town_arena", "bm_reroll_tournamentprize", text.ToString(),
-                new GameMenuOption.OnConditionDelegate(RerollCondition),
-                new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
-                false, -1, true);
-
-            starter.AddGameMenuOption("town_arena", "bm_select_tournamentprize", "Select Prize",
-             new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
-             new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, -1, true);
+            if (TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled)
+            {
+                var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
+                starter.AddGameMenuOption("town_arena", "bm_reroll_tournamentprize", text.ToString(),
+                    new GameMenuOption.OnConditionDelegate(RerollCondition),
+                    new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
+                    false, -1, true);
+            }
+            if (TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection)
+            {
+                starter.AddGameMenuOption("town_arena", "bm_select_tournamentprize", "Select Prize",
+                 new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
+                 new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 1, true);
+            }
+            
+            
 
             starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", "Select Tournament Style",
              new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
-             new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, -1, true);
+             new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, 2, true);
 
         }
         #endregion
@@ -163,20 +176,20 @@ namespace BMTournamentPrizes.Behaviors
                         itemModifier = null;
                     }                    
                 }
-                else if (pickedPrize.HasHorseComponent)
-                {
-                    ItemModifierGroup itemModifierGroup1 = pickedPrize.HorseComponent.ItemModifierGroup;
-                    if (itemModifierGroup1 != null)
-                    {
-                        itemModifier = itemModifierGroup1.GetRandomItemModifier(1f);
-                    }
-                    else
-                    {
-                        itemModifier = null;
-                    }                    
-                }
+                //else if (pickedPrize.HasHorseComponent)
+                //{
+                //    ItemModifierGroup itemModifierGroup1 = pickedPrize.HorseComponent.ItemModifierGroup;
+                //    if (itemModifierGroup1 != null)
+                //    {
+                //        itemModifier = itemModifierGroup1.GetRandomItemModifier(1f);
+                //    }
+                //    else
+                //    {
+                //        itemModifier = null;
+                //    }                    
+                //}
                 currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
-             //   currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null));
+               // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
             }
 
             if (!keepTownPrize)
@@ -204,10 +217,14 @@ namespace BMTournamentPrizes.Behaviors
                     x.Amount > 0
                     && validtypes.Contains(x.EquipmentElement.Item.ItemType))
                    .Select(x => x.EquipmentElement.Item.StringId).ToList();
+                FileLog.Log("TournamentPrizeSystem : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
+                FileLog.Log("No valid town prizes found in value range, reverted to all items in town." );
             }
             if (list.Count == 0)
             {
                 list = TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems;
+                FileLog.Log("TournamentPrizeSystem in " + tournamentGame.Town.Name.ToString() + " : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
+                FileLog.Log("No custom prizes found in value range");
             }
             if (list.Count == 0)
             {
@@ -377,16 +394,22 @@ namespace BMTournamentPrizes.Behaviors
                 //  InformationManager.Clear();
                 foreach (ItemRosterElement ire in currentPool.Prizes)
                 {
-                    ItemObject p = ire.EquipmentElement.Item;
+                    var p = ire.EquipmentElement;
                     try
                     {
-                        var ii = new ImageIdentifier(p.StringId, ImageIdentifierType.Item, p.Name.ToString());
-                        prizeElements.Add(new InquiryElement(p.StringId, p.Name.ToString(), ii, true, p.ToToolTipTextObject().ToString()));
-                        //  InformationManager.AddTooltipInformation(typeof(ItemObject), new object[] { p });
+                        var ii = new ImageIdentifier(p.Item.StringId, ImageIdentifierType.Item, p.GetModifiedItemName().ToString());
+                        // prizeElements.Add(new InquiryElement(p.Item.StringId, ii, true, p.Item.ToToolTipTextObject().ToString()));
+                        prizeElements.Add(new InquiryElement(
+                            p.Item.StringId,
+                            p.GetModifiedItemName().ToString(),
+                            ii,
+                            true,
+                            p.Item.ToToolTipTextObject().ToString()
+                            ));
                     }
                     catch (Exception ex)
                     {
-                        FileLog.Log("ERROR: Tournament Prize System\nFailed to add prize element to display" + p.StringId);
+                        FileLog.Log("ERROR: Tournament Prize System\nFailed to add prize element to display" + p.Item.StringId);
                         FileLog.Log(ex.ToStringFull());
                     }
                 }
@@ -469,13 +492,16 @@ namespace BMTournamentPrizes.Behaviors
             tournamentTypeElements.Add(new InquiryElement("melee", "Standard Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
             tournamentTypeElements.Add(new InquiryElement("melee2", "Individual Only Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
 #if DEBUG
-            tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
-            tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
-            tournamentTypeElements.Add(new InquiryElement("race", "Horse Racing Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("race", "Horse Racing Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("race", "External Application Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
 #endif
             InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
                     "Tournament Type Selection", "What kind of Tournament would you like to compete in today?", tournamentTypeElements, true, true, "OK", "Cancel",
                     new Action<List<InquiryElement>>(OnSelectTournamentStyle), new Action<List<InquiryElement>>(OnSelectDoNothing)), true);
+
+            
             try
             {
                 GameMenu.SwitchToMenu("town_arena");
@@ -552,5 +578,48 @@ namespace BMTournamentPrizes.Behaviors
         public override void SyncData(IDataStore dataStore)
         {
         }
+
+        #region Rewards and Calculations
+        public static float GetRenownValue(CharacterObject character)
+        {
+            var worth = 0f;
+            if (character.IsHero)
+            {
+                worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.HeroBase];
+                var hero = character.HeroObject;
+                if (hero != null)
+                {
+                    if (hero.IsNoble)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsNoble];
+                    }
+                    if (hero.IsNotable)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsNotable];
+                    }
+                    if (hero.IsCommander)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsCommander];
+                    }
+                    if (hero.IsMinorFactionHero)
+                    {
+                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                    }
+                    if (hero.IsFactionLeader)
+                    {
+                        if (hero.MapFaction.IsKingdomFaction)
+                            worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMajorFactionLeader];
+                        if (hero.MapFaction.IsMinorFaction)
+                            worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                    }
+                }
+            }
+            else
+            {
+                worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerTroopTier[character.Tier];
+            }
+            return worth;
+        }
+        #endregion
     }
 }

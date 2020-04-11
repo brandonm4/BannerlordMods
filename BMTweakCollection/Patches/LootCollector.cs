@@ -1,9 +1,12 @@
 ﻿using HarmonyLib;
+using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
@@ -14,13 +17,13 @@ namespace BMTweakCollection.Patches
 
     //public static class LootCollectorInfo
     //{
-        //public static Type ClassType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+    //public static Type ClassType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
     //}
 
 
-  // [HarmonyPatch(Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))]
-  
-   // [HarmonyPatch(LootCollectorInfo.ClassType, "GetXpFromHit")]
+    // [HarmonyPatch(Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))]
+
+    // [HarmonyPatch(LootCollectorInfo.ClassType, "GetXpFromHit")]
     public class LootCollectorPatch
     {
         // make sure DoPatching() is called at start either by
@@ -29,24 +32,48 @@ namespace BMTweakCollection.Patches
 
         public static void DoPatching()
         {
-            var harmony = new Harmony("com.example.patch");
             LootCollectorType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
             var mOriginal = AccessTools.Method(LootCollectorType, "GiveShareOfLootToParty");
             var prefix = typeof(LootCollectorPatch).GetMethod("GiveShareOfLootToPartyPre");
 
-            // in general, add null checks here (new HarmonyMethod() does it for you too)
+            MethodInfo TargetMethodInfo = LootCollectorType.GetMethod("GiveShareOfLootToParty", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            MethodInfo PatchMethodInfo = typeof(LootCollectorPatch).GetMethod(nameof(GiveShareOfLootToPartyPre), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
-            harmony.Patch(mOriginal, new HarmonyMethod(prefix));
+            try
+            {
+                var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol2");
+                _harmony.Patch(TargetMethodInfo,
+                    prefix: new HarmonyMethod(PatchMethodInfo));
+            }
+            catch (Exception exception1)
+            {
+                string message;
+                Exception exception = exception1;
+                string str = exception.Message;
+                Exception innerException = exception.InnerException;
+                if (innerException != null)
+                {
+                    message = innerException.Message;
+                }
+                else
+                {
+                    message = null;
+                }
+                MessageBox.Show(string.Concat("Tournament XP Error patching:\n", str, " \n\n", message));
+            }
+
         }
 
-    
-        internal static bool GiveShareOfLootToPartyPre(PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount, 
-            ref TroopRoster ___LootedMembers,
-            ref ItemRoster ___LootedItems,
-            ref TroopRoster ___LootedPrisoners,
-            ref TroopRoster ___CasualtiesInBattle
-            )
+
+        internal static bool GiveShareOfLootToPartyPre(ref object __instance, PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount)
         {
+            //var ___LootedMembers= Traverse.Create<LootCollectorType>(__instance).Field("LootedMembers").GetValue()
+            var ___LootedMembers = LootCollectorType.GetField("LootedMembers").GetValue(__instance) as TroopRoster;
+            var ___LootedPrisoners = LootCollectorType.GetField("LootedPrisoners").GetValue(__instance) as TroopRoster;
+            var ___CasualtiesInBattle = LootCollectorType.GetField("CasualtiesInBattle").GetValue(__instance) as TroopRoster;
+            var ___LootedItems = LootCollectorType.GetField("CasualtiesInBattle").GetValue(__instance) as ItemRoster;
+
+
             bool flag = winnerParty == PartyBase.MainParty;
             List<TroopRosterElement> troopRosterElements = new List<TroopRosterElement>();
             foreach (TroopRosterElement lootedMember in ___LootedMembers)
@@ -144,15 +171,12 @@ namespace BMTweakCollection.Patches
             }
             if (flag)
             {
-                //IEnumerable<ItemRosterElement> itemRosterElements1 = this.LootCasualties(troopRosterElements1, explainedNumber.ResultNumber);
-                LootCollectorType.GetMethod("LootCasualties").Invoke()
+                IEnumerable<ItemRosterElement> itemRosterElements1 = LootCasualties(troopRosterElements1, explainedNumber.ResultNumber);
                 partyToReceiveLoot.ItemRoster.Add(itemRosterElements1);
             }
             else if (partyToReceiveLoot.LeaderHero != null)
             {
-
-
-               // int gold = LootCollectorPatch.ConvertLootToGold(this.LootCasualties(troopRosterElements1, 0.5f));
+                int gold = ConvertLootToGold(LootCasualties(troopRosterElements1, 0.5f));
                 gold = MBMath.Round((float)gold * 0.5f * explainedNumber.ResultNumber);
                 GiveGoldAction.ApplyBetweenCharacters(null, partyToReceiveLoot.LeaderHero, gold, false);
                 return false;
@@ -173,7 +197,7 @@ namespace BMTweakCollection.Patches
             return num;
         }
 
-        private IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor)
+        private static IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor)
         {
             EquipmentElement equipmentElement;
             ItemModifier randomModifierWithTarget;
@@ -184,7 +208,7 @@ namespace BMTweakCollection.Patches
             {
                 for (int i = 0; i < 1; i++)
                 {
-                    Equipment randomEquipment = LootCollector.GetRandomEquipment(shareFromCasualty.Character);
+                    Equipment randomEquipment = GetRandomEquipment(shareFromCasualty.Character);
                     equipmentElements.Clear();
                     int num = MBRandom.RoundRandomized(lootFactor);
                     for (int j = 0; j < num; j++)
@@ -243,6 +267,16 @@ namespace BMTweakCollection.Patches
                 }
             }
             return itemRosters;
+        }
+
+
+        private static Equipment GetRandomEquipment(CharacterObject ch)
+        {
+            if (ch.IsHero)
+            {
+                return ch.FirstBattleEquipment;
+            }
+            return ch.BattleEquipments.ToList<Equipment>()[MBRandom.RandomInt(ch.BattleEquipments.Count<Equipment>())];
         }
     }
 }

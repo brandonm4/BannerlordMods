@@ -13,7 +13,7 @@ namespace TournamentLib.Models
     {
         private const string instanceID = "TournamentXPSettings";
         private static Settings _instance = null;
-        public override string ModName => "Tournament XP";
+        public override string ModName => "BMTournamentXP";
         public override string ModuleFolderName => ModLibSubModule.ModuleFolderName;
         public static Settings Instance
         {

@@ -58,13 +58,15 @@ namespace BMTweakCollection.Models
 
                         mod = MBRandom.RandomFloatRanged(mod, 1.0f);
                         var orig = __result;
-                        __result = __result * mod;
+                        var deduction = (orig - ((__result * mod))) * -1f; ;
+
                         ExplainedNumber en = new ExplainedNumber(__result, explainer);
                         explainer?.Lines.Remove(explainer.Lines.Last());
-                        var textObject = new TextObject("{FIRST_NAME} scouted for food. Consumption reduced by {REDUCTION_AMOUNT}", null);
+                        var textObject = new TextObject("{FIRST_NAME} scouted for food.", null);
                         textObject.SetTextVariable("FIRST_NAME", party.Scout.FirstName);
-                        textObject.SetTextVariable("REDUCTION_PERCENT", (orig-__result).ToString());
-                        en.Add(__result, textObject);
+                        //textObject.SetTextVariable("REDUCTION_AMOUNT", (orig-__result).ToString());
+                        en.Add(deduction, textObject);
+                        __result = en.ResultNumber;
                     }
                 }
             }

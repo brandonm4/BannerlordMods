@@ -404,7 +404,7 @@ namespace BMTournamentPrizes.Behaviors
                             p.GetModifiedItemName().ToString(),
                             ii,
                             true,
-                            p.Item.ToToolTipTextObject().ToString()
+                            p.ToToolTipTextObject().ToString()
                             ));
                     }
                     catch (Exception ex)

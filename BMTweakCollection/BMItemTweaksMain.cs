@@ -68,7 +68,7 @@ namespace BMTweakCollection
                 var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol");
                 _harmony.PatchAll();
 
-                //LootCollectorPatch.DoPatching();
+                LootCollectorPatch.DoPatching();
             }
             catch (Exception exception1)
             {

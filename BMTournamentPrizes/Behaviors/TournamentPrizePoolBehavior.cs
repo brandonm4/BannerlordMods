@@ -236,6 +236,7 @@ namespace BMTournamentPrizes.Behaviors
             && validtypes.Contains(x.EquipmentElement.Item.ItemType)
            && x.EquipmentElement.Item.Value >= minValue
            && x.EquipmentElement.Item.Value <= maxValue
+           && !x.EquipmentElement.Item.NotMerchandise 
               ).Select(x => x.EquipmentElement.Item.StringId).ToList();
 
             if (list.Count == 0)

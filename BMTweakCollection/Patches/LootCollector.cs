@@ -70,9 +70,9 @@ namespace BMTweakCollection.Patches
             //var ___LootedMembers= Traverse.Create<LootCollectorType>(__instance).Field("LootedMembers").GetValue()
             var ___LootedMembers = LootCollectorType.GetProperty("LootedMembers", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
             var ___LootedPrisoners = LootCollectorType.GetProperty("LootedPrisoners", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
-            var ___CasualtiesInBattle = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
-            var ___LootedItems = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as ItemRoster;
-
+            var ___CasualtiesInBattle = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.Public | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
+            var ___LootedItems = LootCollectorType.GetProperty("LootedItems", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as ItemRoster;
+            
 
             bool flag = winnerParty == PartyBase.MainParty;
             List<TroopRosterElement> troopRosterElements = new List<TroopRosterElement>();
@@ -214,7 +214,7 @@ namespace BMTweakCollection.Patches
                     for (int j = 0; j < num; j++)
                     {
                         float expectedLootedItemValue = ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
-                        EquipmentElement randomItem = randomEquipment.GetRandomItem(expectedLootedItemValue);
+                        EquipmentElement randomItem = randomEquipment.GetRandomItem(expectedLootedItemValue * MobileParty.GetMainPartySkillCounsellor(DefaultSkills.Roguery).GetSkillValue(DefaultSkills.Roguery));
                         if (randomItem.Item != null && !randomItem.Item.NotMerchandise && equipmentElements.Count<EquipmentElement>((EquipmentElement x) => x.Item.Type == randomItem.Item.Type) == 0)
                         {
                             equipmentElements.Add(randomItem);

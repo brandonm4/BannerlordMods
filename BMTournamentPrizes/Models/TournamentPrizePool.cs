@@ -8,7 +8,7 @@ using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
 using TournamentLib.Models;
 
-namespace BMTournamentPrizes.Models
+namespace TournamentsXPanded.Models
 {
 
     /* If you are viewing this for ideas on how to do things, don't do this 
@@ -18,7 +18,7 @@ namespace BMTournamentPrizes.Models
      * so in this particular case, I felt it was justifiable.
      * I haven't been able to succesfully deregister my classes to make for a /clean/ save yet.  
      */
-    [SaveableClass(BMTournamentPrizesMain.OBJ_PRIZEPOOL)]
+    [SaveableClass(TournamentsXPandedSubModule.OBJ_PRIZEPOOL)]
     public class TournamentPrizePool : MBObjectBase
     {
         [SaveableProperty(300)]
@@ -63,7 +63,7 @@ namespace BMTournamentPrizes.Models
     }
     public class TournamentPrizePoolSaveableTypeDefiner : SaveableTypeDefiner
     {
-        public TournamentPrizePoolSaveableTypeDefiner() : base(BMTournamentPrizesMain.SAVEDEF_PRIZEPOOL)
+        public TournamentPrizePoolSaveableTypeDefiner() : base(TournamentsXPandedSubModule.SAVEDEF_PRIZEPOOL)
         {
         }
 

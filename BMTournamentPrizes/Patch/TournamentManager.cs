@@ -1,11 +1,11 @@
-﻿using BMTournamentPrizes.Behaviors;
-using BMTournamentPrizes.Models;
+﻿using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TournamentLib.Models;
 
-namespace BMTournamentPrizes.Patch
+namespace TournamentsXPanded.Patch
 {
 
     [HarmonyPatch(typeof(TournamentManager), "AddTournament")]
@@ -13,7 +13,7 @@ namespace BMTournamentPrizes.Patch
     {
         public static void Prefex(TournamentGame game)
         {
-            //BMTournamentPrizesMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);
+            //TournamentsXPandedMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);
             if (game.Prize == null)
             {
                 FileLog.Log("BMTournamentPrize: AddTournament Detected a missing prize.  Correcting with vanilla item.");

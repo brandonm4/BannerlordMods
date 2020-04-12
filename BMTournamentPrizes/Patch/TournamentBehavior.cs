@@ -1,6 +1,6 @@
-﻿using BMTournamentPrizes;
-using BMTournamentPrizes.Behaviors;
-using BMTournamentPrizes.Models;
+﻿using TournamentsXPanded;
+using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 using HarmonyLib;
 using SandBox.TournamentMissions.Missions;
 using System;

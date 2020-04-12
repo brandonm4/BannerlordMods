@@ -23,12 +23,7 @@ namespace TournamentLib
 
         protected override void OnSubModuleLoad()
         {
-            string appSettings = String.Concat(BasePath.Name, "Modules/BMTournamentXP/ModuleData/BMTournament.config.xml");
-
-            if (File.Exists(appSettings))
-            {                        
-                TournamentConfiguration.Instance.LoadXML(appSettings);
-            }
+           
         }
     }
 }

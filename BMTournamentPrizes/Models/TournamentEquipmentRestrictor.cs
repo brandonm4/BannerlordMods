@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.Core;
 
-namespace BMTournamentPrizes.Models
+namespace TournamentsXPanded.Models
 {
     internal class TournamentEquipmentRestrictor
     {

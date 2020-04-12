@@ -1,5 +1,5 @@
-﻿using BMTournamentPrizes.Behaviors;
-using BMTournamentPrizes.Models;
+﻿using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 using HarmonyLib;
 using Newtonsoft.Json;
 using System;
@@ -14,9 +14,9 @@ using TaleWorlds.MountAndBlade;
 using TournamentLib;
 using TournamentLib.Models;
 
-namespace BMTournamentPrizes
+namespace TournamentsXPanded
 {
-    public class BMTournamentPrizesMain : BMSubModuleBase
+    public class TournamentsXPandedSubModule : BMSubModuleBase
     {
 
         private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
@@ -37,13 +37,16 @@ namespace BMTournamentPrizes
                     d.ItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ExcludedItemTypeString);
                 }
             }
+            if (TournamentXPSettings.Instance.MaximumBetOdds > 0)
+            {
 
+            }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
 
-            ShowMessage("Tournament XPerience Prize Module Loaded");
+            ShowMessage("Tournaments XPanded Loaded");
 
         }
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

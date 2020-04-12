@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMTournamentXP", "BMTournamentXP\BMTournamentXP.csproj", "{B63EFDBB-9FAD-468E-B114-CBDE842723F4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMTweakCollection", "BMTweakCollection\BMTweakCollection.csproj", "{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMTournamentPrizes", "BMTournamentPrizes\BMTournamentPrizes.csproj", "{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentXPanded", "BMTournamentPrizes\TournamentXPanded.csproj", "{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentLib", "TournamentLib\TournamentLib.csproj", "{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3B5DD3A8-D2C2-4247-A360-3E7ECD9F4F2C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OtherModules", "OtherModules", "{1BC03B8D-831F-4B08-A2A7-774344AF767A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModLib", "..\BannerlordTweaks\ModLib\ModLib.csproj", "{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Debug|x64.ActiveCfg = Debug|x64
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Debug|x64.Build.0 = Debug|x64
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Release|x64.ActiveCfg = Release|x64
-		{B63EFDBB-9FAD-468E-B114-CBDE842723F4}.Release|x64.Build.0 = Release|x64
 		{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34C89FC8-1C6A-4D51-8BC5-48FBA4DCAEE7}.Debug|x64.ActiveCfg = Debug|x64
@@ -55,9 +47,20 @@ Global
 		{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}.Release|x64.ActiveCfg = Release|x64
 		{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}.Release|x64.Build.0 = Release|x64
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Debug|x64.Build.0 = Debug|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|x64.ActiveCfg = Release|Any CPU
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{002DC1E4-AEF3-4080-8E71-A8C23D05C0B7} = {1BC03B8D-831F-4B08-A2A7-774344AF767A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5926C1A4-2DF6-4F00-BFA0-9DC86F966980}

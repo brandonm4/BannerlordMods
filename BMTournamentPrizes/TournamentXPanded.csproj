@@ -7,8 +7,8 @@
     <ProjectGuid>{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BMTournamentPrizes</RootNamespace>
-    <AssemblyName>BMTournamentPrizes</AssemblyName>
+    <RootNamespace>TournamentsXPanded</RootNamespace>
+    <AssemblyName>TournamentsXPanded</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -32,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BMTournamentXP\bin\Win64_Shipping_Client\</OutputPath>
+    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXPanded\bin\Win64_Shipping_Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -40,7 +40,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BMTournamentXP\bin\Win64_Shipping_Client\</OutputPath>
+    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentXPanded\bin\Win64_Shipping_Client\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -105,9 +105,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
-    <Compile Include="BMTournamentPrizes.cs" />
+    <Compile Include="SubModule.cs" />
     <Compile Include="Extensions\ItemObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Patch\DefaultCombatXPModel.cs" />
     <Compile Include="Patch\DefaultTournamentModel.cs" />
     <Compile Include="Models\Fight2TournamentGame.cs" />
     <Compile Include="Models\TournamentEquipmentRestrictor.cs" />
@@ -129,6 +130,10 @@
     <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BannerlordTweaks\ModLib\ModLib.csproj">
+      <Project>{002dc1e4-aef3-4080-8e71-a8c23d05c0b7}</Project>
+      <Name>ModLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
       <Project>{1f9e0b27-68dd-4fc3-9d8c-e132f32c9a31}</Project>
       <Name>TournamentLib</Name>

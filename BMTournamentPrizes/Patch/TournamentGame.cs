@@ -1,5 +1,5 @@
-﻿using BMTournamentPrizes.Behaviors;
-using BMTournamentPrizes.Models;
+﻿using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 using HarmonyLib;
 using System;
 using System.Windows.Forms;
@@ -8,7 +8,7 @@ using TaleWorlds.Core;
 using TournamentLib.Extensions;
 using TournamentLib.Models;
 
-namespace BMTournamentPrizes.Patch
+namespace TournamentsXPanded.Patch
 {
     [HarmonyPatch(typeof(TournamentGame), "GetTournamentPrize")]
     public class GetTournamentPrizePatch1

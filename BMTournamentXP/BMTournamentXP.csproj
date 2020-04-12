@@ -57,6 +57,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SandBox">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
@@ -122,6 +123,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BannerlordTweaks\ModLib\ModLib.csproj">
+      <Project>{002dc1e4-aef3-4080-8e71-a8c23d05c0b7}</Project>
+      <Name>ModLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
       <Project>{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}</Project>
       <Name>TournamentLib</Name>

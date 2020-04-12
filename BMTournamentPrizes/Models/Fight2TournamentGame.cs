@@ -9,10 +9,10 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
 
-namespace BMTournamentPrizes.Models
+namespace TournamentsXPanded.Models
 {
 
-    [SaveableClass(BMTournamentPrizesMain.OBJ_TOURNAMENT_TYPE_MELEE2)]
+    [SaveableClass(TournamentsXPandedSubModule.OBJ_TOURNAMENT_TYPE_MELEE2)]
     public class Fight2TournamentGame : FightTournamentGame
     {
         public Fight2TournamentGame(Town town) : base(town)
@@ -35,7 +35,7 @@ namespace BMTournamentPrizes.Models
 
     public class Fight2TournamentGameSaveableTypeDefiner : SaveableTypeDefiner
     {
-        public Fight2TournamentGameSaveableTypeDefiner() : base(BMTournamentPrizesMain.SAVEDEF_TOURNAMENT_TYPE_MELEE2)
+        public Fight2TournamentGameSaveableTypeDefiner() : base(TournamentsXPandedSubModule.SAVEDEF_TOURNAMENT_TYPE_MELEE2)
         {
         }
 

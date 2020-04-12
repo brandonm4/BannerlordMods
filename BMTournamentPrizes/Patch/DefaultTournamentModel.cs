@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BMTournamentPrizes.Models
+namespace TournamentsXPanded.Models
 {
     public class DefaultTournamentModelPatch
     {

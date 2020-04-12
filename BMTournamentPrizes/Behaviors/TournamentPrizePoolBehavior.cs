@@ -1,5 +1,5 @@
-﻿using BMTournamentPrizes.Extensions;
-using BMTournamentPrizes.Models;
+﻿using TournamentsXPanded.Extensions;
+using TournamentsXPanded.Models;
 using HarmonyLib;
 using Helpers;
 using System;
@@ -16,7 +16,7 @@ using TaleWorlds.Localization;
 using TournamentLib.Extensions;
 using TournamentLib.Models;
 
-namespace BMTournamentPrizes.Behaviors
+namespace TournamentsXPanded.Behaviors
 {
     public class TournamentPrizePoolBehavior : CampaignBehaviorBase
     {

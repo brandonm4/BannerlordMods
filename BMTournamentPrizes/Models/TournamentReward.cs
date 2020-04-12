@@ -8,7 +8,7 @@ using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
 using TournamentLib.Models;
 
-namespace BMTournamentPrizes.Models
+namespace TournamentsXPanded.Models
 {
     public class TournamentReward 
     {

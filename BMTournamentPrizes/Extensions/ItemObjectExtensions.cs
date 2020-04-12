@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace BMTournamentPrizes.Extensions
+namespace TournamentsXPanded.Extensions
 {
     public static class ItemObjectExtensions
     {

@@ -10,7 +10,15 @@ using TournamentLib.Models;
 
 namespace BMTournamentPrizes.Models
 {
-    [SaveableClass(4106000)]
+
+    /* If you are viewing this for ideas on how to do things, don't do this 
+    /* adding a savable class to the MBObjectManager makes the game unloadable ifyou remove the mod from the game 
+    /* you're better off managing your data in SyncData in your behavior 
+    /* However, if you are also inherting and adding classes that were SaveableClasses - like I do for the new TournamentTypes, those must also be SaveableClasses, 
+     * so in this particular case, I felt it was justifiable.
+     * I haven't been able to succesfully deregister my classes to make for a /clean/ save yet.  
+     */
+    [SaveableClass(BMTournamentPrizesMain.OBJ_PRIZEPOOL)]
     public class TournamentPrizePool : MBObjectBase
     {
         [SaveableProperty(300)]
@@ -53,11 +61,9 @@ namespace BMTournamentPrizes.Models
         }
 
     }
-
-
     public class TournamentPrizePoolSaveableTypeDefiner : SaveableTypeDefiner
     {
-        public TournamentPrizePoolSaveableTypeDefiner() : base(4105000)
+        public TournamentPrizePoolSaveableTypeDefiner() : base(BMTournamentPrizesMain.SAVEDEF_PRIZEPOOL)
         {
         }
 

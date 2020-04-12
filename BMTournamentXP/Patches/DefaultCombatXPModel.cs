@@ -35,9 +35,10 @@ namespace BMTournamentXPMain.Patches
         {
             int num = attackedTroop.MaxHitPoints();
             xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
+
             if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
             {
-                xpAmount *= 8;
+                xpAmount = xpAmount;
             }
             if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
             {

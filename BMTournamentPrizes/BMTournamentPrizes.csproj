@@ -108,9 +108,11 @@
     <Compile Include="BMTournamentPrizes.cs" />
     <Compile Include="Extensions\ItemObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Patch\DefaultTournamentModel.cs" />
     <Compile Include="Models\Fight2TournamentGame.cs" />
     <Compile Include="Models\TournamentEquipmentRestrictor.cs" />
     <Compile Include="Models\TournamentPrizePool.cs" />
+    <Compile Include="Models\TournamentReward.cs" />
     <Compile Include="Patch\TournamentBehavior.cs" />
     <Compile Include="Patch\TournamentGame.cs" />
     <Compile Include="Patch\TournamentManager.cs" />

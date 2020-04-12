@@ -120,5 +120,14 @@ namespace BMTournamentPrizes
                 }
             }
         }
+
+
+        internal const int OBJ_PRIZEPOOL = 4106000;
+        internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;
+        internal const int OBJ_TOURNAMENT_REWARD = 4106002;
+
+        internal const int SAVEDEF_PRIZEPOOL = 4105000;
+        internal const int SAVEDEF_TOURNAMENT_TYPE_MELEE2 = 4105001;
+        internal const int SAVEDEF_TOURNAMENT_REWARD = 4105002;
     }
 }

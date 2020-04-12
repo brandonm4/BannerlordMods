@@ -22,10 +22,10 @@ namespace BMTournamentPrizes.Patch
                 ItemObject prize;
                 if (TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
                     || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
-                    || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla                    )
+                    || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla)
                 {
                     TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Town.Settlement, __result);
-                    prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance,null,false);                  
+                    prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
                 }
                 else
                 {
@@ -61,5 +61,18 @@ namespace BMTournamentPrizes.Patch
         }
 
 
+    }
+
+    [HarmonyPatch(typeof(TournamentGame), "get_TournamentWinRenown")]
+    public class TournamentGameGetTournamentWinRenownPatch
+    {
+        public static void Postfix(ref float __result)
+        {
+            __result += TournamentPrizePoolBehavior.TournamentReward.BonusRenown;
+        }
+        static bool Prepare()
+        {
+            return true;
+        }
     }
 }

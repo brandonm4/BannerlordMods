@@ -20,7 +20,11 @@ namespace BMTournamentPrizes.Behaviors
 {
     public class TournamentPrizePoolBehavior : CampaignBehaviorBase
     {
+        public static TournamentReward TournamentReward { get; set; }
+
         public TournamentPrizePoolBehavior() { }
+
+        
 
         public static TournamentPrizePool GetTournamentPrizePool(string settlementStringId)
         {
@@ -43,6 +47,7 @@ namespace BMTournamentPrizes.Behaviors
             }
             return obj;
         }
+   
         public static void ClearTournamentPrizes(string settlement_string_id)
         {
             ClearTournamentPrizes(Campaign.Current.Settlements.Where(x => x.StringId == settlement_string_id).Single());
@@ -55,6 +60,16 @@ namespace BMTournamentPrizes.Behaviors
             currentPool.RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
         }
         #region Events
+        public override void RegisterEvents()
+        {
+            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
+            CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
+            CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(this.OnCleanSave));
+        }
+        public override void SyncData(IDataStore dataStore)
+        {
+            
+        }
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
             if (TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled)
@@ -78,6 +93,18 @@ namespace BMTournamentPrizes.Behaviors
              new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
              new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, 2, true);
 
+        }
+        private void OnCleanSave()
+        {
+            if (TournamentConfiguration.Instance.EnableCleanSaveProcess)
+            {
+                List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
+                MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
+                foreach(var pp in prizePools)
+                {
+                    MBObjectManager.Instance.UnregisterObject(pp);                    
+                }
+            }
         }
         #endregion
 
@@ -569,15 +596,7 @@ namespace BMTournamentPrizes.Behaviors
 
 
 #endregion
-        public override void RegisterEvents()
-        {
-            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
-            CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
-        }
-
-        public override void SyncData(IDataStore dataStore)
-        {
-        }
+      
 
         #region Rewards and Calculations
         public static float GetRenownValue(CharacterObject character)
@@ -619,6 +638,24 @@ namespace BMTournamentPrizes.Behaviors
                 worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerTroopTier[character.Tier];
             }
             return worth;
+        }
+
+        public static float GetTournamentThreatLevel(CharacterObject character)
+        {
+            float threat = 0f;
+            //TournamentXP addon for Odd Calculations
+            //Get armor bonus
+            threat += character.GetArmArmorSum() * 2 + character.GetBodyArmorSum() * 4 + character.GetLegArmorSum()  + character.GetHeadArmorSum() *2;
+            ////Get skills based 
+            threat += (float)character.GetSkillValue(DefaultSkills.Bow)
+                + (float)character.GetSkillValue(DefaultSkills.OneHanded)
+                + (float)character.GetSkillValue(DefaultSkills.TwoHanded)
+                + (float)character.GetSkillValue(DefaultSkills.Throwing)
+                + (float)character.GetSkillValue(DefaultSkills.Polearm)
+                + (float)character.GetSkillValue(DefaultSkills.Riding);
+            threat += (float)character.HitPoints;
+
+            return threat;
         }
         #endregion
     }

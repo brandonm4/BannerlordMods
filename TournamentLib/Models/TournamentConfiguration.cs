@@ -165,6 +165,9 @@ namespace TournamentLib.Models
                                         case "bonustournamentmatchgoldimmediate":
                                             PrizeConfiguration.BonusTournamentMatchGoldImmediate = nc.InnerText.ConvertToBool();
                                             break;
+                                        case "enablecleansaveprocess":
+                                            EnableCleanSaveProcess = nc.InnerText.ConvertToBool();
+                                            break;
                                     }
                                 }
                                 break;
@@ -219,7 +222,8 @@ namespace TournamentLib.Models
                 return false;
             }
         }
-
+        public bool EnableCleanSaveProcess { get; set; } = false;
+        
         public PrizeConfiguration PrizeConfiguration { get; set; } = new PrizeConfiguration();
         public XPConfiguration XPConfiguration { get; set; } = new XPConfiguration();
         public TournamentTweaks TournamentTweaks { get; set; } = new TournamentTweaks();

@@ -68,10 +68,10 @@ namespace BMTweakCollection.Patches
         internal static bool GiveShareOfLootToPartyPre(ref object __instance, PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount)
         {
             //var ___LootedMembers= Traverse.Create<LootCollectorType>(__instance).Field("LootedMembers").GetValue()
-            var ___LootedMembers = LootCollectorType.GetField("LootedMembers").GetValue(__instance) as TroopRoster;
-            var ___LootedPrisoners = LootCollectorType.GetField("LootedPrisoners").GetValue(__instance) as TroopRoster;
-            var ___CasualtiesInBattle = LootCollectorType.GetField("CasualtiesInBattle").GetValue(__instance) as TroopRoster;
-            var ___LootedItems = LootCollectorType.GetField("CasualtiesInBattle").GetValue(__instance) as ItemRoster;
+            var ___LootedMembers = LootCollectorType.GetProperty("LootedMembers", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
+            var ___LootedPrisoners = LootCollectorType.GetProperty("LootedPrisoners", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
+            var ___CasualtiesInBattle = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
+            var ___LootedItems = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as ItemRoster;
 
 
             bool flag = winnerParty == PartyBase.MainParty;

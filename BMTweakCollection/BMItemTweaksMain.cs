@@ -23,7 +23,7 @@ namespace BMTweakCollection
 {
     public class BMTweakCollectionSubModule : BMSubModuleBase
     {
-        
+
         public static BMRandomTweaksConfiguration Configuration { get; set; }
 
         protected override void OnSubModuleLoad()
@@ -34,15 +34,8 @@ namespace BMTweakCollection
             var configtxt = File.ReadAllText(appSettings);
             BMTweakCollectionSubModule.Configuration = JsonConvert.DeserializeObject<BMRandomTweaksConfiguration>(configtxt);
 
-            //Stupid way to do this
-         
-            //Configuration.MainPartySkillMods.Add(DefaultSkills.Crafting, 3.0f);
-
-
-           
-           // LootCollectorPatch.DoPatching();
-
-
+            //Stupid way to do this            
+            //LootCollectorPatch.DoPatching();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -59,7 +52,7 @@ namespace BMTweakCollection
 
             Configuration.MainPartySkillMods = new Dictionary<SkillObject, float>();
             Configuration.MainPartySkillMods.Add(DefaultSkills.Charm, 3.0f);
-            Configuration.MainPartySkillMods.Add(DefaultSkills.Leadership, 3.0f);          
+            Configuration.MainPartySkillMods.Add(DefaultSkills.Leadership, 3.0f);
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -67,7 +60,7 @@ namespace BMTweakCollection
             CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
             if (campaignGameStarter != null)
             {
-                
+                // ItemTweaks.MakeCivilianSaddles(12);
             }
             try
             {
@@ -180,6 +173,6 @@ namespace BMTweakCollection
             }
         }
 
-  
+
     }
 }

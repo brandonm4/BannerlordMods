@@ -12,7 +12,7 @@ using TaleWorlds.SaveSystem;
 namespace BMTournamentPrizes.Models
 {
 
-    [SaveableClass(4106001)]
+    [SaveableClass(BMTournamentPrizesMain.OBJ_TOURNAMENT_TYPE_MELEE2)]
     public class Fight2TournamentGame : FightTournamentGame
     {
         public Fight2TournamentGame(Town town) : base(town)
@@ -35,7 +35,7 @@ namespace BMTournamentPrizes.Models
 
     public class Fight2TournamentGameSaveableTypeDefiner : SaveableTypeDefiner
     {
-        public Fight2TournamentGameSaveableTypeDefiner() : base(4105001)
+        public Fight2TournamentGameSaveableTypeDefiner() : base(BMTournamentPrizesMain.SAVEDEF_TOURNAMENT_TYPE_MELEE2)
         {
         }
 

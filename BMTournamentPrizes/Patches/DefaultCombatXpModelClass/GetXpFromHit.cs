@@ -15,9 +15,9 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
     {
         public override bool Applied { get; protected set; }
 
-        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultCombatXpModel).GetMethod("GetXpFromHit");
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultCombatXpModel).GetMethod("GetXpFromHit", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-        private static readonly MethodInfo PatchMethodInfo = typeof(GetXpFromHit).GetMethod(nameof(Postfix));
+        private static readonly MethodInfo PatchMethodInfo = typeof(GetXpFromHit).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
         private static void Postfix(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
         {

@@ -25,6 +25,10 @@ namespace TournamentsXPanded
 
         protected override void OnSubModuleLoad()
         {
+
+            string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), TournamentXPSettings.Instance.ModuleFolderName, "Logs");
+            FileLog.logPath = logpath;
+
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
                 //Eventually plan to let people define their own

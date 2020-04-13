@@ -1,0 +1,19 @@
+[HarmonyPatch(typeof(VirtualFolders))]
+[HarmonyPatch("GetVirtualFileContent")]
+public class Patch_VirtualFolders
+{
+    // Remove all IL instructions from old method
+    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var codes = new List<CodeInstruction>(instructions);
+        codes.RemoveRange(0, codes.Count - 1);
+        return codes.AsEnumerable();
+    }
+
+    //execute your new method after the old method (which was essentially removed)
+    static string Postfix(string filePath)
+    {
+        // Copy paste code from original method
+        // return your result
+    }
+}

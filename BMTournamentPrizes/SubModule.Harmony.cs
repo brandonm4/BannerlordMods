@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TaleWorlds.Core;
+using TournamentLib.Extensions;
 using TournamentsXPanded.Patches;
 
 namespace TournamentsXPanded
@@ -19,6 +21,7 @@ namespace TournamentsXPanded
         private static void ApplyPatches(Game game)
         {
             //ActivePatches.Clear();
+            
 
             foreach (var patch in Patches)
             {
@@ -29,6 +32,7 @@ namespace TournamentsXPanded
                 catch (Exception ex)
                 {
                     //Error(ex, $"Error while resetting patch: {patch.GetType().Name}");
+                    MessageBox.Show("TournamentXP Patch Error", $"Error while applying patch: {patch.GetType().Name}\n" + ex.ToStringFull());
                 }
 
                 try

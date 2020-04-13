@@ -136,9 +136,14 @@
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\IPatch.cs" />
     <Compile Include="Patches\PatchBase.cs" />
+    <Compile Include="Patches\TournamentBehaviorClass\CalculateBet.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\AfterStart.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\EndCurrentMatch.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\OnPlayerWinTournament.cs" />
+    <Compile Include="Patches\TournamentGameClass\GetTournamentPrize.cs" />
+    <Compile Include="Patches\TournamentGameClass\get_TournamentWinRenown.cs" />
+    <Compile Include="Patches\TournamentManagerClass\AddTournament.cs" />
+    <Compile Include="Patches\TournamentManagerClass\ResolveTournament.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Extensions\ItemObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -146,11 +151,10 @@
     <Compile Include="Models\TournamentEquipmentRestrictor.cs" />
     <Compile Include="Models\TournamentPrizePool.cs" />
     <Compile Include="Models\TournamentReward.cs" />
-    <Compile Include="Patches\TournamentBehaviorClass\TournamentBehavior.cs" />
-    <Compile Include="Patches\TournamentGameClass\TournamentGame.cs" />
-    <Compile Include="Patches\TournamentManagerClass\TournamentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubModuleHarmony.cs" />
+    <Compile Include="SubModule.Harmony.cs">
+      <DependentUpon>SubModule.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ModLib\TEMPONLY_UNTILMODLIB_RELEASE.txt" />

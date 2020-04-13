@@ -17,16 +17,16 @@ using System.Reflection;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {
-    class OnPlayerWinTournament : PatchBase<AfterStart>
+    public class OnPlayerWinTournament : PatchBase<OnPlayerWinTournament>
     {
         public override bool Applied { get; protected set; }
 
-        private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("OnPlayerWinTournament");
+        private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("OnPlayerWinTournament", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-        private static readonly MethodInfo PatchMethodInfo = typeof(OnPlayerWinTournament).GetMethod(nameof(Prefix));
+        private static readonly MethodInfo PatchMethodInfo = typeof(OnPlayerWinTournament).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
         public override bool IsApplicable(Game game)
         {
-            return (TournamentXPSettings.Instance.EnablePrizeSelection);
+            return TournamentXPSettings.Instance.EnableItemModifiersForPrizes || TournamentXPSettings.Instance.BonusTournamentWinInfluence > 0;
         }
         public override void Reset() { }
 
@@ -44,63 +44,17 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
             Applied = true;
         }
 
+        //REVISIT - convert to transpiler patch to just change our prize payment
+        // All we really need to change is instead of giving an ItemObject - which has no ItemModifers, we give them an ItemRosterEquipement, which can have ItemModifiers
         public static bool Prefix(ref TournamentBehavior __instance)
-        {
-            bool bDofix = false;
-            if (__instance.TournamentGame.Prize == null)
-            {
-                bDofix = true;
-            }
-            else if (__instance.TournamentGame.Prize.ItemType == ItemObject.ItemTypeEnum.Invalid)
-            {
-                bDofix = true;
-            }
-            if (bDofix)
-            {
-                FileLog.Log("Tournament XP Prize: WARNING\nNo prize was detected for this tournament.  You should never see this message.  If you are, somehow the prize the game thinks you should get isn't found.  An alternate random item is being created just for you.");
-                var prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance.TournamentGame);
-                TournamentPrizePoolBehavior.SetTournamentSelectedPrize(__instance.TournamentGame, prize);
-            }
+        {        
             //Override Standard behavior
             if (Campaign.Current.GameMode != CampaignGameMode.Campaign)
             {
                 return false;
             }
 
-            //Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(this._tournamentGame.Prize, 1, true);
-            var currentPool = TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Settlement);
-            var prizeStringId = __instance.TournamentGame.Prize.StringId;
-            try
-            {
-                if (currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).Count() > 0)
-                {
-                    if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
-                    {
-                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
-                        TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
-                    }
-                }
-                else
-                {
-                    if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
-                    {
-                        //   Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.SelectPrizeItemRosterElement, 1, true);
-                        FileLog.Log("Tournament XP Prize WARNING\nThe stored Selected Prize does not equal the tournaments selected item.\nPlease send me a link to your savegame - if you have one right before winning the tournament - on nexus for research.");
-                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
-                        TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
-                {
-                    FileLog.Log("Tournament XP Error Giving Prize:\n" + ex.ToStringFull());
-                    Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
-                }
-            }
-
-
+            /* Give Gold, Influence, Renown */
             if (__instance.OverallExpectedDenars > 0)
             {
                 GiveGoldAction.ApplyBetweenCharacters(null, Hero.MainHero, __instance.OverallExpectedDenars, false);
@@ -111,6 +65,45 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                 GainKingdomInfluenceAction.ApplyForDefault(Hero.MainHero, TournamentPrizePoolBehavior.TournamentReward.BonusInfluence);
             }
 
+            /* Give Item Prize */
+            if (!TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
+            {
+                if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
+                {
+                    Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
+                    TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
+                }
+            }
+            else
+            {
+                TournamentPrizePool currentPool = null;
+                string prizeStringId = "";
+                try
+                {
+                    if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
+                    {
+                        currentPool = TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Settlement);
+                        prizeStringId = __instance.TournamentGame.Prize.StringId;
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+                        TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    FileLog.Log("ERROR: Tournament XPanded: OnPlayerWinTournament\nError Awarding Prize");
+                    
+                    FileLog.Log("TournamentPrizePool:\n");
+                    if (currentPool != null)
+                        FileLog.Log(Newtonsoft.Json.JsonConvert.SerializeObject(currentPool));
+                    FileLog.Log(ex.ToStringFull());
+
+                    if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
+                    {
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
+                        TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
+                    }
+                }
+            }    
             Campaign.Current.TournamentManager.OnPlayerWinTournament(__instance.TournamentGame.GetType());
 
             return false;

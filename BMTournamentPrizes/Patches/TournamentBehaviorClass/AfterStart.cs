@@ -21,12 +21,12 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
     {
         public override bool Applied { get; protected set; }
 
-        private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("AfterStart");
+        private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("AfterStart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-        private static readonly MethodInfo PatchMethodInfo = typeof(AfterStart).GetMethod(nameof(Prefix));
+        private static readonly MethodInfo PatchMethodInfo = typeof(AfterStart).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
         public override bool IsApplicable(Game game)
         {
-            return (TournamentXPSettings.Instance.IsTournamentXPEnabled || TournamentXPSettings.Instance.IsArenaXPEnabled);
+            return true;
         }
         public override void Reset() { }
 
@@ -42,7 +42,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
             Applied = true;
         }
-        public static bool Prefix(TournamentBehavior __instance)
+        static bool Prefix(TournamentBehavior __instance)
         {
             TournamentPrizePoolBehavior.TournamentReward = new TournamentReward(__instance.TournamentGame);
             typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentXPSettings.Instance.BonusTournamentWinGold);

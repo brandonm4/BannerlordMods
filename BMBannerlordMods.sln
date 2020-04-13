@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentXPanded", "BMTournamentPrizes\TournamentXPanded.csproj", "{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3B5DD3A8-D2C2-4247-A360-3E7ECD9F4F2C}"
+	ProjectSection(SolutionItems) = preProject
+		Sample1.txt = Sample1.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OtherModules", "OtherModules", "{1BC03B8D-831F-4B08-A2A7-774344AF767A}"
 EndProject

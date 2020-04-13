@@ -42,10 +42,7 @@ namespace TournamentsXPanded.Models
         public bool DebugMode { get; set; } = false;
         #endregion
 
-        #region Re-Roll
-        [XmlElement]
-        [SettingProperty("Prize Re-roll", "Tooltip")]
-        public bool TournamentPrizeRerollEnabled { get; set; } = false;
+        #region Re-Roll        
         [XmlElement]
         [SettingProperty("Re-rolls per Tournament", "Tooltip")]
         public int MaxNumberOfRerollsPerTournament { get; set; } = 3;

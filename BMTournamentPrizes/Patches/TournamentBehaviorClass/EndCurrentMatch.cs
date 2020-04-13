@@ -20,9 +20,9 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
     {
         public override bool Applied { get; protected set; }
 
-        private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("EndCurrentMatch");
+        private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("EndCurrentMatch", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-        private static readonly MethodInfo PatchMethodInfo = typeof(EndCurrentMatch).GetMethod(nameof(Prefix));
+        private static readonly MethodInfo PatchMethodInfo = typeof(EndCurrentMatch).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
         public override bool IsApplicable(Game game)
         {
             return (TournamentXPSettings.Instance.BonusTournamentMatchGold > 0 || TournamentXPSettings.Instance.EnableRenownPerTroopTier);

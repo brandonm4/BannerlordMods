@@ -71,7 +71,7 @@ namespace TournamentsXPanded.Behaviors
         }
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
-            if (TournamentXPSettings.Instance.TournamentPrizeRerollEnabled)
+            if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0)
             {
                 var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
                 starter.AddGameMenuOption("town_arena", "bm_reroll_tournamentprize", text.ToString(),
@@ -338,7 +338,7 @@ namespace TournamentsXPanded.Behaviors
 
         private static bool RerollCondition(MenuCallbackArgs args)
         {
-            if (!TournamentXPSettings.Instance.TournamentPrizeRerollEnabled)
+            if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament == 0)
             {
                 return false;
             }

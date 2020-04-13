@@ -11,18 +11,21 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TournamentLib;
-using TournamentLib.Models;
+using TournamentsXPanded.Patches;
+using System.Reflection;
 
 namespace TournamentsXPanded
 {
-    public class TournamentsXPandedSubModule : BMSubModuleBase
+    public partial class TournamentsXPandedSubModule : MBSubModuleBase
     {
 
         private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
+        
+
+
         protected override void OnSubModuleLoad()
         {
-            if (TournamentConfiguration.Instance.TournamentTweaks.TournamentEquipmentFilter)
+            if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
                 //Eventually plan to let people define their own
                 restrictors.Add(new TournamentEquipmentRestrictor
@@ -37,10 +40,6 @@ namespace TournamentsXPanded
                     d.ItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ExcludedItemTypeString);
                 }
             }
-            if (TournamentXPSettings.Instance.MaximumBetOdds > 0)
-            {
-
-            }
         }
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
@@ -50,12 +49,12 @@ namespace TournamentsXPanded
 
         }
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-        {            
+        {
             if (game.GameType is Campaign)
             {
                 CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
                 //gameStarterObject.AddModel(new TournamentPrizeExpansion());              
-                MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);                
+                MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);
                 if (campaignGameStarter != null)
                 {
                     campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
@@ -86,10 +85,9 @@ namespace TournamentsXPanded
         }
         public override void OnGameInitializationFinished(Game game)
         {
-
+            ApplyPatches(game);
             base.OnGameInitializationFinished(game);
-
-            if (TournamentConfiguration.Instance.TournamentTweaks.TournamentEquipmentFilter)
+            if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
                 string[] _weaponTemplatesIdTeamSizeOne = new String[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };
 
@@ -124,7 +122,13 @@ namespace TournamentsXPanded
             }
         }
 
+        public static void ShowMessage(string msg, Color? color = null)
+        {
+            if (color == null)
+                color = Color.White;
 
+            InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
+        }
         internal const int OBJ_PRIZEPOOL = 4106000;
         internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;
         internal const int OBJ_TOURNAMENT_REWARD = 4106002;
@@ -132,5 +136,7 @@ namespace TournamentsXPanded
         internal const int SAVEDEF_PRIZEPOOL = 4105000;
         internal const int SAVEDEF_TOURNAMENT_TYPE_MELEE2 = 4105001;
         internal const int SAVEDEF_TOURNAMENT_REWARD = 4105002;
+
+  
     }
 }

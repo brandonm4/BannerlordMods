@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TournamentsXPanded.Models
+namespace ModLib
 {
-    public class DefaultTournamentModelPatch
+    public enum SettingType
     {
+        Bool,
+        Int,
+        Float
     }
 }

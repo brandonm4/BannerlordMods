@@ -17,11 +17,11 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TournamentLib;
+
 
 namespace BMTweakCollection
 {
-    public class BMTweakCollectionSubModule : BMSubModuleBase
+    public class BMTweakCollectionSubModule : MBSubModuleBase
     {
 
         public static BMRandomTweaksConfiguration Configuration { get; set; }
@@ -172,7 +172,13 @@ namespace BMTweakCollection
                 );
             }
         }
+        public static void ShowMessage(string msg, Color? color = null)
+        {
+            if (color == null)
+                color = Color.White;
 
+            InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
+        }
 
     }
 }

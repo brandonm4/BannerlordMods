@@ -3,7 +3,7 @@ using TournamentsXPanded.Models;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
-using TournamentLib.Models;
+
 
 namespace TournamentsXPanded.Patch
 {
@@ -24,7 +24,7 @@ namespace TournamentsXPanded.Patch
         }
         static bool Prepare()
         {
-            return (TournamentConfiguration.Instance.PrizeConfiguration.EnableConfigReloadRealTime || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection);            
+            return (TournamentXPSettings.Instance.EnablePrizeSelection);            
         }
     }
 
@@ -37,7 +37,7 @@ namespace TournamentsXPanded.Patch
         }
         static bool Prepare()
         {
-            return (TournamentConfiguration.Instance.PrizeConfiguration.EnableConfigReloadRealTime || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection);
+            return (TournamentXPSettings.Instance.EnablePrizeSelection);
         }
     }
 }

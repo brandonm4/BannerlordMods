@@ -1,6 +1,28 @@
-The Tournament XPerience
+#Mount & Blade II: Bannerlord Tournaments XPanded Module
 
-Provides Tournament Prize options as well as enhances the xp in tournaments and arena fights.  It originally provided xp gain in tournaments but that is now a feature in the core game as of 1.0.6.
+##Current Features
+* XP Gain in Arena and Tournaments	
+	* Configurable % gain
+* Prize Pool for Tournaments
+	* Select a prize from a pool
+	* Re-roll prize pool
+	* Prize Pool Generation Options
+		* Vanilla
+		* Customized List
+		* Items only in the Town inventory
+		* Combination of above
+		* Filter items by value
+		* Filter items by type
+* Additional Rewards for Tournament
+	* Flat Amout on Winning
+		* Gold per match
+		* Gold per tournament
+		* Renown
+		* Influcence
+	* Dynamic Amount of renown based on Difficulty
+* All Options are configurable and can be turned on or off 
+		
+
 
 Technical Design Decisions/Rules
 I will not override/replace any stock game default model or behavior.  I will allow myself the option to add new behaviors that will work alongside the existing ones, but they will not be replaced by a customized version.

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
-using TournamentLib.Models;
+
 
 namespace TournamentsXPanded.Models
 {
@@ -47,13 +47,13 @@ namespace TournamentsXPanded.Models
         {
             Prizes = new ItemRoster();
             SelectedPrizeStringId = "";
-            RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
+            RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
         }
         public TournamentPrizePool(int rerolls = -1)
         {
             Prizes = new ItemRoster();
             SelectedPrizeStringId = "";
-            RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
+            RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
             if (rerolls >= 0)
             {
                 RemainingRerolls = rerolls;

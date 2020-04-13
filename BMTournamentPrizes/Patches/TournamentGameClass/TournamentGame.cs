@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TournamentLib.Extensions;
-using TournamentLib.Models;
 
 namespace TournamentsXPanded.Patch
 {
@@ -20,9 +19,9 @@ namespace TournamentsXPanded.Patch
             try
             {
                 ItemObject prize;
-                if (TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
-                    || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
-                    || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla)
+                if (TournamentXPSettings.Instance.EnablePrizeSelection
+                    || TournamentXPSettings.Instance.TournamentPrizeRerollEnabled
+                    || TournamentXPSettings.Instance.PrizeListMode != PrizeListMode.Vanilla)
                 {
                     TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Town.Settlement, __result);
                     prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
@@ -49,11 +48,11 @@ namespace TournamentsXPanded.Patch
 
         private static bool Prepare()
         {
-            if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
-                || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection
-                || TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode != PrizeListMode.Vanilla
-                || TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeTypeFilterToLists)
+            if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
+                || TournamentXPSettings.Instance.EnablePrizeSelection
+                || TournamentXPSettings.Instance.TournamentPrizeRerollEnabled
+                || TournamentXPSettings.Instance.PrizeListMode != PrizeListMode.Vanilla
+                || TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
             {
                 return true;
             }

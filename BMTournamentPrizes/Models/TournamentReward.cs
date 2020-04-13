@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.SaveSystem;
-using TournamentLib.Models;
+
 
 namespace TournamentsXPanded.Models
 {
@@ -21,9 +21,9 @@ namespace TournamentsXPanded.Models
 
         public TournamentReward(TournamentGame tournamentGame)
         {
-            BonusRenown = TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinRenown;
+            BonusRenown = TournamentXPSettings.Instance.BonusTournamentWinRenown;
                 
-            BonusInfluence = TournamentConfiguration.Instance.PrizeConfiguration.BonusTournamentWinInfluence +1f;
+            BonusInfluence = TournamentXPSettings.Instance.BonusTournamentWinInfluence +1f;
             BonusGold = 0;
         }
     }

@@ -1,0 +1,65 @@
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using HarmonyLib;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
+using TournamentsXPanded.Models;
+
+namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
+{
+    public class GetXpFromHit : PatchBase<GetXpFromHit>
+    {
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultCombatXpModel).GetMethod("GetXpFromHit");
+
+        private static readonly MethodInfo PatchMethodInfo = typeof(GetXpFromHit).GetMethod(nameof(Postfix));
+
+        private static void Postfix(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
+        {
+            int num = attackedTroop.MaxHitPoints();
+            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
+
+            if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
+            {
+                xpAmount = xpAmount;
+            }
+            if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
+            {
+                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.ArenaXPAdjustment);
+            }
+            if (missionType == CombatXpModel.MissionTypeEnum.Tournament)
+            {
+                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
+            }
+        }
+
+        public override bool IsApplicable(Game game)
+        {
+            return (TournamentXPSettings.Instance.IsTournamentXPEnabled || TournamentXPSettings.Instance.IsArenaXPEnabled);
+        }
+
+        public override void Apply(Game game)
+        {
+            if (Applied) return;
+
+            TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
+              postfix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.Low,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+        public override void Reset()
+        {
+        }
+    }
+}
+

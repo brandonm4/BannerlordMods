@@ -14,7 +14,6 @@ using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TournamentLib.Extensions;
-using TournamentLib.Models;
 
 namespace TournamentsXPanded.Behaviors
 {
@@ -56,8 +55,8 @@ namespace TournamentsXPanded.Behaviors
         {
             var currentPool = GetTournamentPrizePool(settlement);
             currentPool.Prizes = new ItemRoster();
-            currentPool.SelectedPrizeStringId = "";
-            currentPool.RemainingRerolls = TournamentConfiguration.Instance.PrizeConfiguration.MaxNumberOfRerollsPerTournament;
+            currentPool.SelectedPrizeStringId = ""; 
+            currentPool.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
         }
         #region Events
         public override void RegisterEvents()
@@ -72,7 +71,7 @@ namespace TournamentsXPanded.Behaviors
         }
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
-            if (TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled)
+            if (TournamentXPSettings.Instance.TournamentPrizeRerollEnabled)
             {
                 var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
                 starter.AddGameMenuOption("town_arena", "bm_reroll_tournamentprize", text.ToString(),
@@ -80,7 +79,7 @@ namespace TournamentsXPanded.Behaviors
                     new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
                     false, -1, true);
             }
-            if (TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection)
+            if (TournamentXPSettings.Instance.EnablePrizeSelection)
             {
                 starter.AddGameMenuOption("town_arena", "bm_select_tournamentprize", "Select Prize",
                  new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
@@ -96,15 +95,15 @@ namespace TournamentsXPanded.Behaviors
         }
         private void OnCleanSave()
         {
-            if (TournamentConfiguration.Instance.EnableCleanSaveProcess)
-            {
-                List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
-                MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
-                foreach(var pp in prizePools)
-                {
-                    MBObjectManager.Instance.UnregisterObject(pp);                    
-                }
-            }
+            //if (TournamentXPSettings.Instance.EnableCleanSaveProcess)
+            //{
+            //    List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
+            //    MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
+            //    foreach(var pp in prizePools)
+            //    {
+            //        MBObjectManager.Instance.UnregisterObject(pp);                    
+            //    }
+            //}
         }
         #endregion
 
@@ -113,7 +112,7 @@ namespace TournamentsXPanded.Behaviors
         public static ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, TournamentPrizePool currentPool = null, bool keepTownPrize = true)
         {
             ItemObject prize;
-            var numItemsToGet = TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions;
+            var numItemsToGet = TournamentXPSettings.Instance.NumberOfPrizeOptions;
             bool bRegenAllPrizes = false;
             if (currentPool == null)
             {
@@ -123,22 +122,22 @@ namespace TournamentsXPanded.Behaviors
 
             //Get the town items if using that mode
             List<string> townitems = new List<string>();
-            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownCustom
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownVanilla
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownOnly)
+            if (TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownCustom
+                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownVanilla
+                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownOnly)
             {
-                townitems = GetValidTownItems(tournamentGame, TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMin, TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMax, TournamentConfiguration.Instance.PrizeConfiguration.TownValidPrizeTypes);
+                townitems = GetValidTownItems(tournamentGame, TournamentXPSettings.Instance.TownPrizeMin, TournamentXPSettings.Instance.TownPrizeMax, TournamentXPSettings.Instance.TownValidPrizeTypes);
             }
 
             //Now get the list items - either customized or vanilla system
             List<string> listItems = new List<string>();
-            if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.Custom
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownCustom)
+            if (TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.Custom
+                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownCustom)
             {
-                listItems = TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems;
+                listItems = TournamentXPSettings.Instance.CustomTourneyItems;
             }
-            else if (TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.TownVanilla
-                || TournamentConfiguration.Instance.PrizeConfiguration.PrizeListMode == PrizeListMode.Vanilla)
+            else if (TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownVanilla
+                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.Vanilla)
             {
                 listItems = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, numItemsToGet);
             }
@@ -250,7 +249,7 @@ namespace TournamentsXPanded.Behaviors
             }
             if (list.Count == 0)
             {
-                list = TournamentConfiguration.Instance.PrizeConfiguration.CustomTourneyItems;
+                list = TournamentXPSettings.Instance.CustomTourneyItems;
                 FileLog.Log("TournamentPrizeSystem in " + tournamentGame.Town.Name.ToString() + " : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
                 FileLog.Log("No custom prizes found in value range");
             }
@@ -258,7 +257,7 @@ namespace TournamentsXPanded.Behaviors
             {
                 MessageBox.Show("Tournament Prize System", "Warning: The current town has no prizes available with your current defined filter.  Defaulting to Vanilla items.");
                 //list = PrizeConfiguration.StockTourneyItems;
-                list = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions);
+                list = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, TournamentXPSettings.Instance.NumberOfPrizeOptions);
             }
             return list;
         }
@@ -267,10 +266,10 @@ namespace TournamentsXPanded.Behaviors
             float minValue = 1000f;
             float maxValue = 5000f;
 
-            if (TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
+            if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
             {
-                minValue = TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMin;
-                maxValue = TournamentConfiguration.Instance.PrizeConfiguration.TownPrizeMax;
+                minValue = TournamentXPSettings.Instance.TownPrizeMin;
+                maxValue = TournamentXPSettings.Instance.TownPrizeMax;
             }
 
             string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
@@ -280,10 +279,10 @@ namespace TournamentsXPanded.Behaviors
             {
                 if ((float)item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
                 {
-                    if (TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeTypeFilterToLists)
+                    if (TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
                     {
                         if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture &&
-                            TournamentConfiguration.Instance.PrizeConfiguration.TownValidPrizeTypes.Contains(item.ItemType)
+                            TournamentXPSettings.Instance.TownValidPrizeTypes.Contains(item.ItemType)
                         )
                         {
                             return 1f;
@@ -339,7 +338,7 @@ namespace TournamentsXPanded.Behaviors
 
         private static bool RerollCondition(MenuCallbackArgs args)
         {
-            if (!TournamentConfiguration.Instance.PrizeConfiguration.TournamentPrizeRerollEnabled)
+            if (!TournamentXPSettings.Instance.TournamentPrizeRerollEnabled)
             {
                 return false;
             }
@@ -394,7 +393,7 @@ namespace TournamentsXPanded.Behaviors
 
         public static bool PrizeSelectCondition(MenuCallbackArgs args)
         {
-            if (!TournamentConfiguration.Instance.PrizeConfiguration.EnablePrizeSelection)
+            if (!TournamentXPSettings.Instance.EnablePrizeSelection)
             {
                 return false;
             }
@@ -413,7 +412,7 @@ namespace TournamentsXPanded.Behaviors
                 TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
                 TournamentPrizePool currentPool = GetTournamentPrizePool(Settlement.CurrentSettlement);
 
-                if (currentPool.Prizes.Count < TournamentConfiguration.Instance.PrizeConfiguration.NumberOfPrizeOptions)
+                if (currentPool.Prizes.Count < TournamentXPSettings.Instance.NumberOfPrizeOptions)
                 {
                     ItemObject prize = GenerateTournamentPrize(tournamentGame, currentPool, true);
                 }
@@ -605,38 +604,38 @@ namespace TournamentsXPanded.Behaviors
             var worth = 0f;
             if (character.IsHero)
             {
-                worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.HeroBase];
+                worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.HeroBase];
                 var hero = character.HeroObject;
                 if (hero != null)
                 {
                     if (hero.IsNoble)
                     {
-                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsNoble];
+                        worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.IsNoble];
                     }
                     if (hero.IsNotable)
                     {
-                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsNotable];
+                        worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.IsNotable];
                     }
                     if (hero.IsCommander)
                     {
-                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsCommander];
+                        worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.IsCommander];
                     }
                     if (hero.IsMinorFactionHero)
                     {
-                        worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                        worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
                     }
                     if (hero.IsFactionLeader)
                     {
                         if (hero.MapFaction.IsKingdomFaction)
-                            worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMajorFactionLeader];
+                            worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.IsMajorFactionLeader];
                         if (hero.MapFaction.IsMinorFaction)
-                            worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                            worth += TournamentXPSettings.Instance.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
                     }
                 }
             }
             else
             {
-                worth += TournamentConfiguration.Instance.PrizeConfiguration.RenownPerTroopTier[character.Tier];
+                worth += TournamentXPSettings.Instance.RenownPerTroopTier[character.Tier];
             }
             return worth;
         }

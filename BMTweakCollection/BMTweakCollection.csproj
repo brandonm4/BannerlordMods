@@ -54,10 +54,11 @@
     <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OtherFiles\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SandBox">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
@@ -131,12 +132,6 @@
     <None Include="app.config" />
     <None Include="ModuleData\BMTweakCollection.config.json" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TournamentLib\TournamentLib.csproj">
-      <Project>{1F9E0B27-68DD-4FC3-9D8C-E132F32C9A31}</Project>
-      <Name>TournamentLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CommunityPatches\" />

@@ -167,7 +167,8 @@ namespace BMTweakCollection.Patches
             ExplainedNumber explainedNumber = new ExplainedNumber(1f, null);
             if (winnerParty.MobileParty != null && winnerParty.MobileParty.Leader != null)
             {
-                SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, winnerParty.MobileParty.Leader, ref explainedNumber, true);
+                //Get the best looter
+                SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, GetCharacterWithHighestSkill(winnerParty, DefaultSkills.Roguery), ref explainedNumber, true);
             }
             if (flag)
             {
@@ -197,6 +198,40 @@ namespace BMTweakCollection.Patches
             return num;
         }
 
+
+        private static IEnumerable<ItemRosterElement>LootCasualties2(ICollection<TroopRosterElement> shareFromCasualties, float lootChance)
+        {
+            // MobileParty.GetMainPartySkillCounsellor(DefaultSkills.Roguery).GetSkillValue(DefaultSkills.Roguery)
+            ItemRoster itemRosters = new ItemRoster();
+            Dictionary<string, int> loots = new Dictionary<string, int>();
+            lootChance = MathF.Clamp(lootChance * 1.3f, 20f, 95f);
+
+            foreach (TroopRosterElement casualty in shareFromCasualties)
+            {
+                Equipment randomEquipment = GetRandomEquipment(casualty.Character);
+                var potentialLootItems = GetItemsFromEquipmentSlots(randomEquipment);
+                foreach(ItemObject item in potentialLootItems)
+                {
+                    float rdm = MBRandom.RandomFloatRanged(100f);
+                    if (rdm < lootChance)
+                    {
+                        if (loots.ContainsKey(item.StringId))
+                        {
+                            loots[item.StringId] += 1;
+                        }
+                        else
+                        {
+                            loots.Add(item.StringId, 1);
+                        }
+                    }
+                }
+            }
+            foreach(var stringId in loots.Keys)
+            {
+                itemRosters.Add(new ItemRosterElement(MBObjectManager.Instance.GetObject<ItemObject>(stringId), loots[stringId]));
+            }
+            return itemRosters;
+        }
         private static IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor)
         {
             EquipmentElement equipmentElement;
@@ -206,15 +241,17 @@ namespace BMTweakCollection.Patches
             List<EquipmentElement> equipmentElements = new List<EquipmentElement>();
             foreach (TroopRosterElement shareFromCasualty in shareFromCasualties)
             {
-                for (int i = 0; i < 1; i++)
+                //for (int i = 0; i < 1; i++)
                 {
                     Equipment randomEquipment = GetRandomEquipment(shareFromCasualty.Character);
                     equipmentElements.Clear();
                     int num = MBRandom.RoundRandomized(lootFactor);
+                    float lootSkill = lootFactor / .25f;
+
                     for (int j = 0; j < num; j++)
                     {
-                        float expectedLootedItemValue = ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
-                        EquipmentElement randomItem = randomEquipment.GetRandomItem(expectedLootedItemValue * MobileParty.GetMainPartySkillCounsellor(DefaultSkills.Roguery).GetSkillValue(DefaultSkills.Roguery));
+                        float expectedLootedItemValue = ItemHelper.GetExpectedLootedItemValue(CharacterObject.PlayerCharacter);
+                        EquipmentElement randomItem = randomEquipment.GetRandomItem(expectedLootedItemValue);
                         if (randomItem.Item != null && !randomItem.Item.NotMerchandise && equipmentElements.Count<EquipmentElement>((EquipmentElement x) => x.Item.Type == randomItem.Item.Type) == 0)
                         {
                             equipmentElements.Add(randomItem);
@@ -278,5 +315,40 @@ namespace BMTweakCollection.Patches
             }
             return ch.BattleEquipments.ToList<Equipment>()[MBRandom.RandomInt(ch.BattleEquipments.Count<Equipment>())];
         }
+
+        private static List<ItemObject> GetItemsFromEquipmentSlots(Equipment equipment)
+        {
+            List<ItemObject> items = new List<ItemObject>();
+            for (int i =0; i<12; i++)
+            {
+                ItemObject item = equipment.GetEquipmentFromSlot((EquipmentIndex)i).Item;
+                if (item != null)
+                {
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        private static CharacterObject GetCharacterWithHighestSkill(PartyBase party, SkillObject skill)
+        {
+            CharacterObject heroObject = null;
+            int num = 0;
+            for (int i = 0; i < party.MemberRoster.Count; i++)
+            {
+                CharacterObject characterAtIndex = party.MemberRoster.GetCharacterAtIndex(i);
+                if (characterAtIndex.IsHero && !characterAtIndex.HeroObject.IsWounded)
+                {
+                    int skillValue = characterAtIndex.GetSkillValue(skill);
+                    if (skillValue >= num)
+                    {
+                        num = skillValue;
+                        heroObject = characterAtIndex;
+                    }
+                }
+            }
+            return heroObject ?? party.LeaderHero.CharacterObject;
+        }
+
     }
 }

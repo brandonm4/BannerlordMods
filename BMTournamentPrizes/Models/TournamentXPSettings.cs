@@ -44,32 +44,47 @@ namespace TournamentsXPanded.Models
 
         #region Re-Roll        
         [XmlElement]
-        [SettingProperty("Re-rolls per Tournament", "Tooltip")]
+        [SettingProperty("Re-rolls per Tournament", "Maximum number of times you can re-roll the prize pool per tournament.  Set to 0 to disable.")]
         public int MaxNumberOfRerollsPerTournament { get; set; } = 3;
         #endregion
 
         #region Prize Selection
         [XmlElement]
-        [SettingProperty("Prize Selection", "Tooltip")]
+        [SettingProperty("Prize Selection", "Should the Select Prize from the Prize Pool be enable. ")]
         public bool EnablePrizeSelection { get; set; } = true;
         [XmlElement]
-        [SettingProperty("Prize List Mode", "Tooltip")]
-        public PrizeListMode PrizeListMode { get; set; } = PrizeListMode.TownCustom;
+        [SettingProperty("Prize List Mode", "Where do tournaments get prizes from:\nVanilla is standard behavior\nCustom is from a custom list you provide.\nTownCustom,TownVanilla,TownOnly will also pull items from the Town's stock.")]
+        public int PrizeListMode { get; set; } = 0;
         [XmlElement]
-        [SettingProperty("Town Prize Min Value", "Tooltip")]
-        public int TownPrizeMin { get; set; } = 1000;
+        [SettingProperty("Town Prize Min Value", "Any item below this value will not be used.")]
+        public int TownPrizeMin { get; set; } = 1600;
         [XmlElement]
-        [SettingProperty("Town Prize Max Value", "Tooltip")]
-        public int TownPrizeMax { get; set; } = 5000;
+        [SettingProperty("Town Prize Max Value", "Any item above this value will not be used.")]
+        public int TownPrizeMax { get; set; } = 8500;
         [XmlElement]
         [SettingProperty("Prize Value Filter", "Tooltip")]
         public bool TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell { get; set; } = false;
         [XmlElement]
         [SettingProperty("Prize Type Filter", "Tooltip")]
         public bool EnablePrizeTypeFilterToLists { get; set; } = false;
-        [XmlElement]
-        [SettingProperty("Valid Prize Types", "Tooltip")]
-        public List<ItemObject.ItemTypeEnum> TownValidPrizeTypes { get; set; } = new List<ItemObject.ItemTypeEnum>();
+        //[XmlElement]
+        //[SettingProperty("Valid Prize Types", "Tooltip")]
+        public List<ItemObject.ItemTypeEnum> TownValidPrizeTypes { get; set; } = new List<ItemObject.ItemTypeEnum>() {
+            ItemObject.ItemTypeEnum.BodyArmor
+            , ItemObject.ItemTypeEnum.Bow
+            , ItemObject.ItemTypeEnum.Cape
+            , ItemObject.ItemTypeEnum.ChestArmor
+            , ItemObject.ItemTypeEnum.Crossbow
+            , ItemObject.ItemTypeEnum.HandArmor
+            , ItemObject.ItemTypeEnum.HeadArmor
+        , ItemObject.ItemTypeEnum.Horse
+        , ItemObject.ItemTypeEnum.HorseHarness
+        , ItemObject.ItemTypeEnum.LegArmor
+        , ItemObject.ItemTypeEnum.OneHandedWeapon
+        , ItemObject.ItemTypeEnum.Polearm
+        , ItemObject.ItemTypeEnum.Shield
+        , ItemObject.ItemTypeEnum.Thrown
+        , ItemObject.ItemTypeEnum.TwoHandedWeapon};
 
 
         [XmlElement]
@@ -82,6 +97,8 @@ namespace TournamentsXPanded.Models
         public List<string> CustomTourneyItems { get; set; }
 
         public bool EnableItemModifiersForPrizes { get; set; } = false;
+
+        
         #endregion
 
         #region Match Odds       

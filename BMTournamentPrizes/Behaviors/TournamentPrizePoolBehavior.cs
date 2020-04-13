@@ -122,22 +122,22 @@ namespace TournamentsXPanded.Behaviors
 
             //Get the town items if using that mode
             List<string> townitems = new List<string>();
-            if (TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownCustom
-                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownVanilla
-                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownOnly)
+            if (TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownCustom
+                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownVanilla
+                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownOnly)
             {
                 townitems = GetValidTownItems(tournamentGame, TournamentXPSettings.Instance.TownPrizeMin, TournamentXPSettings.Instance.TownPrizeMax, TournamentXPSettings.Instance.TownValidPrizeTypes);
             }
 
             //Now get the list items - either customized or vanilla system
             List<string> listItems = new List<string>();
-            if (TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.Custom
-                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownCustom)
+            if (TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.Custom
+                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownCustom)
             {
                 listItems = TournamentXPSettings.Instance.CustomTourneyItems;
             }
-            else if (TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.TownVanilla
-                || TournamentXPSettings.Instance.PrizeListMode == PrizeListMode.Vanilla)
+            else if (TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownVanilla
+                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.Vanilla)
             {
                 listItems = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, numItemsToGet);
             }

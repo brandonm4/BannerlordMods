@@ -4,6 +4,7 @@ using ModLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace ModLib
 {
@@ -71,6 +72,7 @@ namespace ModLib
             catch (Exception ex)
             {
                 //ModDebug.ShowError("An error occurred while creating the ViewModels for all mod settings", "Error Occurred", ex);
+                MessageBox.Show(ex.ToStringFull());
             }
         }
     }

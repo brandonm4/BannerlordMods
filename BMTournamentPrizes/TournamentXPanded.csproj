@@ -82,9 +82,24 @@
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TaleWorlds.DotNet">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll</HintPath>
+    </Reference>
     <Reference Include="TaleWorlds.Engine">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="TaleWorlds.Engine.GauntletUI">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.GauntletUI.dll</HintPath>
+    </Reference>
+    <Reference Include="TaleWorlds.GauntletUI">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.dll</HintPath>
+    </Reference>
+    <Reference Include="TaleWorlds.GauntletUI.Data">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="TaleWorlds.InputSystem">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.Library">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
@@ -122,10 +137,12 @@
     <Compile Include="ModLib\FileDatabase\SettingsDatabase.cs" />
     <Compile Include="ModLib\FileDatabase\SettingType.cs" />
     <Compile Include="Models\TournamentXPSettings.cs" />
+    <Compile Include="ModLib\GUI\GauntletUI\ModOptionsGauntletScreen.cs" />
     <Compile Include="ModLib\GUI\ViewModels\ModSettingsScreenVM.cs" />
     <Compile Include="ModLib\GUI\ViewModels\ModSettingsVM.cs" />
     <Compile Include="ModLib\GUI\ViewModels\SettingProperty.cs" />
     <Compile Include="ModLib\GUI\ViewModels\SettingPropertyGroup.cs" />
+    <Compile Include="ModLib\GUI\Views\ModLibSliderWidget.cs" />
     <Compile Include="ModLib\Interfaces\IAction.cs" />
     <Compile Include="ModLib\Interfaces\IInitial.cs" />
     <Compile Include="ModLib\Interfaces\ISerialisableFile.cs" />
@@ -157,6 +174,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ModLib\GUI\Brushes\DividerBrushes.xml" />
+    <Content Include="ModLib\GUI\Brushes\ModSettingsItemBrush.xml" />
+    <Content Include="ModLib\GUI\Brushes\ResetButtonBrush.xml" />
+    <Content Include="ModLib\GUI\Brushes\TextBrushes.xml" />
+    <Content Include="ModLib\GUI\Views\ModOptionsScreen.xml" />
+    <Content Include="ModLib\GUI\Views\ModSettingsItem.xml" />
+    <Content Include="ModLib\GUI\Views\SettingPropertyGroupView.xml" />
+    <Content Include="ModLib\GUI\Views\SettingPropertyView.xml" />
+    <Content Include="ModLib\GUI\Views\SettingsView.xml" />
     <Content Include="ModLib\TEMPONLY_UNTILMODLIB_RELEASE.txt" />
     <Content Include="SubModule.xml" />
   </ItemGroup>

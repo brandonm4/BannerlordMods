@@ -31,7 +31,7 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
             if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
                 || TournamentXPSettings.Instance.EnablePrizeSelection
                 || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0
-                || TournamentXPSettings.Instance.PrizeListMode != PrizeListMode.Vanilla
+                || TournamentXPSettings.Instance.PrizeListMode != (int)PrizeListMode.Vanilla
                 || TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
             {
                 return true;
@@ -66,7 +66,7 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
                 ItemObject prize;
                 if (TournamentXPSettings.Instance.EnablePrizeSelection
                     || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0
-                    || TournamentXPSettings.Instance.PrizeListMode != PrizeListMode.Vanilla)
+                    || TournamentXPSettings.Instance.PrizeListMode != (int)PrizeListMode.Vanilla)
                 {
                     TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Town.Settlement, __result);
                     prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);

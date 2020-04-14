@@ -48,6 +48,20 @@ namespace TournamentsXPanded.Behaviors
                 obj.Prizes.Add(new ItemRosterElement(prize, 1));
                 obj.SelectedPrizeStringId = prize.StringId;
             }
+            else
+            {
+                if (settlement.HasTournament)
+                {
+                    var townPrize = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town).Prize;
+                    if (townPrize.StringId != obj.SelectedPrizeStringId)
+                    {
+                        obj.Prizes = new ItemRoster();
+                        obj.Prizes.Add(new ItemRosterElement(townPrize, 1));
+                        obj.SelectedPrizeStringId = townPrize.StringId;
+                        obj.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
+                    }
+                }                
+            }
             return obj;
         }
 

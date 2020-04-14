@@ -11,6 +11,12 @@ namespace TournamentsXPanded.Models
     [SaveableClass(TournamentsXPandedSubModule.OBJ_TOURNAMENT_TYPE_MELEE2)]
     public class Fight2TournamentGame : FightTournamentGame
     {
+        const string descriptionMixed =  "The tournament will be 1v1 and free for all melee group fights.";
+        const string description1v1 = "The tournament will be bracket of 1v1 rounds.";
+        const string descriptionFFA = "The tournament will be a set of group free for all bouts.";
+
+        public string Description { get; set; } = descriptionMixed;
+
         public Fight2TournamentGame(Town town) : base(town)
         {
             base.Mode = TournamentGame.QualificationMode.IndividualScore;
@@ -18,8 +24,9 @@ namespace TournamentsXPanded.Models
 
         public override TextObject GetMenuText()
         {
-            return new TextObject("{=MWGATOoz}The tournament will be 1v1 and death match melee group fights.");
+            return new TextObject(string.Concat("{=MWGATOoz}", Description));
         }
+
 
         public override int MaxTeamSize
         {
@@ -27,6 +34,38 @@ namespace TournamentsXPanded.Models
             {
                 return 1;
             }
+        }
+
+        private int _maxTeamNumberPerMatch = 4;
+        public override int MaxTeamNumberPerMatch
+        {
+            get
+            {
+                return _maxTeamNumberPerMatch;
+            }
+        }
+        
+
+
+        public void SetFightMode(FightMode mode)
+        {
+            switch(mode)
+            {
+                case FightMode.Mixed:
+                    _maxTeamNumberPerMatch = 4;
+                    Description = descriptionMixed;
+                    break;
+                case FightMode.One_One:
+                    _maxTeamNumberPerMatch = 2;
+                    Description = description1v1;
+                    break;
+            }
+        }
+
+        public enum FightMode
+        {
+            Mixed,
+            One_One
         }
     }
 

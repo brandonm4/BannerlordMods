@@ -151,6 +151,7 @@
     <Compile Include="ModLib\SetValueAction.cs" />
     <Compile Include="ModLib\UndoRedoStack.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
+    <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
     <Compile Include="Patches\IPatch.cs" />
     <Compile Include="Patches\PatchBase.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\CalculateBet.cs" />

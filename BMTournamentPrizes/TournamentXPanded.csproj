@@ -53,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OtherFiles\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="ModLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
@@ -84,6 +88,7 @@
     </Reference>
     <Reference Include="TaleWorlds.DotNet">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Engine">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll</HintPath>
@@ -91,15 +96,19 @@
     </Reference>
     <Reference Include="TaleWorlds.Engine.GauntletUI">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.GauntletUI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.GauntletUI">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.GauntletUI.Data">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.Data.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.InputSystem">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Library">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
@@ -126,30 +135,7 @@
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
     <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="Extensions\StringHelpers.cs" />
-    <Compile Include="ModLib\Attributes\SettingPropertyAttribute.cs" />
-    <Compile Include="ModLib\Attributes\SettingPropertyGroupAttribute.cs" />
-    <Compile Include="ModLib\ExtensionMethods\ExceptionExtensionMethods.cs" />
-    <Compile Include="ModLib\ExtensionMethods\IEnumerableExtensions.cs" />
-    <Compile Include="ModLib\ExtensionMethods\MBBindingListExtensions.cs" />
-    <Compile Include="ModLib\ExtensionMethods\StackExtension.cs" />
-    <Compile Include="ModLib\FileDatabase\FileDatabase.cs" />
-    <Compile Include="ModLib\FileDatabase\SettingsBase.cs" />
-    <Compile Include="ModLib\FileDatabase\SettingsDatabase.cs" />
-    <Compile Include="ModLib\FileDatabase\SettingType.cs" />
     <Compile Include="Models\TournamentXPSettings.cs" />
-    <Compile Include="ModLib\GUI\GauntletUI\ModOptionsGauntletScreen.cs" />
-    <Compile Include="ModLib\GUI\ViewModels\ModSettingsScreenVM.cs" />
-    <Compile Include="ModLib\GUI\ViewModels\ModSettingsVM.cs" />
-    <Compile Include="ModLib\GUI\ViewModels\SettingProperty.cs" />
-    <Compile Include="ModLib\GUI\ViewModels\SettingPropertyGroup.cs" />
-    <Compile Include="ModLib\GUI\Views\ModLibSliderWidget.cs" />
-    <Compile Include="ModLib\Interfaces\IAction.cs" />
-    <Compile Include="ModLib\Interfaces\IInitial.cs" />
-    <Compile Include="ModLib\Interfaces\ISerialisableFile.cs" />
-    <Compile Include="ModLib\Interfaces\ISubFolder.cs" />
-    <Compile Include="ModLib\Ref.cs" />
-    <Compile Include="ModLib\SetValueAction.cs" />
-    <Compile Include="ModLib\UndoRedoStack.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
     <Compile Include="Patches\IPatch.cs" />
@@ -175,16 +161,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModLib\GUI\Brushes\DividerBrushes.xml" />
-    <Content Include="ModLib\GUI\Brushes\ModSettingsItemBrush.xml" />
-    <Content Include="ModLib\GUI\Brushes\ResetButtonBrush.xml" />
-    <Content Include="ModLib\GUI\Brushes\TextBrushes.xml" />
-    <Content Include="ModLib\GUI\Views\ModOptionsScreen.xml" />
-    <Content Include="ModLib\GUI\Views\ModSettingsItem.xml" />
-    <Content Include="ModLib\GUI\Views\SettingPropertyGroupView.xml" />
-    <Content Include="ModLib\GUI\Views\SettingPropertyView.xml" />
-    <Content Include="ModLib\GUI\Views\SettingsView.xml" />
-    <Content Include="ModLib\TEMPONLY_UNTILMODLIB_RELEASE.txt" />
     <Content Include="SubModule.xml" />
   </ItemGroup>
   <ItemGroup>

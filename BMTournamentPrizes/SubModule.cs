@@ -1,13 +1,16 @@
 ﻿using HarmonyLib;
 
 using ModLib;
-
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -24,11 +27,26 @@ namespace TournamentsXPanded
 
         protected override void OnSubModuleLoad()
         {
-            if (!ModLib.FileDatabase.Initialise(ModuleFolderName))
+            try
             {
-                MessageBox.Show("TournamentsXPanded failed to initialize settings data.");
+                FileDatabase.Initialise(ModuleFolderName);
+                var modnames = Utilities.GetModulesNames().ToList();
+                if (modnames.Contains("ModLib"))
+                {
+                 //   SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
+            }
+            string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
 
+            if (File.Exists(customfile))
+            {
+                var configtxt = File.ReadAllText(customfile);
+                TournamentPrizePoolBehavior.CustomTourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+            }
             //Need to convert my enums to ints for this to work.
             // SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance, ModuleFolderName);
 
@@ -60,9 +78,16 @@ namespace TournamentsXPanded
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            SettingsDatabase.BuildModSettingsVMs();
-
             ShowMessage("Tournaments XPanded Loaded");
+            //var loadedMods = new List<ModuleInfo>();
+            //foreach (var moduleName in Utilities.GetModulesNames())
+            //{
+            //    var moduleInfo = new ModuleInfo();
+            //    moduleInfo.Load(moduleName);
+            //    loadedMods.Add(moduleInfo);
+            //}
+
+
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -90,7 +115,6 @@ namespace TournamentsXPanded
         public override void OnGameInitializationFinished(Game game)
         {
             ApplyPatches(game);
-            base.OnGameInitializationFinished(game);
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
                 string[] _weaponTemplatesIdTeamSizeOne = new String[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };

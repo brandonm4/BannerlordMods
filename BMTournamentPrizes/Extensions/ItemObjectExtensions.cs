@@ -2,6 +2,7 @@
 
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 
 namespace TournamentsXPanded.Extensions
 {
@@ -54,6 +55,10 @@ namespace TournamentsXPanded.Extensions
                     desc += "Length: {LENGTH}\n";
                     keyValues.Add("LENGTH", item.WeaponComponent.PrimaryWeapon.WeaponLength.ToString());
                 }
+                if (IsWeaponCouchable(item))
+                {
+                    desc += "Couchable";
+                }
             }
             if (item.ArmorComponent != null)
             {
@@ -92,6 +97,24 @@ namespace TournamentsXPanded.Extensions
                 toolTip.SetTextVariable(k, keyValues[k]);
             }
             return toolTip;
+        }
+
+        internal static bool IsWeaponCouchable(ItemObject weapon)
+        {
+            bool flag = false;
+            using (IEnumerator<WeaponComponentData> enumerator = weapon.Weapons.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    if (!MBItem.GetItemIsPassiveUsage(enumerator.Current.ItemUsage))
+                    {
+                        continue;
+                    }
+                    flag = true;
+                    break;
+                }         
+            }
+            return flag;
         }
 
         public static TextObject ToToolTipTextObject(this EquipmentElement equipmentElement)

@@ -72,7 +72,7 @@ namespace BMTweakCollection.Patches
             var ___LootedPrisoners = LootCollectorType.GetProperty("LootedPrisoners", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
             var ___CasualtiesInBattle = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.Public | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
             var ___LootedItems = LootCollectorType.GetProperty("LootedItems", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as ItemRoster;
-            
+
 
             bool flag = winnerParty == PartyBase.MainParty;
             List<TroopRosterElement> troopRosterElements = new List<TroopRosterElement>();
@@ -206,7 +206,7 @@ namespace BMTweakCollection.Patches
         }
 
 
-        private static IEnumerable<ItemRosterElement>LootCasualties2(ICollection<TroopRosterElement> shareFromCasualties, float lootChance)
+        private static IEnumerable<ItemRosterElement> LootCasualties2(ICollection<TroopRosterElement> shareFromCasualties, float lootChance)
         {
             // MobileParty.GetMainPartySkillCounsellor(DefaultSkills.Roguery).GetSkillValue(DefaultSkills.Roguery)
             ItemRoster itemRosters = new ItemRoster();
@@ -217,7 +217,7 @@ namespace BMTweakCollection.Patches
             {
                 Equipment randomEquipment = GetRandomEquipment(casualty.Character);
                 var potentialLootItems = GetItemsFromEquipmentSlots(randomEquipment);
-                foreach(ItemObject item in potentialLootItems)
+                foreach (ItemObject item in potentialLootItems)
                 {
                     float rdm = MBRandom.RandomFloatRanged(100f);
                     if (rdm < lootChance)
@@ -233,7 +233,7 @@ namespace BMTweakCollection.Patches
                     }
                 }
             }
-            foreach(var stringId in loots.Keys)
+            foreach (var stringId in loots.Keys)
             {
                 itemRosters.Add(new ItemRosterElement(MBObjectManager.Instance.GetObject<ItemObject>(stringId), loots[stringId]));
             }
@@ -261,16 +261,19 @@ namespace BMTweakCollection.Patches
                         if (playerWin)
                         {
                             float valLevel = (float)Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
-                            expectedLootedItemValue = 0.8f * (30f + lootFactor + (float)(valLevel * valLevel));
+                            expectedLootedItemValue = 0.8f * ((30f * lootFactor) + (float)(valLevel * valLevel));
                         }
                         else
                         {
                             expectedLootedItemValue = ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
                         }
-                        EquipmentElement randomItem = GetRandomItem(randomEquipment,expectedLootedItemValue);
-                        if (randomItem.Item != null && !randomItem.Item.NotMerchandise && equipmentElements.Count<EquipmentElement>((EquipmentElement x) => x.Item.Type == randomItem.Item.Type) == 0)
+                        List<EquipmentElement> randomItems = GetRandomItems(randomEquipment, expectedLootedItemValue);
+                        foreach (EquipmentElement randomItem in randomItems)
                         {
-                            equipmentElements.Add(randomItem);
+                            if (randomItem.Item != null && !randomItem.Item.NotMerchandise && equipmentElements.Count<EquipmentElement>((EquipmentElement x) => x.Item.Type == randomItem.Item.Type) == 0)
+                            {
+                                equipmentElements.Add(randomItem);
+                            }
                         }
                     }
                     for (int k = 0; k < equipmentElements.Count; k++)
@@ -281,7 +284,7 @@ namespace BMTweakCollection.Patches
                         if (playerWin)
                         {
                             float valLevel = (float)Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
-                            single = 0.8f * 30f + (float)(valLevel * valLevel);
+                            single = 0.8f * (30f * lootFactor) + (float)(valLevel * valLevel);
                         }
                         else
                         {
@@ -345,7 +348,7 @@ namespace BMTweakCollection.Patches
         private static List<ItemObject> GetItemsFromEquipmentSlots(Equipment equipment)
         {
             List<ItemObject> items = new List<ItemObject>();
-            for (int i =0; i<12; i++)
+            for (int i = 0; i < 12; i++)
             {
                 ItemObject item = equipment.GetEquipmentFromSlot((EquipmentIndex)i).Item;
                 if (item != null)
@@ -377,9 +380,11 @@ namespace BMTweakCollection.Patches
         }
 
 
-        public static EquipmentElement GetRandomItem(Equipment equipment, float targetValue = 0f)
+        public static List<EquipmentElement> GetRandomItems(Equipment equipment, float targetValue = 0f)
         {
             EquipmentElement item;
+            List<EquipmentElement> items = new List<EquipmentElement>();
+
             int num = 0;
             for (int i = 0; i < 12; i++)
             {
@@ -407,7 +412,7 @@ namespace BMTweakCollection.Patches
                             float single = targetValue / (Math.Max(targetValue, value) * (float)num);
                             if (MBRandom.RandomFloat < single)
                             {
-                                return equipmentElement;
+                                items.Add(equipmentElement);
                             }
                             num--;
                         }
@@ -415,7 +420,7 @@ namespace BMTweakCollection.Patches
                 }
             }
             item = new EquipmentElement();
-            return item;
+            return items;
         }
     }
 }

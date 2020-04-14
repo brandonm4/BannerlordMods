@@ -3,8 +3,9 @@ using ModLib.Attributes;
 
 using System.Collections.Generic;
 using System.Xml.Serialization;
-
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace TournamentsXPanded.Models
 {
@@ -76,6 +77,10 @@ namespace TournamentsXPanded.Models
         [XmlElement]
         [SettingProperty("Prize Type Filter", "Tooltip")]
         public bool EnablePrizeTypeFilterToLists { get; set; } = false;
+
+        [XmlElement]
+        [SettingProperty("Prize Value Per Level")]
+        public int PrizeValueIncreasePerLevel { get; set; } = 1000;
 
         //[XmlElement]
         //[SettingProperty("Valid Prize Types", "Tooltip")]
@@ -199,6 +204,17 @@ namespace TournamentsXPanded.Models
         public float ArenaXPAdjustment { get; set; } = 1.0f;
 
         #endregion XP Adjustments
+
+
+        public int GetMinPrizeValue()
+        {
+            return TownPrizeMin + MathF.Ceiling((Hero.MainHero.Level * PrizeValueIncreasePerLevel) * 0.1f);
+        }
+
+        public int GetMaxPrizeValue()
+        {
+            return TownPrizeMax + (Hero.MainHero.Level * PrizeValueIncreasePerLevel);
+        }
     }
 
     public enum PrizeListMode

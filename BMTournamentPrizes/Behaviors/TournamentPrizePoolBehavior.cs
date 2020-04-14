@@ -133,7 +133,7 @@ namespace TournamentsXPanded.Behaviors
                 || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownVanilla
                 || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownOnly)
             {
-                townitems = GetValidTownItems(tournamentGame, TournamentXPSettings.Instance.TownPrizeMin, TournamentXPSettings.Instance.TownPrizeMax, TournamentXPSettings.Instance.TownValidPrizeTypes);
+                townitems = GetValidTownItems(tournamentGame, TournamentXPSettings.Instance.GetMinPrizeValue(), TournamentXPSettings.Instance.GetMaxPrizeValue(), TournamentXPSettings.Instance.TownValidPrizeTypes);
             }
 
             //Now get the list items - either customized or vanilla system
@@ -268,8 +268,8 @@ namespace TournamentsXPanded.Behaviors
 
             if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
             {
-                minValue = TournamentXPSettings.Instance.TownPrizeMin;
-                maxValue = TournamentXPSettings.Instance.TownPrizeMax;
+                minValue = TournamentXPSettings.Instance.GetMinPrizeValue();
+                maxValue = TournamentXPSettings.Instance.GetMaxPrizeValue();
             }
 
             string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };

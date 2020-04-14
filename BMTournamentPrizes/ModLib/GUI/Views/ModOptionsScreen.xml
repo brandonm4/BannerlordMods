@@ -3,13 +3,12 @@
 
     <Constant Name="CancelButton.Width" BrushLayer="Default" BrushName="Popup.Cancel.Button" BrushValueType="Width" />
     <Constant Name="CancelButton.Height" BrushLayer="Default" BrushName="Popup.Cancel.Button" BrushValueType="Height" />
-
   </Constants>
   <Window>
     <Widget Id="ModOptionsScreen" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
       <Children>
 
-        <Standard.Background/>
+        <Standard.Background />
 
         <!-- Main screen section -->
         <ListPanel Id="MainSection" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="164">
@@ -23,7 +22,7 @@
 
                 <!-- Title -->
                 <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="ModSettings.Title.Text" Text="Mods"
-                                HorizontalAlignment="Center" VerticalAlignment="Top" MarginRight="19" PositionYOffset="-10"/>
+                                HorizontalAlignment="Center" VerticalAlignment="Top" MarginRight="19" PositionYOffset="-10" />
 
                 <!-- Mods Listing Section Inner Panel-->
                 <Widget HeightSizePolicy="Fixed" WidthSizePolicy="Fixed" HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -50,17 +49,14 @@
                                 <ModSettingsItem />
                               </ItemTemplate>
                             </ListPanel>
-
                           </Children>
                         </Widget>
-
                       </Children>
                     </ScrollablePanel>
 
                     <!-- Mod list scroll bar -->
                     <Standard.VerticalScrollbar Id="ModsScrollbar" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right"
-                                                VerticalAlignment="Bottom" MarginLeft="2" MarginTop="1" MarginBottom="1"/>
-
+                                                VerticalAlignment="Bottom" MarginLeft="2" MarginTop="1" MarginBottom="1" />
                   </Children>
                 </Widget>
 
@@ -74,7 +70,6 @@
                       <Children>
 
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Button.Text" Text="@CancelButtonText" />
-
                       </Children>
                     </ButtonWidget>
 
@@ -87,13 +82,10 @@
                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Button.Text" Text="@DoneButtonText" />
                       </Children>
                     </ButtonWidget>
-
                   </Children>
                 </ListPanel>
-
               </Children>
             </Widget>
-
 
             <!-- Selected Mod Settings Section on the right -->
             <Widget Id="ModSettingsSection" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" MarginLeft="40" IsVisible="@SomethingSelected"
@@ -106,7 +98,7 @@
                     <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="80" Brush="ModSettings.Title.Text" Text="@SelectedModName"
                                     HorizontalAlignment="Center" VerticalAlignment="Top" />
                     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2"  VerticalAlignment="Top" Brush="Divider.Yellow"
-                            MarginLeft="15" MarginRight="15"/>
+                            MarginLeft="15" MarginRight="15" />
 
                     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginRight="30" MarginLeft="30">
                       <Children>
@@ -122,19 +114,15 @@
                                   <Children>
 
                                     <SettingsView DataSource="{SelectedMod}" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" />
-
                                   </Children>
                                 </Widget>
-
                               </Children>
                             </Widget>
-
                           </Children>
                         </ScrollablePanel>
 
                         <Standard.VerticalScrollbar Id="SettingsScrollBar" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                                    MarginTop="2"/>
-
+                                                    MarginTop="2" />
                       </Children>
                     </Widget>
 
@@ -144,26 +132,21 @@
                       <Children>
 
                         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2"  VerticalAlignment="Top" Brush="Divider.Yellow"
-                                MarginLeft="15" MarginRight="15" MarginBottom="2"/>
+                                MarginLeft="15" MarginRight="15" MarginBottom="2" />
 
                         <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="@HintText" IsVisible="@IsHintVisible"
-                                    HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="20" MarginRight="10" Brush="ModSettings.Hint.Text"/>
-
+                                    HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="20" MarginRight="10" Brush="ModSettings.Hint.Text" />
                       </Children>
                     </ListPanel>
-
                   </Children>
                 </ListPanel>
-
               </Children>
             </Widget>
-
           </Children>
         </ListPanel>
 
         <!-- Top Banner -->
-        <Standard.TopPanel Parameter.Title="@TitleLabel"/>
-        
+        <Standard.TopPanel Parameter.Title="@TitleLabel" />
       </Children>
     </Widget>
   </Window>

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
@@ -11,7 +8,6 @@ using TaleWorlds.SaveSystem;
 
 namespace TournamentsXPanded.Models
 {
-
     [SaveableClass(TournamentsXPandedSubModule.OBJ_TOURNAMENT_TYPE_MELEE2)]
     public class Fight2TournamentGame : FightTournamentGame
     {
@@ -19,11 +15,12 @@ namespace TournamentsXPanded.Models
         {
             base.Mode = TournamentGame.QualificationMode.IndividualScore;
         }
-     
+
         public override TextObject GetMenuText()
         {
             return new TextObject("{=MWGATOoz}The tournament will be 1v1 and death match melee group fights.");
         }
+
         public override int MaxTeamSize
         {
             get

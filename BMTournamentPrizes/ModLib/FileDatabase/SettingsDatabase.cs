@@ -1,6 +1,6 @@
-﻿
-using ModLib.GUI.ViewModels;
+﻿using ModLib.GUI.ViewModels;
 using ModLib.Interfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,7 @@ namespace ModLib
 
         public static List<SettingsBase> AllSettings => AllSettingsDict.Values.ToList();
         public static int SettingsCount => AllSettingsDict.Values.Count;
+
         public static List<ModSettingsVM> ModSettingsVMs
         {
             get

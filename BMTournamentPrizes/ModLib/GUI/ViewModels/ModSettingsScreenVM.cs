@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Windows.Forms;
+
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
@@ -27,6 +27,7 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
+
         [DataSourceProperty]
         public bool ChangesMade
         {
@@ -35,6 +36,7 @@ namespace ModLib.GUI.ViewModels
                 return ModSettingsList.Any((x) => x.URS.ChangesMade());
             }
         }
+
         [DataSourceProperty]
         public string DoneButtonText
         {
@@ -45,6 +47,7 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
+
         [DataSourceProperty]
         public string CancelButtonText
         {
@@ -54,6 +57,7 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
+
         [DataSourceProperty]
         public MBBindingList<ModSettingsVM> ModSettingsList
         {
@@ -67,6 +71,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public ModSettingsVM SelectedMod
         {
@@ -82,10 +87,13 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public string SelectedModName => SelectedMod == null ? "Mod Name Goes Here" : SelectedMod.ModName;
+
         [DataSourceProperty]
         public bool SomethingSelected => SelectedMod != null;
+
         [DataSourceProperty]
         public string HintText
         {
@@ -100,6 +108,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         public bool IsHintVisible => !string.IsNullOrWhiteSpace(HintText);
 
         public ModSettingsScreenVM()

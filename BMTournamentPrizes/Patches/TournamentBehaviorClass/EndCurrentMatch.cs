@@ -1,33 +1,37 @@
 ﻿using HarmonyLib;
+
 using SandBox.TournamentMissions.Missions;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
+
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {
-   
-    public class EndCurrentMatch: PatchBase<EndCurrentMatch>
+    public class EndCurrentMatch : PatchBase<EndCurrentMatch>
     {
         public override bool Applied { get; protected set; }
 
         private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("EndCurrentMatch", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private static readonly MethodInfo PatchMethodInfo = typeof(EndCurrentMatch).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
         public override bool IsApplicable(Game game)
         {
             return (TournamentXPSettings.Instance.BonusTournamentMatchGold > 0 || TournamentXPSettings.Instance.EnableRenownPerTroopTier);
         }
-        public override void Reset() { }
+
+        public override void Reset()
+        {
+        }
 
         public override void Apply(Game game)
         {
@@ -40,8 +44,8 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
               );
             Applied = true;
         }
-    
-        static bool Prefix(TournamentBehavior __instance)
+
+        private static bool Prefix(TournamentBehavior __instance)
         {
             var winners = (List<TournamentParticipant>)Traverse.Create(__instance.CurrentMatch).Method("GetWinners").GetValue();
             if (winners.Where(x => x.Character.HeroObject == Hero.MainHero).Count() > 0)
@@ -83,6 +87,6 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
             }
 
             return true;
-        }       
+        }
     }
 }

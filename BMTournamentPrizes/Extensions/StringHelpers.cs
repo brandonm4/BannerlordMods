@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using TournamentsXPanded.Models;
 
@@ -10,12 +6,12 @@ namespace TournamentLib.Extensions
 {
     public static class TournamentStringExtensions
     {
-        public static bool ConvertToBool(this string s )
+        public static bool ConvertToBool(this string s)
         {
             if (!String.IsNullOrWhiteSpace(s))
             {
                 s = s.Trim().ToLower();
-                switch(s)
+                switch (s)
                 {
                     case "y":
                     case "yes":
@@ -33,18 +29,22 @@ namespace TournamentLib.Extensions
             if (!String.IsNullOrWhiteSpace(s))
             {
                 s = s.Trim().ToLower();
-                switch(s)
+                switch (s)
                 {
                     case "vanilla":
                     case "stock":
                         return PrizeListMode.Vanilla;
+
                     case "custom":
                         return PrizeListMode.Custom;
+
                     case "townstock":
                     case "townvanilla":
                         return PrizeListMode.TownVanilla;
+
                     case "towncustom":
                         return PrizeListMode.TownCustom;
+
                     case "townonly":
                         return PrizeListMode.TownOnly;
                 }

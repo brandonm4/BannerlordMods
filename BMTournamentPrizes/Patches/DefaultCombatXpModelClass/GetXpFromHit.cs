@@ -1,12 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using HarmonyLib;
+
+using System;
 using System.Reflection;
-using HarmonyLib;
+
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
@@ -57,9 +58,9 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
             Applied = true;
         }
+
         public override void Reset()
         {
         }
     }
 }
-

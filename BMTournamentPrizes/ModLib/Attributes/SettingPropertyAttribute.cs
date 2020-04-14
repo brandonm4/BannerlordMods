@@ -20,7 +20,6 @@ namespace ModLib.Attributes
 
         public SettingPropertyAttribute(string displayName, string tooltip = "") : this(displayName, 0f, 0f, tooltip)
         {
-
         }
     }
 }

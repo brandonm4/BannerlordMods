@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <Name value="TournamentsXPanded"/>
-  <Id value="TournamentsXPanded"/>
-  <Version value="e1.2.0"/>
-  <SingleplayerModule value="true"/>
-  <MultiplayerModule value="false"/>
-  <Official value="false"/>
+  <Name value="TournamentsXPanded" />
+  <Id value="TournamentsXPanded" />
+  <Version value="e1.2.0" />
+  <SingleplayerModule value="true" />
+  <MultiplayerModule value="false" />
+  <Official value="false" />
   <DependedModules>
-    <DependedModule Id="Native"/>
-    <DependedModule Id="SandBoxCore"/>
-    <DependedModule Id="Sandbox"/>
-    <DependedModule Id="CustomBattle"/>
+    <DependedModule Id="Native" />
+    <DependedModule Id="SandBoxCore" />
+    <DependedModule Id="Sandbox" />
+    <DependedModule Id="CustomBattle" />
     <DependedModule Id="StoryMode" />
   </DependedModules>
   <SubModules>
     <SubModule>
-      <Name value="BMTweakCollection"/>
-      <DLLName value="BMTweakCollection.dll"/>
-      <SubModuleClassType value="TournamentsXPanded.TournamentsXPandedMain"/>
+      <Name value="BMTweakCollection" />
+      <DLLName value="BMTweakCollection.dll" />
+      <SubModuleClassType value="TournamentsXPanded.TournamentsXPandedMain" />
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />
       </Tags>
     </SubModule>
   </SubModules>
-  <Xmls/>
+  <Xmls />
 </Module>

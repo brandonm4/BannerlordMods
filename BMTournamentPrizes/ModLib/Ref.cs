@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModLib
 {
@@ -40,7 +36,6 @@ namespace ModLib
 
         public Ref(Func<object> getter) : this(getter, null)
         {
-
         }
 
         public Ref(PropertyInfo propInfo, object instance)

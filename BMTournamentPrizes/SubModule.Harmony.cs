@@ -1,13 +1,14 @@
 ﻿using HarmonyLib;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using TaleWorlds.Core;
-using TournamentLib.Extensions;
+
+using TournamentXPanded.Extensions;
+
 using TournamentsXPanded.Patches;
 
 namespace TournamentsXPanded
@@ -16,12 +17,12 @@ namespace TournamentsXPanded
     {
         internal static readonly Harmony Harmony = new Harmony(nameof(TournamentsXPanded));
         public static IDictionary<Type, IPatch> ActivePatches = new Dictionary<Type, IPatch>();
+
         #region HarmoryPatches
-      
+
         private static void ApplyPatches(Game game)
         {
             //ActivePatches.Clear();
-            
 
             foreach (var patch in Patches)
             {
@@ -61,7 +62,9 @@ namespace TournamentsXPanded
                 ShowMessage($"{(patchApplied ? "Applied" : "Skipped")} Patch: {patch.GetType().Name}");
             }
         }
+
         private static LinkedList<IPatch> _patches;
+
         private static LinkedList<IPatch> Patches
         {
             get
@@ -98,10 +101,10 @@ namespace TournamentsXPanded
                 return _patches;
             }
         }
-        #endregion
+
+        #endregion HarmoryPatches
     }
 }
-
 
 /* Harmony Patch code courtesty of Bannerlord Community Patch*/
 /* License for this code file */

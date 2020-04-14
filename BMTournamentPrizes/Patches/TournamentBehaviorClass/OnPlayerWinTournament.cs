@@ -1,19 +1,19 @@
-﻿using TournamentsXPanded;
-using TournamentsXPanded.Behaviors;
-using TournamentsXPanded.Models;
-using HarmonyLib;
+﻿using HarmonyLib;
+
 using SandBox.TournamentMissions.Missions;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
+using System.Reflection;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TournamentLib.Extensions;
-using System.Reflection;
+
+using TournamentXPanded.Extensions;
+
+using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {
@@ -24,11 +24,15 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
         private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("OnPlayerWinTournament", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private static readonly MethodInfo PatchMethodInfo = typeof(OnPlayerWinTournament).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
         public override bool IsApplicable(Game game)
         {
             return TournamentXPSettings.Instance.EnableItemModifiersForPrizes || TournamentXPSettings.Instance.BonusTournamentWinInfluence > 0;
         }
-        public override void Reset() { }
+
+        public override void Reset()
+        {
+        }
 
         public override void Apply(Game game)
         {
@@ -47,7 +51,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
         //REVISIT - convert to transpiler patch to just change our prize payment
         // All we really need to change is instead of giving an ItemObject - which has no ItemModifers, we give them an ItemRosterEquipement, which can have ItemModifiers
         public static bool Prefix(ref TournamentBehavior __instance)
-        {        
+        {
             //Override Standard behavior
             if (Campaign.Current.GameMode != CampaignGameMode.Campaign)
             {
@@ -88,10 +92,10 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     FileLog.Log("ERROR: Tournament XPanded: OnPlayerWinTournament\nError Awarding Prize");
-                    
+
                     FileLog.Log("TournamentPrizePool:\n");
                     if (currentPool != null)
                         FileLog.Log(Newtonsoft.Json.JsonConvert.SerializeObject(currentPool));
@@ -103,11 +107,10 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }
-            }    
+            }
             Campaign.Current.TournamentManager.OnPlayerWinTournament(__instance.TournamentGame.GetType());
 
             return false;
         }
-
     }
 }

@@ -1,41 +1,36 @@
-﻿using TournamentsXPanded.Behaviors;
-using TournamentsXPanded.Models;
-using HarmonyLib;
-using Newtonsoft.Json;
+﻿using HarmonyLib;
+
+using ModLib;
+
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade;
-using TournamentsXPanded.Patches;
-using System.Reflection;
 using TaleWorlds.Localization;
-using TaleWorlds.Engine.Screens;
-using ModLib.GUI.GauntletUI;
-using ModLib;
+using TaleWorlds.MountAndBlade;
+
+using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded
 {
     public partial class TournamentsXPandedSubModule : MBSubModuleBase
     {
-
         private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
         public static string ModuleFolderName { get; } = "TournamentsXPanded";
 
-
         protected override void OnSubModuleLoad()
-        {          
+        {
             if (!ModLib.FileDatabase.Initialise(ModuleFolderName))
             {
                 MessageBox.Show("TournamentsXPanded failed to initialize settings data.");
             }
 
             //Need to convert my enums to ints for this to work.
-           // SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance, ModuleFolderName);
+            // SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance, ModuleFolderName);
 
             string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs");
             FileLog.logPath = logpath;
@@ -56,40 +51,40 @@ namespace TournamentsXPanded
                 }
             }
 
-             //Will be handled by ModLib 
+            //Will be handled by ModLib
             //TaleWorlds.MountAndBlade.Module.CurrentModule.AddInitialStateOption(new InitialStateOption("ModOptionsMenu", new TextObject("Mod Options"), 9990, () =>
             //{
             //    ScreenManager.PushScreen(new ModOptionsGauntletScreen());
             //}, false));
-            
         }
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             SettingsDatabase.BuildModSettingsVMs();
 
             ShowMessage("Tournaments XPanded Loaded");
-
         }
+
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             if (game.GameType is Campaign)
             {
                 CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
-                //gameStarterObject.AddModel(new TournamentPrizeExpansion());              
+                //gameStarterObject.AddModel(new TournamentPrizeExpansion());
                 MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);
                 if (campaignGameStarter != null)
                 {
                     campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
-                }              
-            }           
+                }
+            }
         }
 
         public override void OnGameLoaded(Game game, object initializerObject)
         {
-            if (TournamentXPSettings.Instance.DebugMode)
-            {
-              DoDebugPopup();
-            }
+            //if (TournamentXPSettings.Instance.DebugMode)
+            //{
+            //    DoDebugPopup();
+            //}
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -109,19 +104,18 @@ namespace TournamentsXPanded
                 RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
             }
         }
+
         protected void DoDebugPopup()
         {
             var patches = "Patch Status\n";
-            foreach(var p in Patches)
+            foreach (var p in Patches)
             {
                 patches += p.ToString() + ": " + p.Applied.ToString() + "\n";
             }
 
             TextObject info = new TextObject(patches);
             InformationManager.DisplayMessage(new InformationMessage(patches));
-
         }
-
 
         private void RemoveTournamentSpearFootSets(string[] templates)
         {
@@ -152,6 +146,7 @@ namespace TournamentsXPanded
 
             InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }
+
         internal const int OBJ_PRIZEPOOL = 4106000;
         internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;
         internal const int OBJ_TOURNAMENT_REWARD = 4106002;
@@ -159,7 +154,5 @@ namespace TournamentsXPanded
         internal const int SAVEDEF_PRIZEPOOL = 4105000;
         internal const int SAVEDEF_TOURNAMENT_TYPE_MELEE2 = 4105001;
         internal const int SAVEDEF_TOURNAMENT_REWARD = 4105002;
-
-  
     }
 }

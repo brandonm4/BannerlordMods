@@ -49,7 +49,8 @@ namespace BMTweakCollection.Patches
 
         static bool Prepare()
         {
-            return true;
+            //return true;
+            return false;
         }
     }
 }

@@ -4,7 +4,7 @@
                   IsSelected="@IsSelected" DoNotPassEventsToChildren="true" ClipContents="true">
       <Children>
         <RichTextWidget Text="@ModName" HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    MarginLeft="10" Brush="Mod.Settings.Item.Name"/>
+                    MarginLeft="10" Brush="Mod.Settings.Item.Name" />
       </Children>
                       <!--Brush="Clan.Tuple.Name.Text"-->
     </ButtonWidget>

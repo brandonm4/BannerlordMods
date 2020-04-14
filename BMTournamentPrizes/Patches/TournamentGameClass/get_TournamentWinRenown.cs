@@ -1,19 +1,12 @@
-﻿using TournamentsXPanded;
+﻿using HarmonyLib;
+
+using System.Reflection;
+
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
-using HarmonyLib;
-using SandBox.TournamentMissions.Missions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TournamentLib.Extensions;
-using System.Reflection;
 
 namespace TournamentsXPanded.Patches.TournamentGameClass
 {
@@ -28,7 +21,10 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
         {
             return TournamentXPSettings.Instance.BonusTournamentWinRenown > 0 || TournamentXPSettings.Instance.EnableRenownPerTroopTier;
         }
-        public override void Reset() { }
+
+        public override void Reset()
+        {
+        }
 
         public override void Apply(Game game)
         {
@@ -40,7 +36,7 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
             Applied = true;
         }
 
-        static void Postfix(ref float __result)
+        private static void Postfix(ref float __result)
         {
             __result += TournamentPrizePoolBehavior.TournamentReward.BonusRenown;
         }

@@ -1,15 +1,17 @@
-﻿using TournamentsXPanded.Behaviors;
-using TournamentsXPanded.Models;
-using HarmonyLib;
+﻿using HarmonyLib;
+
+using System.Reflection;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
-using System.Reflection;
 using TaleWorlds.Core;
 
+using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentManagerClass
 {
-    class ResolveTournament : PatchBase<ResolveTournament>
+    internal class ResolveTournament : PatchBase<ResolveTournament>
     {
         public override bool Applied { get; protected set; }
 
@@ -20,7 +22,10 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
         {
             return (TournamentXPSettings.Instance.EnablePrizeSelection || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0);
         }
-        public override void Reset() { }
+
+        public override void Reset()
+        {
+        }
 
         public override void Apply(Game game)
         {
@@ -36,7 +41,8 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
         {
             TournamentPrizePoolBehavior.ClearTournamentPrizes(tournament.Town.Settlement);
         }
-        static bool Prepare()
+
+        private static bool Prepare()
         {
             return (TournamentXPSettings.Instance.EnablePrizeSelection);
         }

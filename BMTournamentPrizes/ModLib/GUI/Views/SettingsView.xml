@@ -9,7 +9,6 @@
             <SettingPropertyGroupView />
           </ItemTemplate>
         </ListPanel>
-
       </Children>
     </Widget>
   </Window>

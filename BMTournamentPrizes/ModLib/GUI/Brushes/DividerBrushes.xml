@@ -1,8 +1,8 @@
 ﻿<Brushes>
 
-  <Brush Name="Divider.White" >
+  <Brush Name="Divider.White">
     <Layers>
-      <BrushLayer Name="Default" Sprite="GradientDivider_9"/>
+      <BrushLayer Name="Default" Sprite="GradientDivider_9" />
     </Layers>
     <Styles>
       <Style Name="Default">
@@ -11,9 +11,9 @@
     </Styles>
   </Brush>
 
-  <Brush Name="Divider.Yellow" >
+  <Brush Name="Divider.Yellow">
     <Layers>
-      <BrushLayer Name="Default" Sprite="GradientDivider_9" Color="#FFEBC1FF"/>
+      <BrushLayer Name="Default" Sprite="GradientDivider_9" Color="#FFEBC1FF" />
     </Layers>
     <Styles>
       <Style Name="Default">
@@ -21,5 +21,4 @@
       </Style>
     </Styles>
   </Brush>
-
 </Brushes>

@@ -1,4 +1,5 @@
 ﻿using ModLib.Attributes;
+
 using TaleWorlds.Library;
 
 namespace ModLib.GUI.ViewModels
@@ -10,6 +11,7 @@ namespace ModLib.GUI.ViewModels
         public SettingPropertyGroupAttribute Attribute { get; private set; }
         public UndoRedoStack URS { get; private set; }
         public ModSettingsScreenVM Parent { get; private set; }
+
         public string HintText
         {
             get
@@ -33,8 +35,10 @@ namespace ModLib.GUI.ViewModels
                 return $"{Attribute.GroupName} {addition}";
             }
         }
+
         [DataSourceProperty]
         public MBBindingList<SettingProperty> SettingProperties { get; } = new MBBindingList<SettingProperty>();
+
         [DataSourceProperty]
         public bool GroupToggle
         {
@@ -60,6 +64,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public bool HasGroupToggle => GroupToggleSettingProperty != null;
 

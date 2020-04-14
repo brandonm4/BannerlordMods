@@ -1,19 +1,22 @@
-﻿using TournamentsXPanded.Extensions;
-using TournamentsXPanded.Models;
-using HarmonyLib;
+﻿using HarmonyLib;
+
 using Helpers;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
-using TournamentLib.Extensions;
+
+using TournamentXPanded.Extensions;
+
+using TournamentsXPanded.Extensions;
+using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Behaviors
 {
@@ -21,23 +24,24 @@ namespace TournamentsXPanded.Behaviors
     {
         public static TournamentReward TournamentReward { get; set; }
 
-        public TournamentPrizePoolBehavior() { }
-
-        
+        public TournamentPrizePoolBehavior()
+        {
+        }
 
         public static TournamentPrizePool GetTournamentPrizePool(string settlementStringId)
         {
             return GetTournamentPrizePool(Campaign.Current.Settlements.Where(x => x.StringId == settlementStringId).Single());
         }
+
         public static TournamentPrizePool GetTournamentPrizePool(Settlement settlement, ItemObject prize = null)
         {
             Town component = settlement.Town;
             TournamentPrizePool obj = MBObjectManager.Instance.GetObject<TournamentPrizePool>((TournamentPrizePool x) => x.Town == component);
             if (obj == null)
             {
-                obj = MBObjectManager.Instance.CreateObject<TournamentPrizePool>();               
-                obj.Town = component;             
-            }            
+                obj = MBObjectManager.Instance.CreateObject<TournamentPrizePool>();
+                obj.Town = component;
+            }
             if (prize != null)
             {
                 obj.Prizes = new ItemRoster();
@@ -46,29 +50,33 @@ namespace TournamentsXPanded.Behaviors
             }
             return obj;
         }
-   
+
         public static void ClearTournamentPrizes(string settlement_string_id)
         {
             ClearTournamentPrizes(Campaign.Current.Settlements.Where(x => x.StringId == settlement_string_id).Single());
         }
+
         public static void ClearTournamentPrizes(Settlement settlement)
         {
             var currentPool = GetTournamentPrizePool(settlement);
             currentPool.Prizes = new ItemRoster();
-            currentPool.SelectedPrizeStringId = ""; 
+            currentPool.SelectedPrizeStringId = "";
             currentPool.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
         }
+
         #region Events
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
             CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(this.OnCleanSave));
         }
+
         public override void SyncData(IDataStore dataStore)
         {
-            
         }
+
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
             if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0)
@@ -85,14 +93,12 @@ namespace TournamentsXPanded.Behaviors
                  new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
                  new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 1, true);
             }
-            
-            
 
             starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", "Select Tournament Style",
              new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
              new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, 2, true);
-
         }
+
         private void OnCleanSave()
         {
             //if (TournamentXPSettings.Instance.EnableCleanSaveProcess)
@@ -101,11 +107,12 @@ namespace TournamentsXPanded.Behaviors
             //    MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
             //    foreach(var pp in prizePools)
             //    {
-            //        MBObjectManager.Instance.UnregisterObject(pp);                    
+            //        MBObjectManager.Instance.UnregisterObject(pp);
             //    }
             //}
         }
-        #endregion
+
+        #endregion Events
 
         #region Prizes
 
@@ -186,36 +193,27 @@ namespace TournamentsXPanded.Behaviors
             }
             currentPool.Prizes = new ItemRoster();
             foreach (var id in pickeditems)
-            {                        
+            {
                 ItemModifier itemModifier = null;
                 var pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(id);
-            
-                if (pickedPrize.HasArmorComponent)
+
+                if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
                 {
-                    ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
-                    if (itemModifierGroup != null)
+                    if (pickedPrize.HasArmorComponent)
                     {
-                        itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                        ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
+                        if (itemModifierGroup != null)
+                        {
+                            itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                        }
+                        else
+                        {
+                            itemModifier = null;
+                        }
                     }
-                    else
-                    {
-                        itemModifier = null;
-                    }                    
                 }
-                //else if (pickedPrize.HasHorseComponent)
-                //{
-                //    ItemModifierGroup itemModifierGroup1 = pickedPrize.HorseComponent.ItemModifierGroup;
-                //    if (itemModifierGroup1 != null)
-                //    {
-                //        itemModifier = itemModifierGroup1.GetRandomItemModifier(1f);
-                //    }
-                //    else
-                //    {
-                //        itemModifier = null;
-                //    }                    
-                //}
                 currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
-               // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
+                // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
             }
 
             if (!keepTownPrize)
@@ -226,6 +224,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return currentPool.SelectPrizeItemRosterElement.EquipmentElement.Item;
         }
+
         internal static List<string> GetValidTownItems(TournamentGame tournamentGame, int minValue, int maxValue, List<ItemObject.ItemTypeEnum> validtypes)
         {
             var roster = tournamentGame.Town.Owner.ItemRoster;
@@ -235,7 +234,7 @@ namespace TournamentsXPanded.Behaviors
             && validtypes.Contains(x.EquipmentElement.Item.ItemType)
            && x.EquipmentElement.Item.Value >= minValue
            && x.EquipmentElement.Item.Value <= maxValue
-           && !x.EquipmentElement.Item.NotMerchandise 
+           && !x.EquipmentElement.Item.NotMerchandise
               ).Select(x => x.EquipmentElement.Item.StringId).ToList();
 
             if (list.Count == 0)
@@ -245,7 +244,7 @@ namespace TournamentsXPanded.Behaviors
                     && validtypes.Contains(x.EquipmentElement.Item.ItemType))
                    .Select(x => x.EquipmentElement.Item.StringId).ToList();
                 FileLog.Log("TournamentPrizeSystem : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
-                FileLog.Log("No valid town prizes found in value range, reverted to all items in town." );
+                FileLog.Log("No valid town prizes found in value range, reverted to all items in town.");
             }
             if (list.Count == 0)
             {
@@ -261,6 +260,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return list;
         }
+
         public static ItemObject GetTournamentPrizeVanilla(Settlement settlement)
         {
             float minValue = 1000f;
@@ -281,8 +281,28 @@ namespace TournamentsXPanded.Behaviors
                 {
                     if (TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
                     {
+                        var validPizeTypes = new List<ItemObject.ItemTypeEnum>()
+                        {
+                            ItemObject.ItemTypeEnum.BodyArmor
+            , ItemObject.ItemTypeEnum.Bow
+            , ItemObject.ItemTypeEnum.Cape
+            //, ItemObject.ItemTypeEnum.ChestArmor
+          //  , ItemObject.ItemTypeEnum.Crossbow
+            , ItemObject.ItemTypeEnum.HandArmor
+            , ItemObject.ItemTypeEnum.HeadArmor
+        , ItemObject.ItemTypeEnum.Horse
+        , ItemObject.ItemTypeEnum.HorseHarness
+        , ItemObject.ItemTypeEnum.LegArmor
+        , ItemObject.ItemTypeEnum.OneHandedWeapon
+        //, ItemObject.ItemTypeEnum.Polearm
+      //  , ItemObject.ItemTypeEnum.Shield
+      //  , ItemObject.ItemTypeEnum.Thrown
+        , ItemObject.ItemTypeEnum.TwoHandedWeapon
+                        };
+
+
                         if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture &&
-                            TournamentXPSettings.Instance.TownValidPrizeTypes.Contains(item.ItemType)
+                            validPizeTypes.Contains(item.ItemType)
                         )
                         {
                             return 1f;
@@ -292,7 +312,6 @@ namespace TournamentsXPanded.Behaviors
                     {
                         return 1f;
                     }
-
                 }
                 return 0f;
             }) ?? MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) =>
@@ -312,6 +331,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return itemObject;
         }
+
         public static List<string> GetVanillaSetOfPrizes(Settlement settlement, int count)
         {
             List<string> prizes = new List<string>();
@@ -328,11 +348,13 @@ namespace TournamentsXPanded.Behaviors
             }
             return prizes;
         }
+
         public static void SetTournamentSelectedPrize(TournamentGame tournamentGame, ItemObject prize)
         {
             typeof(TournamentGame).GetProperty("Prize").SetValue(tournamentGame, prize);
         }
-        #endregion
+
+        #endregion Prizes
 
         #region Menu Entries
 
@@ -356,6 +378,7 @@ namespace TournamentsXPanded.Behaviors
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
             return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
         }
+
         public static void RerollConsequence(MenuCallbackArgs args)
         {
             try
@@ -364,14 +387,13 @@ namespace TournamentsXPanded.Behaviors
                 TournamentGame tournamentGame = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town);
 
                 //Clear old prizes
-                settings.SelectedPrizeStringId  = null;
+                settings.SelectedPrizeStringId = null;
                 settings.Prizes = new ItemRoster();
                 settings.RemainingRerolls--;
 
                 //Generate New Prize
                 var prize = GenerateTournamentPrize(tournamentGame, settings, false);
                 SetTournamentSelectedPrize(tournamentGame, prize);
-
 
                 try
                 {
@@ -416,7 +438,6 @@ namespace TournamentsXPanded.Behaviors
                 {
                     ItemObject prize = GenerateTournamentPrize(tournamentGame, currentPool, true);
                 }
-
 
                 //  InformationManager.Clear();
                 foreach (ItemRosterElement ire in currentPool.Prizes)
@@ -468,7 +489,7 @@ namespace TournamentsXPanded.Behaviors
             }
         }
 
-        static void OnSelectPrize(List<InquiryElement> prizeSelections)
+        private static void OnSelectPrize(List<InquiryElement> prizeSelections)
         {
             if (prizeSelections.Count > 0)
             {
@@ -496,9 +517,9 @@ namespace TournamentsXPanded.Behaviors
                 }
             }
         }
-        static void OnDeSelectPrize(List<InquiryElement> prizeSelections)
-        {
 
+        private static void OnDeSelectPrize(List<InquiryElement> prizeSelections)
+        {
         }
 
         public static bool TournamentTypeSelectCondition(MenuCallbackArgs args)
@@ -513,6 +534,7 @@ namespace TournamentsXPanded.Behaviors
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
             return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
         }
+
         public static void TournamentTypeSelectConsequence(MenuCallbackArgs args)
         {
             List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
@@ -528,7 +550,6 @@ namespace TournamentsXPanded.Behaviors
                     "Tournament Type Selection", "What kind of Tournament would you like to compete in today?", tournamentTypeElements, true, true, "OK", "Cancel",
                     new Action<List<InquiryElement>>(OnSelectTournamentStyle), new Action<List<InquiryElement>>(OnSelectDoNothing)), true);
 
-            
             try
             {
                 GameMenu.SwitchToMenu("town_arena");
@@ -538,10 +559,9 @@ namespace TournamentsXPanded.Behaviors
                 FileLog.Log("ERROR: BMTournamentXP: Select TournyType: Refreshing Arena Menu:");
                 FileLog.Log(ex.ToStringFull());
             }
-
         }
 
-        static void OnSelectTournamentStyle(List<InquiryElement> selectedTypes)
+        private static void OnSelectTournamentStyle(List<InquiryElement> selectedTypes)
         {
             if (selectedTypes.Count > 0)
             {
@@ -549,24 +569,29 @@ namespace TournamentsXPanded.Behaviors
                 TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
                 TournamentGame tournamentGame;
                 TournamentGame currentGame = tournamentManager.GetTournamentGame(town);
-            
+
                 switch (selectedTypes.First().Identifier.ToString())
                 {
                     case "melee":
                         tournamentGame = new FightTournamentGame(town);
                         break;
+
                     case "melee2":
                         tournamentGame = new Fight2TournamentGame(town);
                         break;
+
                     case "archery":
                         tournamentGame = new ArcheryTournamentGame(town);
                         break;
+
                     case "joust":
                         tournamentGame = new JoustingTournamentGame(town);
                         break;
+
                     case "race":
                         tournamentGame = new HorseRaceTournamentGame(town);
                         break;
+
                     default:
                         tournamentGame = new FightTournamentGame(town);
                         break;
@@ -589,16 +614,15 @@ namespace TournamentsXPanded.Behaviors
                 }
             }
         }
-        static void OnSelectDoNothing(List<InquiryElement> prizeSelections)
-        {
 
+        private static void OnSelectDoNothing(List<InquiryElement> prizeSelections)
+        {
         }
 
-
-#endregion
-      
+        #endregion Menu Entries
 
         #region Rewards and Calculations
+
         public static float GetRenownValue(CharacterObject character)
         {
             var worth = 0f;
@@ -645,8 +669,8 @@ namespace TournamentsXPanded.Behaviors
             float threat = 0f;
             //TournamentXP addon for Odd Calculations
             //Get armor bonus
-            threat += character.GetArmArmorSum() * 2 + character.GetBodyArmorSum() * 4 + character.GetLegArmorSum()  + character.GetHeadArmorSum() *2;
-            ////Get skills based 
+            threat += character.GetArmArmorSum() * 2 + character.GetBodyArmorSum() * 4 + character.GetLegArmorSum() + character.GetHeadArmorSum() * 2;
+            ////Get skills based
             threat += (float)character.GetSkillValue(DefaultSkills.Bow)
                 + (float)character.GetSkillValue(DefaultSkills.OneHanded)
                 + (float)character.GetSkillValue(DefaultSkills.TwoHanded)
@@ -657,6 +681,7 @@ namespace TournamentsXPanded.Behaviors
 
             return threat;
         }
-        #endregion
+
+        #endregion Rewards and Calculations
     }
 }

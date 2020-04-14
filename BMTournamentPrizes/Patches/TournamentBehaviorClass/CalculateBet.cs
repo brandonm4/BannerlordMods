@@ -1,19 +1,14 @@
-﻿using TournamentsXPanded;
-using TournamentsXPanded.Behaviors;
-using TournamentsXPanded.Models;
-using HarmonyLib;
+﻿using HarmonyLib;
+
 using SandBox.TournamentMissions.Missions;
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TournamentLib.Extensions;
 using System.Reflection;
+
+using TaleWorlds.Core;
+
+using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {
@@ -23,24 +18,28 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
         private static readonly MethodInfo TargetMethodInfo = typeof(TournamentBehavior).GetMethod("CalculateBet", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-       private static readonly MethodInfo PatchMethodInfo = typeof(CalculateBet).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(CalculateBet).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
         public override bool IsApplicable(Game game)
-        {            
+        {
             return TournamentXPSettings.Instance.MaximumBetOdds > 0;
         }
-        public override void Reset() { }
+
+        public override void Reset()
+        {
+        }
 
         public override void Apply(Game game)
         {
             if (Applied) return;
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
-          transpiler:new HarmonyMethod(PatchMethodInfo)
+          transpiler: new HarmonyMethod(PatchMethodInfo)
               );
 
             Applied = true;
         }
 
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             /* Orig */
             /*
@@ -71,12 +70,12 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
             //All the lines after what we want to change
             var afterCodes = new List<CodeInstruction>(instructions).Skip(count - 12);
-            
+
             //Rebuild and return
             origCodes.AddItem(changeCode);
             codes = origCodes.Concat(afterCodes).ToList();
-           
-           // codes.RemoveRange(0, codes.Count - 1);
+
+            // codes.RemoveRange(0, codes.Count - 1);
             return codes.AsEnumerable();
         }
     }

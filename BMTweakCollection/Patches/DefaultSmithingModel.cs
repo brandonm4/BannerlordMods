@@ -71,53 +71,53 @@ namespace BMTweakCollection.Patches
         {
             if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
             {
-                __result = (count * count + 12) / BMTweakCollectionSubModule.Configuration.CustomSmithingXPDivisor;
+                __result = (count * count + 12) / 36;
                 return false; 
             }
             return true;
         }
     }
 
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmithing")]
-    public class DefaultSmithingModelPatch5
-    {    
-        public static void Postfix(ref int __result)
-        {
-            __result = __result * 3;
-        }
-    }
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmelting")]
-    public class DefaultSmithingModelPatch6
-    {
-        public static void Postfix(ref int __result)
-        {
-            __result = __result * 5;
-        }
-    }
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForRefining")]
-    public class DefaultSmithingModelPatch7
-    {
-        public static void Postfix(ref int __result)
-        {
-            __result = __result * 5;
-        }
-    }
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmeltingItem")]
-    public class DefaultSmithingModelPatch8
-    {
-        public static void Postfix(ref int __result)
-        {
-            __result = __result * 5;
-        }
-    }
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmithingItem")]
-    public class DefaultSmithingModelPatch9
-    {
-        public static void Postfix(ref int __result)
-        {
-            __result = __result * 5;
-        }
-    }
+    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmithing")]
+    //public class DefaultSmithingModelPatch5
+    //{    
+    //    public static void Postfix(ref int __result)
+    //    {
+    //        __result = __result * 3;
+    //    }
+    //}
+    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmelting")]
+    //public class DefaultSmithingModelPatch6
+    //{
+    //    public static void Postfix(ref int __result)
+    //    {
+    //        __result = __result * 5;
+    //    }
+    //}
+    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForRefining")]
+    //public class DefaultSmithingModelPatch7
+    //{
+    //    public static void Postfix(ref int __result)
+    //    {
+    //        __result = __result * 5;
+    //    }
+    //}
+    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmeltingItem")]
+    //public class DefaultSmithingModelPatch8
+    //{
+    //    public static void Postfix(ref int __result)
+    //    {
+    //        __result = __result * 5;
+    //    }
+    //}
+    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmithingItem")]
+    //public class DefaultSmithingModelPatch9
+    //{
+    //    public static void Postfix(ref int __result)
+    //    {
+    //        __result = __result * 5;
+    //    }
+    //}
 }
 
 

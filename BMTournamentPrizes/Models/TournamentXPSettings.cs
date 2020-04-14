@@ -1,11 +1,9 @@
 ﻿using ModLib;
 using ModLib.Attributes;
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
+
 using TaleWorlds.Core;
 
 namespace TournamentsXPanded.Models
@@ -16,6 +14,7 @@ namespace TournamentsXPanded.Models
         private static TournamentXPSettings _instance = null;
         public override string ModName => "TournamentsXPanded";
         public override string ModuleFolderName => "TournamentsXPanded";
+
         public static TournamentXPSettings Instance
         {
             get
@@ -34,39 +33,50 @@ namespace TournamentsXPanded.Models
                 return _instance;
             }
         }
+
         [XmlElement]
         public override string ID { get; set; } = instanceID;
 
+        #region Debug Settings
 
-        #region Debug Settings             
         public bool DebugMode { get; set; } = false;
-        #endregion
 
-        #region Re-Roll        
+        #endregion Debug Settings
+
+        #region Re-Roll
+
         [XmlElement]
         [SettingProperty("Re-rolls per Tournament", "Maximum number of times you can re-roll the prize pool per tournament.  Set to 0 to disable.")]
         public int MaxNumberOfRerollsPerTournament { get; set; } = 3;
-        #endregion
+
+        #endregion Re-Roll
 
         #region Prize Selection
+
         [XmlElement]
         [SettingProperty("Prize Selection", "Should the Select Prize from the Prize Pool be enable. ")]
         public bool EnablePrizeSelection { get; set; } = true;
+
         [XmlElement]
         [SettingProperty("Prize List Mode", "Where do tournaments get prizes from:\nVanilla is standard behavior\nCustom is from a custom list you provide.\nTownCustom,TownVanilla,TownOnly will also pull items from the Town's stock.")]
         public int PrizeListMode { get; set; } = 0;
+
         [XmlElement]
         [SettingProperty("Town Prize Min Value", "Any item below this value will not be used.")]
         public int TownPrizeMin { get; set; } = 1600;
+
         [XmlElement]
         [SettingProperty("Town Prize Max Value", "Any item above this value will not be used.")]
         public int TownPrizeMax { get; set; } = 8500;
+
         [XmlElement]
         [SettingProperty("Prize Value Filter", "Tooltip")]
         public bool TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell { get; set; } = false;
+
         [XmlElement]
         [SettingProperty("Prize Type Filter", "Tooltip")]
         public bool EnablePrizeTypeFilterToLists { get; set; } = false;
+
         //[XmlElement]
         //[SettingProperty("Valid Prize Types", "Tooltip")]
         public List<ItemObject.ItemTypeEnum> TownValidPrizeTypes { get; set; } = new List<ItemObject.ItemTypeEnum>() {
@@ -86,10 +96,10 @@ namespace TournamentsXPanded.Models
         , ItemObject.ItemTypeEnum.Thrown
         , ItemObject.ItemTypeEnum.TwoHandedWeapon};
 
-
         [XmlElement]
         [SettingProperty("Custom Prize Pool Filename", "Tooltip")]
         public string CustomPrizeFileName { get; set; } = "";
+
         [XmlElement]
         [SettingProperty("Prizes Per Pool", "Tooltip")]
         public int NumberOfPrizeOptions { get; set; } = 3;
@@ -98,19 +108,22 @@ namespace TournamentsXPanded.Models
 
         public bool EnableItemModifiersForPrizes { get; set; } = false;
 
-        
-        #endregion
+        #endregion Prize Selection
 
-        #region Match Odds       
+        #region Match Odds
+
         public bool OppenentDifficultyAffectsOdds { get; set; } = true;[XmlElement]
         [SettingProperty("Max Odds", "Tooltip")]
         public float MaximumBetOdds { get; set; } = 4;
-        #endregion
+
+        #endregion Match Odds
 
         #region Bonus Winnings
+
         [XmlElement]
         [SettingProperty("Bonus Gold Per Round", "Tooltip")]
         public int BonusTournamentMatchGold { get; set; } = 0;
+
         [XmlElement]
         [SettingProperty("Payout Bonus Gold On Match Win", "Tooltip")]
         public bool BonusTournamentMatchGoldImmediate { get; set; } = false;
@@ -118,16 +131,19 @@ namespace TournamentsXPanded.Models
         [XmlElement]
         [SettingProperty("Bonus Gold for Tournament Win", "Tooltip")]
         public int BonusTournamentWinGold { get; set; } = 0;
+
         [XmlElement]
         [SettingProperty("Bonus Renown for Tournament Win", "Tooltip")]
         public int BonusTournamentWinRenown { get; set; } = 0;
+
         [XmlElement]
         [SettingProperty("Bonus Influence for Tournament Win", "Tooltip")]
         public float BonusTournamentWinInfluence { get; set; } = 0;
+
         [XmlElement]
         [SettingProperty("Bonus Renown for Opponent Difficulty", "Tooltip")]
         public bool EnableRenownPerTroopTier { get; set; } = false;
-         
+
         public float RenownTroopTier1 { get; set; } = 1f;
         public float RenownTroopTier2 { get; set; } = 1f;
         public float RenownTroopTier3 { get; set; } = 1f;
@@ -151,6 +167,7 @@ namespace TournamentsXPanded.Models
                 return new[] { 0f, RenownTroopTier1, RenownTroopTier2, RenownTroopTier3, RenownTroopTier4, RenownTroopTier5, RenownTroopTier6, RenownTroopTier7 };
             }
         }
+
         public float[] RenownPerHeroProperty
         {
             get
@@ -159,28 +176,29 @@ namespace TournamentsXPanded.Models
             }
         }
 
-
-
-        #endregion
+        #endregion Bonus Winnings
 
         #region Other
+
         public bool TournamentEquipmentFilter { get; set; }
-        #endregion
+
+        #endregion Other
 
         #region UnImplemented
 
         public int TournamentBonusMoneyBaseNamedCharLevel { get; set; } = 0;
         public bool CompanionsWinPrizes { get; set; } = false;
-        #endregion
+
+        #endregion UnImplemented
 
         #region XP Adjustments
+
         public bool IsTournamentXPEnabled { get; set; } = true;
         public float TournamentXPAdjustment { get; set; } = 1.0f;
         public bool IsArenaXPEnabled { get; set; } = true;
         public float ArenaXPAdjustment { get; set; } = 1.0f;
-        #endregion
 
-
+        #endregion XP Adjustments
     }
 
     public enum PrizeListMode
@@ -191,6 +209,7 @@ namespace TournamentsXPanded.Models
         TownCustom,
         TownOnly,
     }
+
     public enum RenownHeroTier
     {
         HeroBase,

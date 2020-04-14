@@ -1,6 +1,7 @@
 ﻿using ModLib.Attributes;
 using ModLib.GUI.ViewModels;
 using ModLib.Interfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,6 @@ namespace ModLib
                             where propAttr != null
                             let groupAttrToAdd = groupAttr == null ? SettingPropertyGroupAttribute.Default : groupAttr
                             select new SettingProperty(propAttr, groupAttrToAdd, p, this)).ToList();
-
 
             foreach (var settingProp in propList)
             {

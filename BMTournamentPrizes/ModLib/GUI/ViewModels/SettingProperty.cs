@@ -1,7 +1,9 @@
 ﻿using ModLib.Attributes;
 using ModLib.Interfaces;
+
 using System;
 using System.Reflection;
+
 using TaleWorlds.Library;
 
 namespace ModLib.GUI.ViewModels
@@ -27,10 +29,13 @@ namespace ModLib.GUI.ViewModels
 
         [DataSourceProperty]
         public bool IsIntVisible => SettingType == SettingType.Int;
+
         [DataSourceProperty]
         public bool IsFloatVisible => SettingType == SettingType.Float;
+
         [DataSourceProperty]
         public bool IsBoolVisible { get => SettingType == SettingType.Bool; set { } }
+
         [DataSourceProperty]
         public bool IsEnabled
         {
@@ -41,6 +46,7 @@ namespace ModLib.GUI.ViewModels
                 return Group.GroupToggle;
             }
         }
+
         [DataSourceProperty]
         public bool IsSettingVisible
         {
@@ -72,6 +78,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public int IntValue
         {
@@ -89,6 +96,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public float FinalisedFloatValue
         {
@@ -101,6 +109,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public int FinalisedIntValue
         {
@@ -113,6 +122,7 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public bool BoolValue
         {
@@ -136,10 +146,13 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
+
         [DataSourceProperty]
         public float MaxValue => SettingAttribute.MaxValue;
+
         [DataSourceProperty]
         public float MinValue => SettingAttribute.MinValue;
+
         [DataSourceProperty]
         public string ValueString
         {

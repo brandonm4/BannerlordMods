@@ -1,11 +1,12 @@
-﻿
-using ModLib.Interfaces;
+﻿using ModLib.Interfaces;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+
 using TaleWorlds.Library;
 
 namespace ModLib
@@ -184,6 +185,7 @@ namespace ModLib
         private static void LoadAllFiles(string moduleName)
         {
             #region Loadables Folder
+
             //Check if the given module name is correct
             string modulePath = GetPathForModule(moduleName, Location.Modules);
             if (!Directory.Exists(modulePath))
@@ -228,8 +230,11 @@ namespace ModLib
             }
             else
                 Directory.CreateDirectory(moduleLoadablesPath);
-            #endregion
+
+            #endregion Loadables Folder
+
             #region Documents Folder
+
             //TODO::
             string modConfigsPath = GetPathForModule(moduleName, Location.Configs);
             if (Directory.Exists(modConfigsPath))
@@ -248,7 +253,8 @@ namespace ModLib
             }
             else
                 Directory.CreateDirectory(modConfigsPath);
-            #endregion
+
+            #endregion Documents Folder
         }
 
         private static string GetPathForModule(string moduleName, Location location)
@@ -264,6 +270,7 @@ namespace ModLib
             public string AssemblyName { get; private set; } = "";
             public string TypeName { get; private set; } = "";
             public string FullName => $"{TypeName}, {AssemblyName}";
+
             public Type Type
             {
                 get

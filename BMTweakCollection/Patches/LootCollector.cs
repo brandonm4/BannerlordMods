@@ -41,9 +41,9 @@ namespace BMTweakCollection.Patches
 
             try
             {
-                var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol2");
-                _harmony.Patch(TargetMethodInfo,
-                    prefix: new HarmonyMethod(PatchMethodInfo));
+                //  var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol2");
+                BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+                      prefix: new HarmonyMethod(PatchMethodInfo));
             }
             catch (Exception exception1)
             {
@@ -168,11 +168,18 @@ namespace BMTweakCollection.Patches
             if (winnerParty.MobileParty != null && winnerParty.MobileParty.Leader != null)
             {
                 //Get the best looter
-                SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, GetCharacterWithHighestSkill(winnerParty, DefaultSkills.Roguery), ref explainedNumber, true);
+                if (winnerParty.MobileParty == MobileParty.MainParty)
+                {
+                    SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, GetCharacterWithHighestSkill(winnerParty, DefaultSkills.Roguery), ref explainedNumber, true);
+                }
+                else
+                {
+                    SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, winnerParty.MobileParty.Leader, ref explainedNumber, true);
+                }
             }
             if (flag)
             {
-                IEnumerable<ItemRosterElement> itemRosterElements1 = LootCasualties(troopRosterElements1, explainedNumber.ResultNumber);
+                IEnumerable<ItemRosterElement> itemRosterElements1 = LootCasualties(troopRosterElements1, explainedNumber.ResultNumber, flag);
                 partyToReceiveLoot.ItemRoster.Add(itemRosterElements1);
             }
             else if (partyToReceiveLoot.LeaderHero != null)
@@ -232,7 +239,7 @@ namespace BMTweakCollection.Patches
             }
             return itemRosters;
         }
-        private static IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor)
+        private static IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor, bool playerWin = false)
         {
             EquipmentElement equipmentElement;
             ItemModifier randomModifierWithTarget;
@@ -250,8 +257,17 @@ namespace BMTweakCollection.Patches
 
                     for (int j = 0; j < num; j++)
                     {
-                        float expectedLootedItemValue = ItemHelper.GetExpectedLootedItemValue(CharacterObject.PlayerCharacter);
-                        EquipmentElement randomItem = randomEquipment.GetRandomItem(expectedLootedItemValue);
+                        float expectedLootedItemValue = 30f;
+                        if (playerWin)
+                        {
+                            float valLevel = (float)Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
+                            expectedLootedItemValue = 0.8f * (30f + lootFactor + (float)(valLevel * valLevel));
+                        }
+                        else
+                        {
+                            expectedLootedItemValue = ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
+                        }
+                        EquipmentElement randomItem = GetRandomItem(randomEquipment,expectedLootedItemValue);
                         if (randomItem.Item != null && !randomItem.Item.NotMerchandise && equipmentElements.Count<EquipmentElement>((EquipmentElement x) => x.Item.Type == randomItem.Item.Type) == 0)
                         {
                             equipmentElements.Add(randomItem);
@@ -261,7 +277,17 @@ namespace BMTweakCollection.Patches
                     {
                         EquipmentElement item = equipmentElements[k];
                         ItemRosterElement itemRosterElement = new ItemRosterElement(item.Item, 1, null);
-                        float single = ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
+                        float single = 30f; // ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
+                        if (playerWin)
+                        {
+                            float valLevel = (float)Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
+                            single = 0.8f * 30f + (float)(valLevel * valLevel);
+                        }
+                        else
+                        {
+                            single = ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
+                        }
+
                         EquipmentElement equipmentElement1 = itemRosterElement.EquipmentElement;
                         if (!equipmentElement1.Item.HasHorseComponent)
                         {
@@ -350,5 +376,46 @@ namespace BMTweakCollection.Patches
             return heroObject ?? party.LeaderHero.CharacterObject;
         }
 
+
+        public static EquipmentElement GetRandomItem(Equipment equipment, float targetValue = 0f)
+        {
+            EquipmentElement item;
+            int num = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                item = equipment[i];
+                if (item.Item != null)
+                {
+                    item = equipment[i];
+                    if (!item.Item.NotMerchandise)
+                    {
+                        num++;
+                    }
+                }
+            }
+            if (num > 0)
+            {
+                for (int j = 0; j < 12; j++)
+                {
+                    EquipmentElement equipmentElement = equipment[j];
+                    if (equipmentElement.Item != null)
+                    {
+                        item = equipment[j];
+                        if (!item.Item.NotMerchandise)
+                        {
+                            float value = (float)equipmentElement.Item.Value + 0.1f;
+                            float single = targetValue / (Math.Max(targetValue, value) * (float)num);
+                            if (MBRandom.RandomFloat < single)
+                            {
+                                return equipmentElement;
+                            }
+                            num--;
+                        }
+                    }
+                }
+            }
+            item = new EquipmentElement();
+            return item;
+        }
     }
 }

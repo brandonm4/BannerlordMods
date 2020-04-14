@@ -1,19 +1,17 @@
-﻿using TournamentsXPanded;
-using TournamentsXPanded.Behaviors;
-using TournamentsXPanded.Models;
-using HarmonyLib;
-using SandBox.TournamentMissions.Missions;
+﻿using HarmonyLib;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TournamentLib.Extensions;
 using System.Reflection;
+using System.Windows.Forms;
+
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+
+using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Models;
+using TournamentXPanded.Extensions;
 
 namespace TournamentsXPanded.Patches.TournamentGameClass
 {
@@ -38,7 +36,10 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
             }
             return false;
         }
-        public override void Reset() { }
+
+        public override void Reset()
+        {
+        }
 
         public override void Apply(Game game)
         {
@@ -51,16 +52,16 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
             Applied = true;
         }
 
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var codes = new List<CodeInstruction>(instructions);
             codes.RemoveRange(0, codes.Count - 1);
             return codes.AsEnumerable();
         }
 
-        static void Postfix(TournamentGame __instance, ref ItemObject __result)
+        private static void Postfix(TournamentGame __instance, ref ItemObject __result)
         {
-            //__result currently has stock item.          
+            //__result currently has stock item.
             try
             {
                 ItemObject prize;

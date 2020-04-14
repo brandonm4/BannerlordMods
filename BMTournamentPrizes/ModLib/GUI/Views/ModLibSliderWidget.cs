@@ -7,6 +7,7 @@ namespace ModLib.GUI.Views
         //private float oldFloatValue;
         //private int oldIntValue;
         private float _finalisedFloatValue;
+
         private int _finalisedIntValue;
 
         public float FinalisedFloatValue
@@ -21,6 +22,7 @@ namespace ModLib.GUI.Views
                 OnPropertyChanged(value, "FinalisedFloatValue");
             }
         }
+
         public int FinalisedIntValue
         {
             get

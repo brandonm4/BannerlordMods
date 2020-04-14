@@ -113,17 +113,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\MatchedSizeBanditCampaignBehavior.cs" />
-    <Compile Include="BMItemTweaksMain.cs" />
+    <Compile Include="BMTweaksSubmodule.cs" />
+    <Compile Include="ExceptionExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IPatch.cs" />
     <Compile Include="Models\BMRandomTweaksConfiguration.cs" />
+    <Compile Include="PatchBase.cs" />
     <Compile Include="Patches\DefaultSettlementFoodModel.cs" />
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
+    <Compile Include="Patches\HarmonyHelpers.cs" />
     <Compile Include="Patches\Hero.cs" />
-    <Compile Include="Patches\ItemTweaks.cs" />
     <Compile Include="Patches\LootCollector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StaticPropertyContractResolver.cs" />
+    <Compile Include="SubModule.Harmony.cs">
+      <DependentUpon>BMTweaksSubmodule.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="SubModule.xml" />
@@ -133,8 +139,6 @@
     <None Include="ModuleData\BMTweakCollection.config.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CommunityPatches\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

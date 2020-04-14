@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
@@ -87,7 +84,6 @@ namespace TournamentsXPanded.Extensions
                 keyValues.Add("SPEED", item.HorseComponent.Speed.ToString());
                 keyValues.Add("MANEUVER", item.HorseComponent.Maneuver.ToString());
                 keyValues.Add("HEALTH", item.HorseComponent.HitPoints.ToString());
-
             }
 
             TextObject toolTip = new TextObject(desc);
@@ -180,7 +176,6 @@ namespace TournamentsXPanded.Extensions
                 keyValues.Add("SPEED", equipmentElement.Item.HorseComponent.Speed.ToString());
                 keyValues.Add("MANEUVER", equipmentElement.Item.HorseComponent.Maneuver.ToString());
                 keyValues.Add("HEALTH", equipmentElement.Item.HorseComponent.HitPoints.ToString());
-
             }
 
             TextObject toolTip = new TextObject(desc);

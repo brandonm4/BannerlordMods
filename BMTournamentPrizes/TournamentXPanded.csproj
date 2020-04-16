@@ -53,13 +53,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OtherFiles\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="ModLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SandBox">
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
@@ -130,12 +126,46 @@
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TaleWorlds.TwoDimension">
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.TwoDimension.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
-    <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
+    <Compile Include="ErrorLog.cs" />
     <Compile Include="Extensions\StringHelpers.cs" />
     <Compile Include="Models\TournamentXPSettings.cs" />
+    <Compile Include="ModLib\Attributes\SettingPropertyAttribute.cs" />
+    <Compile Include="ModLib\Attributes\SettingPropertyGroupAttribute.cs" />
+    <Compile Include="ModLib\Debugging\DebugVars.cs" />
+    <Compile Include="ModLib\Debugging\ModDebug.cs" />
+    <Compile Include="ModLib\ExtensionMethods\ExceptionExtensionMethods.cs" />
+    <Compile Include="ModLib\ExtensionMethods\ICollectionExtensions.cs" />
+    <Compile Include="ModLib\ExtensionMethods\IEnumerableExtensions.cs" />
+    <Compile Include="ModLib\ExtensionMethods\MBBindingListExtensions.cs" />
+    <Compile Include="ModLib\ExtensionMethods\StackExtension.cs" />
+    <Compile Include="ModLib\ExtensionMethods\StringExtensions.cs" />
+    <Compile Include="ModLib\FileDatabase\SettingsBase.cs" />
+    <Compile Include="ModLib\FileDatabase\SettingType.cs" />
+    <Compile Include="ModLib\GUI\GauntletUI\EditValueGauntletScreen.cs" />
+    <Compile Include="ModLib\GUI\GauntletUI\ModOptionsGauntletScreen.cs" />
+    <Compile Include="ModLib\GUI\ViewModels\EditValueVM.cs" />
+    <Compile Include="ModLib\GUI\ViewModels\ModSettingsScreenVM.cs" />
+    <Compile Include="ModLib\GUI\ViewModels\ModSettingsVM.cs" />
+    <Compile Include="ModLib\GUI\ViewModels\SettingProperty.cs" />
+    <Compile Include="ModLib\GUI\ViewModels\SettingPropertyGroup.cs" />
+    <Compile Include="ModLib\GUI\Views\EditValueTextWidget.cs" />
+    <Compile Include="ModLib\Interfaces\IAction.cs" />
+    <Compile Include="ModLib\Interfaces\IInitial.cs" />
+    <Compile Include="ModLib\Interfaces\ISerialisableFile.cs" />
+    <Compile Include="ModLib\Interfaces\ISubFolder.cs" />
+    <Compile Include="ModLib\Ref.cs" />
+    <Compile Include="ModLib\UndoRedoStack\ComplexAction.cs" />
+    <Compile Include="ModLib\UndoRedoStack\SetFloatSettingProperty.cs" />
+    <Compile Include="ModLib\UndoRedoStack\SetIntSettingProperty.cs" />
+    <Compile Include="ModLib\UndoRedoStack\SetValueAction.cs" />
+    <Compile Include="ModLib\UndoRedoStack\UndoRedoStack.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
     <Compile Include="Patches\IPatch.cs" />

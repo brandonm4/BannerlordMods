@@ -1,11 +1,12 @@
 ﻿using HarmonyLib;
 
-using ModLib;
+
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
@@ -18,6 +19,9 @@ using TaleWorlds.MountAndBlade;
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
 
+
+using ModLib;
+
 namespace TournamentsXPanded
 {
     public partial class TournamentsXPandedSubModule : MBSubModuleBase
@@ -27,31 +31,52 @@ namespace TournamentsXPanded
 
         protected override void OnSubModuleLoad()
         {
+
+            //Setup Logging
+            if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
+            {
+                File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
+            }
+            string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs", "logfile.txt");
+            if (!Directory.Exists(System.IO.Path.GetDirectoryName(logpath)))
+            {
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logpath));
+            }            
+            ErrorLog.LogPath = logpath;
+
+            TournamentXPSettings settings = new TournamentXPSettings();
+            string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
+            if (File.Exists(configPath))
+            {
+                var settingsjson = File.ReadAllText(configPath);
+                 settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
+            }
+            else
+            {
+                JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+                serializerSettings.Formatting = Formatting.Indented;
+              
+                var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
+                File.WriteAllText(configPath, settingsjson);                
+            }
+            TournamentXPSettings.SetSettings(settings);
+
+
             try
             {
-                FileDatabase.Initialise(ModuleFolderName);
+              //  FileDatabase.Initialise(ModuleFolderName);
                 var modnames = Utilities.GetModulesNames().ToList();
                 if (modnames.Contains("ModLib"))
                 {
-                 //   SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance);
+                   //  SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
+                ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
             }
-            string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
 
-            if (File.Exists(customfile))
-            {
-                var configtxt = File.ReadAllText(customfile);
-                TournamentPrizePoolBehavior.CustomTourneyItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-            }
-            //Need to convert my enums to ints for this to work.
-            // SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance, ModuleFolderName);
 
-            string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs");
-            FileLog.logPath = logpath;
 
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
@@ -69,25 +94,11 @@ namespace TournamentsXPanded
                 }
             }
 
-            //Will be handled by ModLib
-            //TaleWorlds.MountAndBlade.Module.CurrentModule.AddInitialStateOption(new InitialStateOption("ModOptionsMenu", new TextObject("Mod Options"), 9990, () =>
-            //{
-            //    ScreenManager.PushScreen(new ModOptionsGauntletScreen());
-            //}, false));
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             ShowMessage("Tournaments XPanded Loaded");
-            //var loadedMods = new List<ModuleInfo>();
-            //foreach (var moduleName in Utilities.GetModulesNames())
-            //{
-            //    var moduleInfo = new ModuleInfo();
-            //    moduleInfo.Load(moduleName);
-            //    loadedMods.Add(moduleInfo);
-            //}
-
-
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -126,6 +137,13 @@ namespace TournamentsXPanded
                 RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeOne);
                 RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
                 RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
+            }
+            string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
+            if (File.Exists(customfile))
+            {
+                var configtxt = File.ReadAllText(customfile);
+                var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+                InitCustomItems(customItems);
             }
         }
 
@@ -170,6 +188,79 @@ namespace TournamentsXPanded
 
             InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }
+
+
+        private void InitCustomItems(List<string> customItems)
+        {
+            List<ItemObject> tourneyItems = new List<ItemObject>();
+            List<string> problemids = new List<string>();
+            TournamentPrizePoolBehavior.CustomTourneyItems = new List<ItemObject>();
+            foreach (var id in customItems)
+            {
+                ItemObject item;
+                try
+                {
+                    item = Game.Current.ObjectManager.GetObject<ItemObject>(id);
+                }
+                catch
+                {
+                    item = null;
+                }
+                if (item == null || item.ItemType == ItemObject.ItemTypeEnum.Invalid)
+                {
+                    problemids.Add(id);
+                    ErrorLog.Log(String.Concat("WARNING: Tournament Prize System\n", "Invalid Item Id detected in prize list.  Please remove from the list.  Ignoring problem item and continuing.\n\n", id));
+                }
+                else
+                {
+                    TournamentPrizePoolBehavior.CustomTourneyItems.Add(item);
+                }
+            }
+            if (problemids.Count > 0)
+            {
+                string info = "Errors in Custom Prize List.\nReview list and correct or remove these entries:\n";
+                foreach (var p in problemids)
+                {
+                    info = String.Concat(info, p, "\n");
+                }
+
+                MessageManager.DisplayDebugMessage(info);
+                //InformationManager.ShowInquiry(new InquiryData("Tournament Prize Errors",
+                //    info,
+                //    true, false, "Ok", "No", null, null, ""), false);
+
+            }
+        }
+
+        /* Mod Settings Interfaces */
+        #region ModSettings
+        public static Dictionary<string, string> GetModSettingValue()
+        {
+            Dictionary<string, string> settings = new Dictionary<string, string>();
+            PropertyInfo[] properties = typeof(TournamentXPSettings).GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                settings.Add(property.Name, property.GetValue(TournamentXPSettings.Instance).ToString());
+            }
+            return settings;
+        }
+
+        public static void SaveModSettingValue(Dictionary<string, string> newSettings)
+        {
+            // write to save settings to anywhere you want
+            //this method will be called when the player clicks on Done button in the settings screen
+            PropertyInfo[] properties = typeof(TournamentXPSettings).GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (newSettings.ContainsKey(property.Name))
+                {
+                    property.SetValue(TournamentXPSettings.Instance, newSettings[property.Name]);
+                }
+            }
+        }
+
+
+        #endregion
 
         internal const int OBJ_PRIZEPOOL = 4106000;
         internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;

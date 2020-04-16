@@ -13,18 +13,18 @@ using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-using TournamentXPanded.Extensions;
 
 using TournamentsXPanded.Extensions;
 using TournamentsXPanded.Models;
 using TaleWorlds.Library;
+using ModLib;
 
 namespace TournamentsXPanded.Behaviors
 {
     public class TournamentPrizePoolBehavior : CampaignBehaviorBase
     {
         public static TournamentReward TournamentReward { get; set; }
-        public static List<string> CustomTourneyItems { get; set; }
+        public static List<ItemObject> CustomTourneyItems { get; set; }
 
         public TournamentPrizePoolBehavior()
         {
@@ -144,36 +144,12 @@ namespace TournamentsXPanded.Behaviors
             {
                 bRegenAllPrizes = true;
                 currentPool = GetTournamentPrizePool(tournamentGame.Town.Settlement);
-            }
-
-            //Get the town items if using that mode
-            List<string> townitems = new List<string>();
-            if (TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownCustom
-                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownVanilla
-                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownOnly)
-            {
-                townitems = GetValidTownItems(tournamentGame, TournamentPrizePoolBehavior.GetMinPrizeValue(), TournamentPrizePoolBehavior.GetMaxPrizeValue(), TournamentPrizePoolBehavior.GetActivePrizeTypes());
-            }
-
-            //Now get the list items - either customized or vanilla system
-            List<string> listItems = new List<string>();
-            if (TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.Custom
-                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownCustom)
-            {
-                listItems = TournamentPrizePoolBehavior.CustomTourneyItems;
-            }
-            else if (TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.TownVanilla
-                || TournamentXPSettings.Instance.PrizeListMode == (int)PrizeListMode.Vanilla)
-            {
-                listItems = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, numItemsToGet);
-            }
-
-            //Now concat them together to get full list.
-            var allitems = townitems.Concat(listItems).ToList();
+            }            
+            var allitems = GetItemStringsRevised(tournamentGame, TournamentPrizePoolBehavior.GetMinPrizeValue(), TournamentPrizePoolBehavior.GetMaxPrizeValue(), TournamentPrizePoolBehavior.GetActivePrizeTypes());
 
             //Add any existing items if we are filling in missing ones from an already generated pool
             var pickeditems = new List<string>();
-            if (keepTownPrize)
+            if (keepTownPrize && !string.IsNullOrWhiteSpace((tournamentGame.Prize.StringId)))
             {
                 pickeditems.Add(tournamentGame.Prize.StringId);
                 currentPool.SelectedPrizeStringId = tournamentGame.Prize.StringId;
@@ -193,8 +169,11 @@ namespace TournamentsXPanded.Behaviors
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: GetTournamentPrize existingprizes\n" + ex.ToStringFull());
+                ErrorLog.Log("ERROR: GetTournamentPrize existingprizes\n" + ex.ToStringFull());
             }
+
+
+            //If the totoal pool of unique items is less than our desired number, reduce our pool size.
             if (allitems.Count() < numItemsToGet)
             {
                 numItemsToGet = allitems.Count();
@@ -256,28 +235,76 @@ namespace TournamentsXPanded.Behaviors
            && !x.EquipmentElement.Item.NotMerchandise
               ).Select(x => x.EquipmentElement.Item.StringId).ToList();
 
-            if (list.Count == 0)
-            {
-                list = roster.Where(x =>
-                    x.Amount > 0
-                    && validtypes.Contains(x.EquipmentElement.Item.ItemType))
-                   .Select(x => x.EquipmentElement.Item.StringId).ToList();
-                FileLog.Log("TournamentPrizeSystem : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
-                FileLog.Log("No valid town prizes found in value range, reverted to all items in town.");
-            }
-            if (list.Count == 0)
-            {
-                list = TournamentPrizePoolBehavior.CustomTourneyItems;
-                FileLog.Log("TournamentPrizeSystem in " + tournamentGame.Town.Name.ToString() + " : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
-                FileLog.Log("No custom prizes found in value range");
-            }
-            if (list.Count == 0)
-            {
-                MessageBox.Show("Tournament Prize System", "Warning: The current town has no prizes available with your current defined filter.  Defaulting to Vanilla items.");
-                //list = PrizeConfiguration.StockTourneyItems;
-                list = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, TournamentXPSettings.Instance.NumberOfPrizeOptions);
-            }
+         
+            //if (list.Count == 0)
+            //{
+            //    list = TournamentPrizePoolBehavior.CustomTourneyItems;
+            //    ErrorLog.Log("TournamentPrizeSystem in " + tournamentGame.Town.Name.ToString() + " : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"));
+            //    ErrorLog.Log("No custom prizes found in value range");
+            //}
+            //if (list.Count == 0)
+            //{
+            //    MessageBox.Show("Tournament Prize System", "Warning: The current town has no prizes available with your current defined filter.  Defaulting to Vanilla items.");
+            //    //list = PrizeConfiguration.StockTourneyItems;
+            //    list = GetVanillaSetOfPrizes(tournamentGame.Town.Settlement, TournamentXPSettings.Instance.NumberOfPrizeOptions);
+            //}
             return list;
+        }
+
+        public static List<string> GetItemStringsRevised(TournamentGame tournamentGame, int minValue, int maxMalue, List<ItemObject.ItemTypeEnum> validTypes)
+        {
+            string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+            List<string> allitems = new List<string>();
+            if (TournamentXPSettings.Instance.PrizeListIncludeLegacy)
+            {               
+                allitems = allitems.Concat(strArray.ToList()).ToList();
+            }
+            if (TournamentXPSettings.Instance.PrizeListIncludeCustom && TournamentPrizePoolBehavior.CustomTourneyItems != null && TournamentPrizePoolBehavior.CustomTourneyItems.Count > 0)
+            {
+                try
+                {                   
+                    var customItems = TournamentPrizePoolBehavior.CustomTourneyItems.Where(x => validTypes.Contains(x.ItemType));
+                    if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsCustom)
+                    {
+                        customItems = customItems.Where(x => x.Value >= TournamentPrizePoolBehavior.GetMinPrizeValue() && x.Value <= TournamentPrizePoolBehavior.GetMaxPrizeValue());
+                    }                  
+                    allitems = allitems.Concat(customItems.Select(x => x.StringId).ToList()).ToList();
+                }
+                catch(Exception ex)
+                {
+                    ErrorLog.Log("Error adding custom items to prize pool.");
+                    ErrorLog.Log(ex.ToStringFull());
+                }
+            }
+            if (TournamentXPSettings.Instance.PrizeListIncludeTown)
+            {
+                var townItems = GetValidTownItems(tournamentGame, minValue, maxMalue, validTypes);
+                allitems = allitems.Concat(townItems).ToList();
+            }
+            if (TournamentXPSettings.Instance.PrizeListIncludeVanilla)
+            {
+                float _minValue = 1600f;
+                float _maxValue = 5000f;
+                List<string> vanillaItems;
+                if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanilla)
+                {
+                    _minValue = minValue;
+                    _maxValue = maxMalue;
+                }
+                vanillaItems = ItemObject.All.Where(x => x.Culture == tournamentGame.Town.Settlement.Culture && validTypes.Contains(x.ItemType) && x.Value >= _minValue && x.Value <=_maxValue).Select(x => x.StringId).ToList();
+                if (vanillaItems.Count == 0)
+                {
+                    vanillaItems = ItemObject.All.Where(x => validTypes.Contains(x.ItemType) && x.Value >= _minValue && x.Value <= _maxValue).Select(x => x.StringId).ToList();
+                }
+
+                allitems = allitems.Concat(vanillaItems).ToList();
+            }
+            if (allitems.Count == 0)
+            {
+                return strArray.ToList();
+            }
+
+            return allitems;
         }
 
         public static ItemObject GetTournamentPrizeVanilla(Settlement settlement)
@@ -285,7 +312,7 @@ namespace TournamentsXPanded.Behaviors
             float minValue = 1000f;
             float maxValue = 5000f;
 
-            if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell)
+            if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanilla)
             {
                 minValue = TournamentPrizePoolBehavior.GetMinPrizeValue();
                 maxValue = TournamentPrizePoolBehavior.GetMaxPrizeValue();
@@ -402,15 +429,14 @@ namespace TournamentsXPanded.Behaviors
                 }
                 catch (Exception ex)
                 {
-                    FileLog.Log("ERROR: BMTournamentXP: Re-roll: Refreshing Arena Menu:");
-                    FileLog.Log(ex.ToStringFull());
+                    ErrorLog.Log("ERROR: BMTournamentXP: Re-roll: Refreshing Arena Menu:");
+                    ErrorLog.Log(ex.ToStringFull());
                 }
             }
             catch (Exception ex)
-            {
-                MessageBox.Show("Tournament XPerience", "An error was detected re-rolling your prize pool.\nPlease zip up your save game (Documents folder)\nError log (harmony.log.txt on desktop)\nYour config file in BMTournamentXP\\ModuleData\nPut on google drive and message me link on Nexus.");
-                FileLog.Log("ERROR: BMTournamentXP: Re-roll Prize Pool");
-                FileLog.Log(ex.ToStringFull());
+            {                
+                ErrorLog.Log("Re-roll Prize Pool");
+                ErrorLog.Log(ex.ToStringFull());
             }
         }
 
@@ -458,14 +484,35 @@ namespace TournamentsXPanded.Behaviors
                     }
                     catch (Exception ex)
                     {
-                        FileLog.Log("ERROR: Tournament Prize System\nFailed to add prize element to display" + p.Item.StringId);
-                        FileLog.Log(ex.ToStringFull());
+                        ErrorLog.Log("ERROR: Tournament Prize System\nFailed to add prize element to display" + p.Item.StringId);
+                        ErrorLog.Log(ex.ToStringFull());
                     }
                 }
                 if (prizeElements.Count > 0)
                 {
+                    string info = "You can choose an item from the list below as your reward if you win the tournament!";
+                    TextObject descr = new TextObject(info);
+
+                    if (TournamentXPSettings.Instance.DebugMode)
+                    {
+                        info = "Town:{TOWN}\nMin:{MIN}\nMax:{MAX}\nProsperity:{PROSPERITY}\nTypes:{TYPES}";
+                        descr = new TextObject(info);
+                        descr.SetTextVariable("TOWN", currentPool.Town.Name);
+                        descr.SetTextVariable("MIN", TournamentPrizePoolBehavior.GetMinPrizeValue().ToString());
+                        descr.SetTextVariable("MAX", TournamentPrizePoolBehavior.GetMaxPrizeValue().ToString());
+                        descr.SetTextVariable("PROSPERITY", currentPool.Town.GetProsperityLevel().ToString());
+                        var types = "";
+                        foreach(var t in TournamentPrizePoolBehavior.GetActivePrizeTypes())
+                        {
+                            types += t.ToString() + ", ";
+                        }
+                        types = types.Substring(0, types.Length - 2);
+                        descr.SetTextVariable("TYPES", types);
+                    }
+                    
+
                     InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
-                            "Tournament Prize Selection", "You can choose an item from the list below as your reward if you win the tournament!", prizeElements, true, true, "OK", "Cancel",
+                            "Tournament Prize Selection", descr.ToString(), prizeElements, true, true, "OK", "Cancel",
                             new Action<List<InquiryElement>>(OnSelectPrize), new Action<List<InquiryElement>>(OnDeSelectPrize)), true);
                     try
                     {
@@ -473,8 +520,8 @@ namespace TournamentsXPanded.Behaviors
                     }
                     catch (Exception ex)
                     {
-                        FileLog.Log("ERROR: BMTournamentXP: Select Prize: Refresh Menu");
-                        FileLog.Log(ex.ToStringFull());
+                        ErrorLog.Log("ERROR: BMTournamentXP: Select Prize: Refresh Menu");
+                        ErrorLog.Log(ex.ToStringFull());
                     }
                 }
                 else
@@ -483,10 +530,9 @@ namespace TournamentsXPanded.Behaviors
                 }
             }
             catch (Exception ex)
-            {
-                MessageBox.Show("Tournament XPerience", "An error was detected selecting your prize pool.\nPlease zip up your save game (Documents folder)\nError log (harmony.log.txt on desktop)\nYour config file in BMTournamentXP\\ModuleData\nPut on google drive and message me link on Nexus.");
-                FileLog.Log("ERROR: BMTournamentXP: Tournament Prize Selection");
-                FileLog.Log(ex.ToStringFull());
+            {               
+                ErrorLog.Log("ERROR: BMTournamentXP: Tournament Prize Selection");
+                ErrorLog.Log(ex.ToStringFull());
             }
         }
 
@@ -504,8 +550,8 @@ namespace TournamentsXPanded.Behaviors
                 }
                 catch (Exception ex)
                 {
-                    FileLog.Log("ERROR: BMTournamentXP: OnSelectPrize: Error setting Town Prize");
-                    FileLog.Log(ex.ToStringFull());
+                    ErrorLog.Log("ERROR: BMTournamentXP: OnSelectPrize: Error setting Town Prize");
+                    ErrorLog.Log(ex.ToStringFull());
                 }
                 try
                 {
@@ -513,8 +559,8 @@ namespace TournamentsXPanded.Behaviors
                 }
                 catch (Exception ex)
                 {
-                    FileLog.Log("ERROR: BMTournamentXP: OnSelectPrize: Refresh Arena Menu");
-                    FileLog.Log(ex.ToStringFull());
+                    ErrorLog.Log("ERROR: BMTournamentXP: OnSelectPrize: Refresh Arena Menu");
+                    ErrorLog.Log(ex.ToStringFull());
                 }
             }
         }
@@ -557,8 +603,8 @@ namespace TournamentsXPanded.Behaviors
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: BMTournamentXP: Select TournyType: Refreshing Arena Menu:");
-                FileLog.Log(ex.ToStringFull());
+                ErrorLog.Log("ERROR: BMTournamentXP: Select TournyType: Refreshing Arena Menu:");
+                ErrorLog.Log(ex.ToStringFull());
             }
         }
 
@@ -575,6 +621,7 @@ namespace TournamentsXPanded.Behaviors
                 {
                     case "melee":
                         tournamentGame = new FightTournamentGame(town);
+                        TournamentPrizePoolBehavior.TournamentReward = new TournamentReward(tournamentGame);
                         break;
 
                     case "melee2":
@@ -610,8 +657,8 @@ namespace TournamentsXPanded.Behaviors
                 }
                 catch (Exception ex)
                 {
-                    FileLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
-                    FileLog.Log(ex.ToStringFull());
+                    ErrorLog.Log("ERROR: BMTournamentXP: Refreshing Arena Screen:");
+                    ErrorLog.Log(ex.ToStringFull());
                 }
             }
         }
@@ -750,10 +797,21 @@ namespace TournamentsXPanded.Behaviors
             var prosperityMod = 1f;
             if (settlement != null && TournamentXPSettings.Instance.TownProsperityAffectsPrizeValues)
             {
-                prosperityMod = ((float)settlement.Town.GetProsperityLevel() + 2f) / 3f;
+                switch (settlement.Town.GetProsperityLevel())
+                {
+                    case SettlementComponent.ProsperityLevel.Low:
+                        prosperityMod = TournamentXPSettings.Instance.TownProsperityLow;
+                        break;
+                    case SettlementComponent.ProsperityLevel.Mid:
+                        prosperityMod = TournamentXPSettings.Instance.TownProsperityMid;
+                        break;
+                    case SettlementComponent.ProsperityLevel.High:
+                        prosperityMod = TournamentXPSettings.Instance.TownProsperityHigh;
+                        break;
+                }                
             }
 
-            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueIncreasePerLevel) * 0.1f)) * prosperityMod);
+            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel) )) * prosperityMod);
         }
 
         public static int GetMaxPrizeValue(Settlement settlement = null)
@@ -761,10 +819,21 @@ namespace TournamentsXPanded.Behaviors
             var prosperityMod = 1f;
             if (settlement != null && TournamentXPSettings.Instance.TownProsperityAffectsPrizeValues)
             {
-                prosperityMod = ((float)settlement.Town.GetProsperityLevel() + 2f) / 3f;
+                switch (settlement.Town.GetProsperityLevel())
+                {
+                    case SettlementComponent.ProsperityLevel.Low:
+                        prosperityMod = TournamentXPSettings.Instance.TownProsperityLow;
+                        break;
+                    case SettlementComponent.ProsperityLevel.Mid:
+                        prosperityMod = TournamentXPSettings.Instance.TownProsperityMid;
+                        break;
+                    case SettlementComponent.ProsperityLevel.High:
+                        prosperityMod = TournamentXPSettings.Instance.TownProsperityHigh;
+                        break;
+                }
             }
 
-            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueIncreasePerLevel) * 0.1f)) * prosperityMod);
+            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * prosperityMod);
         }
         public static float[] RenownPerTroopTier
         {

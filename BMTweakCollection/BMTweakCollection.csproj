@@ -116,7 +116,10 @@
     <Compile Include="BMTweaksSubmodule.cs" />
     <Compile Include="ExceptionExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\CharacterHelpers.cs" />
     <Compile Include="IPatch.cs" />
+    <Compile Include="LootTweaks\AddToLoot.cs" />
+    <Compile Include="LootTweaks\LootBehavior.cs" />
     <Compile Include="Models\BMRandomTweaksConfiguration.cs" />
     <Compile Include="PatchBase.cs" />
     <Compile Include="Patches\DefaultSettlementFoodModel.cs" />
@@ -124,7 +127,7 @@
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
     <Compile Include="Patches\HarmonyHelpers.cs" />
     <Compile Include="Patches\Hero.cs" />
-    <Compile Include="Patches\LootCollector.cs" />
+    <Compile Include="LootTweaks\LootCollector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StaticPropertyContractResolver.cs" />
     <Compile Include="SubModule.Harmony.cs">

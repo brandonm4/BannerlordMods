@@ -1,13 +1,12 @@
-﻿using ModLib.Interfaces;
-
+﻿
+using ModLib.Debugging;
+using ModLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-
-using TaleWorlds.Library;
 
 namespace ModLib
 {
@@ -17,11 +16,11 @@ namespace ModLib
         public static Dictionary<Type, Dictionary<string, ISerialisableFile>> Data { get; } = new Dictionary<Type, Dictionary<string, ISerialisableFile>>();
 
         /// <summary>
-        /// Returns the ILoadable of type T with the given ID.
+        /// Returns the ISerialisableFile of type T with the given ID from the database. If it cannot be found, returns null.
         /// </summary>
-        /// <typeparam name="T">Type of object to retrieve</typeparam>
-        /// <param name="id">ID of object to retrieve</param>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of object to retrieve.</typeparam>
+        /// <param name="id">ID of object to retrieve.</param>
+        /// <returns>Returns the instance of the object with the given type and ID. If it cannot be found, returns null.</returns>
         public static T Get<T>(string id) where T : ISerialisableFile
         {
             //First check if the dictionary contains the key
@@ -36,46 +35,45 @@ namespace ModLib
         /// <summary>
         /// Loads all files for the given module.
         /// </summary>
-        /// <param name="moduleName">Name of the module to load the files from. This is the name of the actual folder in the Bannerlord Modules folder.</param>
+        /// <param name="moduleFolderName">Name of the module to load the files from. This is the name of the actual folder in the Bannerlord Modules folder.</param>
         /// <returns>Returns true if initialisation was successful.</returns>
-        public static bool Initialise(string moduleName)
+        public static bool Initialise(string moduleFolderName)
         {
             bool successful = false;
             try
             {
-                LoadAllFiles(moduleName);
+                LoadAllFiles(moduleFolderName);
                 successful = true;
             }
             catch (Exception ex)
             {
-                //ModDebug.ShowError($"An error occurred whilst trying to load files for module: {moduleName}", "Error occurred during loading files", ex);
+                ModDebug.ShowError($"An error occurred whilst trying to load files for module: {moduleFolderName}", "Error occurred during loading files", ex);
             }
             return successful;
         }
 
         /// <summary>
-        /// Saves the given instance to file.
+        /// Saves the given object instance which inherits ISerialisableFile to an xml file.
         /// </summary>
-        /// <typeparam name="T">Type of the instance to save to file.</typeparam>
-        /// <param name="moduleName">The folder name of the module to save to.</param>
+        /// <param name="moduleFolderName">The folder name of the module to save to.</param>
         /// <param name="sf">Instance of the object to save to file.</param>
-        public static bool SaveToFile(string moduleName, ISerialisableFile sf, Location location = Location.Modules)
+        /// <param name="location">Indicates whether to save the file to the ModuleData/Loadables folder or to the mod's Config folder in Bannerlord's 'My Documents' directory.</param>
+        public static bool SaveToFile(string moduleFolderName, ISerialisableFile sf, Location location = Location.Modules)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(sf.ID))
                     throw new Exception($"FileDatabase tried to save an object of type {sf.GetType().FullName} but the ID value was null.");
-                if (string.IsNullOrWhiteSpace(moduleName))
+                if (string.IsNullOrWhiteSpace(moduleFolderName))
                     throw new Exception($"FileDatabase tried to save an object of type {sf.GetType().FullName} with ID {sf.ID} but the module folder name given was null or empty.");
 
-                string path = GetPathForModule(moduleName, location);
+                //Gets the intended path for the file.
+                string path = GetPathForModule(moduleFolderName, location);
 
-                if (!Directory.Exists(path))
-                {
+                if (location == Location.Modules && !Directory.Exists(path))
+                    throw new Exception($"FileDatabase cannot find the module named {moduleFolderName}");
+                else if (location == Location.Configs && !Directory.Exists(path))
                     Directory.CreateDirectory(path);
-                }
-                if (!Directory.Exists(path))
-                    throw new Exception($"FileDatabase cannot find the module named {moduleName}");
 
                 if (location == Location.Modules)
                     path = Path.Combine(path, "ModuleData", LoadablesFolderName);
@@ -90,7 +88,7 @@ namespace ModLib
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
-                path = Path.Combine(path, $@"{sf.GetType().Name}.{sf.ID}.xml");
+                path = Path.Combine(path, GetFileNameFor(sf));
 
                 if (File.Exists(path))
                     File.Delete(path);
@@ -107,15 +105,54 @@ namespace ModLib
             }
             catch (Exception ex)
             {
-                //ModDebug.ShowError($"Cannot create the file for type {sf.GetType().FullName} with ID {sf.ID} for module {moduleName}:", "Error saving to file", ex);
+                ModDebug.ShowError($"Cannot create the file for type {sf.GetType().FullName} with ID {sf.ID} for module {moduleFolderName}:", "Error saving to file", ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Deletes the file for the given fileName and module.
+        /// </summary>
+        /// <param name="moduleFolderName">The folder name of the module to delete the file for.</param>
+        /// <param name="fileName">The file name of the file to be deleted.</param>
+        /// <param name="location">The location of the file to be deleted.</param>
+        /// <returns>Returns true if the file was deleted successfully.</returns>
+        public static bool DeleteFile(string moduleFolderName, string fileName, Location location = Location.Modules)
+        {
+            bool successful = true;
+            string path = GetPathForModule(moduleFolderName, location);
+            if (!Directory.Exists(path))
+            {
+                ModDebug.ShowError($"Tried to delete a file with file name {fileName} from directory \"{path}\" but the directory doesn't exist.", "Could not find directory");
+                successful = false;
+            }
+
+            if (location == Location.Modules)
+                path = Path.Combine(path, "ModuleData", LoadablesFolderName);
+
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+
+            return successful;
+        }
+
+        /// <summary>
+        /// Deletes the file for the given object instance and module.
+        /// </summary>
+        /// <param name="moduleFolderName">The folder name of the module to delete the file for.</param>
+        /// <param name="sf">The instance of the object whose file should be deleted.</param>
+        /// <param name="location">The location of the file to be deleted.</param>
+        /// <returns>Returns true if the file was deleted successfully.</returns>
+        public static bool DeleteFile(string moduleFolderName, ISerialisableFile sf, Location location = Location.Modules)
+        {
+            return DeleteFile(moduleFolderName, GetFileNameFor(sf), location);
         }
 
         private static void Add(ISerialisableFile loadable)
         {
             if (loadable == null)
-                throw new ArgumentNullException("Tried to add something to the Loader Data dictionary that was null");
+                throw new ArgumentNullException("Tried to add something to the FileDatabase Data dictionary that was null");
             if (string.IsNullOrWhiteSpace(loadable.ID))
                 throw new ArgumentNullException($"Loadable of type {loadable.GetType().ToString()} has missing ID field");
 
@@ -125,7 +162,7 @@ namespace ModLib
 
             if (Data[type].ContainsKey(loadable.ID))
             {
-                //ModDebug.LogError($"Loader already contains Type: {type.AssemblyQualifiedName} ID: {loadable.ID}, overwriting...");
+                ModDebug.LogError($"Loader already contains Type: {type.AssemblyQualifiedName} ID: {loadable.ID}, overwriting...");
                 Data[type][loadable.ID] = loadable;
             }
             else
@@ -134,13 +171,6 @@ namespace ModLib
 
         private static void LoadFromFile(string filePath)
         {
-            //DEBUG:: People can't read and aren't deleting the old mod installation. Need to manually delete the old config file for a couple updates.
-            string modulefolder = Directory.GetParent(filePath).Parent.Parent.Name;
-            if (Path.GetFileName(filePath) == "config.xml" && modulefolder == "zzBannerlordTweaks")
-            {
-                File.Delete(filePath);
-                return;
-            }
             using (XmlReader reader = XmlReader.Create(filePath))
             {
                 string nodeData = "";
@@ -185,7 +215,6 @@ namespace ModLib
         private static void LoadAllFiles(string moduleName)
         {
             #region Loadables Folder
-
             //Check if the given module name is correct
             string modulePath = GetPathForModule(moduleName, Location.Modules);
             if (!Directory.Exists(modulePath))
@@ -217,7 +246,7 @@ namespace ModLib
                                 }
                                 catch (Exception ex)
                                 {
-                                    //ModDebug.LogError($"Failed to load file: {filePath} \n\nSkipping..\n\n", ex);
+                                    ModDebug.LogError($"Failed to load file: {filePath} \n\nSkipping..\n\n", ex);
                                 }
                             }
                         }
@@ -230,12 +259,8 @@ namespace ModLib
             }
             else
                 Directory.CreateDirectory(moduleLoadablesPath);
-
-            #endregion Loadables Folder
-
+            #endregion
             #region Documents Folder
-
-            //TODO::
             string modConfigsPath = GetPathForModule(moduleName, Location.Configs);
             if (Directory.Exists(modConfigsPath))
             {
@@ -247,22 +272,55 @@ namespace ModLib
                     }
                     catch (Exception ex)
                     {
-                        //ModDebug.LogError($"Failed to load file: {filePath}\n\n Skipping...", ex);
+                        ModDebug.LogError($"Failed to load file: {filePath}\n\n Skipping...", ex);
+                    }
+                }
+                string[] subfolders = Directory.GetDirectories(modConfigsPath);
+                if (subfolders.Count() > 0)
+                {
+                    foreach (var subFolder in subfolders)
+                    {
+                        foreach (var filePath in Directory.GetFiles(subFolder))
+                        {
+                            try
+                            {
+                                LoadFromFile(filePath);
+                            }
+                            catch (Exception ex)
+                            {
+                                ModDebug.LogError($"Failed to load file: {filePath}\n\n Skipping...", ex);
+                            }
+                        }
                     }
                 }
             }
             else
                 Directory.CreateDirectory(modConfigsPath);
-
-            #endregion Documents Folder
+            #endregion
         }
 
-        private static string GetPathForModule(string moduleName, Location location)
+        /// <summary>
+        /// Returns the file name for the given ISerialisableFile
+        /// </summary>
+        /// <param name="sf">The instance of the ISerialisableFile to retrieve the file name for.</param>
+        /// <returns>Returns the file name of the given ISerialisableFile, including the file extension.</returns>
+        public static string GetFileNameFor(ISerialisableFile sf)
+        {
+            return $"{sf.GetType().Name}.{sf.ID}.xml";
+        }
+
+        /// <summary>
+        /// Returns the root folder for the given module name and intended location.
+        /// </summary>
+        /// <param name="moduleFolderName">Name of the Module's Folder.</param>
+        /// <param name="location">Which location to get the path to - configs or the mod's module folder.</param>
+        /// <returns></returns>
+        public static string GetPathForModule(string moduleFolderName, Location location)
         {
             if (location == Location.Modules)
-                return System.IO.Path.Combine(BasePath.Name, "Modules", moduleName);
+                return Path.Combine(TaleWorlds.Library.BasePath.Name, "Modules", moduleFolderName);
             else
-                return System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), moduleName);
+                return Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), moduleFolderName);
         }
 
         private class TypeData
@@ -270,12 +328,14 @@ namespace ModLib
             public string AssemblyName { get; private set; } = "";
             public string TypeName { get; private set; } = "";
             public string FullName => $"{TypeName}, {AssemblyName}";
-
+            private Type _type = null;
             public Type Type
             {
                 get
                 {
-                    return Type.GetType(FullName);
+                    if (_type == null)
+                        _type = AppDomain.CurrentDomain.GetAssemblies().Where(z => z.FullName.StartsWith(AssemblyName)).FirstOrDefault().GetType(TypeName);
+                    return _type;
                 }
             }
 

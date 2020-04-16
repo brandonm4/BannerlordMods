@@ -1,5 +1,4 @@
 ﻿using System;
-
 using TaleWorlds.Library;
 
 namespace ModLib.GUI.ViewModels
@@ -11,12 +10,11 @@ namespace ModLib.GUI.ViewModels
         private MBBindingList<SettingPropertyGroup> _settingPropertyGroups;
         public ModSettingsScreenVM Parent { get; private set; } = null;
 
-        public SettingsBase SettingsInstance { get; private set; }
+        public SettingsBase SettingsInstance { get; internal set; }
         public UndoRedoStack URS { get; } = new UndoRedoStack();
 
         [DataSourceProperty]
         public string ModName => SettingsInstance.ModName;
-
         [DataSourceProperty]
         public bool IsSelected
         {
@@ -27,7 +25,6 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
-
         [DataSourceProperty]
         public MBBindingList<SettingPropertyGroup> SettingPropertyGroups
         {
@@ -46,23 +43,24 @@ namespace ModLib.GUI.ViewModels
         {
             SettingsInstance = settingsInstance;
 
-            SettingPropertyGroups = new MBBindingList<SettingPropertyGroup>();
-            SettingPropertyGroups.AddRange(settingsInstance.GetSettingPropertyGroups());
-
-            foreach (var settingGroup in SettingPropertyGroups)
-                settingGroup.AssignUndoRedoStack(URS);
-
             RefreshValues();
         }
 
         public override void RefreshValues()
         {
             base.RefreshValues();
+
+            SettingPropertyGroups = new MBBindingList<SettingPropertyGroup>();
+            SettingPropertyGroups.AddRange(SettingsInstance.GetSettingPropertyGroups());
+
+            foreach (var settingGroup in SettingPropertyGroups)
+                settingGroup.AssignUndoRedoStack(URS);
+
             foreach (var group in SettingPropertyGroups)
                 group.RefreshValues();
-            OnPropertyChanged("IsSelected");
-            OnPropertyChanged("ModName");
-            OnPropertyChanged("SettingPropertyGroups");
+            OnPropertyChanged(nameof(IsSelected));
+            OnPropertyChanged(nameof(ModName));
+            OnPropertyChanged(nameof(SettingPropertyGroups));
         }
 
         public void AddSelectCommand(Action<ModSettingsVM> command)
@@ -74,12 +72,13 @@ namespace ModLib.GUI.ViewModels
         {
             Parent = parent;
             foreach (var group in SettingPropertyGroups)
-                group.SetParent(Parent);
+                group.SetScreenVM(Parent);
         }
 
         private void ExecuteSelect()
         {
             _executeSelect?.Invoke(this);
         }
+
     }
 }

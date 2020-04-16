@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-
+using ModLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
-using TournamentXPanded.Extensions;
+
 
 namespace TournamentsXPanded.Patches.TournamentGameClass
 {
@@ -26,15 +26,15 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
 
         public override bool IsApplicable(Game game)
         {
-            if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
-                || TournamentXPSettings.Instance.EnablePrizeSelection
-                || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0
-                || TournamentXPSettings.Instance.PrizeListMode != (int)PrizeListMode.Vanilla
-                || TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
-            {
+        //    if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanillaAndCustomListsAsWell
+        //        || TournamentXPSettings.Instance.EnablePrizeSelection
+        //        || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0
+        //        || TournamentXPSettings.Instance.PrizeListMode != (int)PrizeListMode.Vanilla
+        //        || TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
+        //    {
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
 
         public override void Reset()
@@ -64,29 +64,30 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
             //__result currently has stock item.
             try
             {
-                ItemObject prize;
-                if (TournamentXPSettings.Instance.EnablePrizeSelection
-                    || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0
-                    || TournamentXPSettings.Instance.PrizeListMode != (int)PrizeListMode.Vanilla)
-                {
-                    TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Town.Settlement, __result);
-                    prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
-                }
-                else
-                {
-                    prize = TournamentPrizePoolBehavior.GetTournamentPrizeVanilla(__instance.Town.Settlement);
-                }
-                if (prize == null)
-                {
-                    MessageBox.Show("Tournament Prize System", "Error generating Tournament Prize. Reverting to vanilla system.");
-                    return;
-                }
+            //    ItemObject prize;
+            //    if (TournamentXPSettings.Instance.EnablePrizeSelection
+            //        || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0
+            //        || TournamentXPSettings.Instance.PrizeListMode != (int)PrizeListMode.Vanilla)
+            //    {
+            //        TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Town.Settlement, __result);
+            //        prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
+            //    }
+            //    else
+            //    {
+            //        prize = TournamentPrizePoolBehavior.GetTournamentPrizeVanilla(__instance.Town.Settlement);
+            //    }
+            //    if (prize == null)
+            //    {
+            //        MessageBox.Show("Tournament Prize System", "Error generating Tournament Prize. Reverting to vanilla system.");
+            //        return;
+            //    }
+            ItemObject prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
                 __result = prize;
             }
             catch (Exception ex)
             {
-                FileLog.Log("ERROR: Tournament Prize System: GetTournamentPrize");
-                FileLog.Log(ex.ToStringFull());
+                ErrorLog.Log("ERROR: Tournament Prize System: GetTournamentPrize");
+                ErrorLog.Log(ex.ToStringFull());
             }
         }
     }

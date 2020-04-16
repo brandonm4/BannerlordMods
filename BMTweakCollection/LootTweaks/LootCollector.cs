@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BMTweakCollection.Helpers;
+using HarmonyLib;
 using Helpers;
 using System;
 using System.Collections.Generic;
@@ -170,7 +171,7 @@ namespace BMTweakCollection.Patches
                 //Get the best looter
                 if (winnerParty.MobileParty == MobileParty.MainParty)
                 {
-                    SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, GetCharacterWithHighestSkill(winnerParty, DefaultSkills.Roguery), ref explainedNumber, true);
+                    SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, BMHelpers.CharacterHelpers.GetCharacterWithHighestSkill(winnerParty, DefaultSkills.Roguery), ref explainedNumber, true);
                 }
                 else
                 {
@@ -359,25 +360,7 @@ namespace BMTweakCollection.Patches
             return items;
         }
 
-        private static CharacterObject GetCharacterWithHighestSkill(PartyBase party, SkillObject skill)
-        {
-            CharacterObject heroObject = null;
-            int num = 0;
-            for (int i = 0; i < party.MemberRoster.Count; i++)
-            {
-                CharacterObject characterAtIndex = party.MemberRoster.GetCharacterAtIndex(i);
-                if (characterAtIndex.IsHero && !characterAtIndex.HeroObject.IsWounded)
-                {
-                    int skillValue = characterAtIndex.GetSkillValue(skill);
-                    if (skillValue >= num)
-                    {
-                        num = skillValue;
-                        heroObject = characterAtIndex;
-                    }
-                }
-            }
-            return heroObject ?? party.LeaderHero.CharacterObject;
-        }
+       
 
 
         public static List<EquipmentElement> GetRandomItems(Equipment equipment, float targetValue = 0f)

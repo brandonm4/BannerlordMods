@@ -1,5 +1,6 @@
-﻿using System.Linq;
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
@@ -16,6 +17,7 @@ namespace ModLib.GUI.ViewModels
         private ModSettingsVM _selectedMod;
         private MBBindingList<ModSettingsVM> _modSettingsList = new MBBindingList<ModSettingsVM>();
         private string _hintText;
+        private string _searchText = "";
 
         [DataSourceProperty]
         public string TitleLabel
@@ -27,7 +29,6 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
-
         [DataSourceProperty]
         public bool ChangesMade
         {
@@ -36,7 +37,6 @@ namespace ModLib.GUI.ViewModels
                 return ModSettingsList.Any((x) => x.URS.ChangesMade());
             }
         }
-
         [DataSourceProperty]
         public string DoneButtonText
         {
@@ -47,7 +47,6 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
-
         [DataSourceProperty]
         public string CancelButtonText
         {
@@ -57,7 +56,6 @@ namespace ModLib.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
-
         [DataSourceProperty]
         public MBBindingList<ModSettingsVM> ModSettingsList
         {
@@ -71,7 +69,6 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
-
         [DataSourceProperty]
         public ModSettingsVM SelectedMod
         {
@@ -82,18 +79,15 @@ namespace ModLib.GUI.ViewModels
                 {
                     _selectedMod = value;
                     OnPropertyChanged();
-                    OnPropertyChanged("SelectedModName");
-                    OnPropertyChanged("SomethingSelected");
+                    OnPropertyChanged(nameof(SelectedModName));
+                    OnPropertyChanged(nameof(SomethingSelected));
                 }
             }
         }
-
         [DataSourceProperty]
         public string SelectedModName => SelectedMod == null ? "Mod Name Goes Here" : SelectedMod.ModName;
-
         [DataSourceProperty]
         public bool SomethingSelected => SelectedMod != null;
-
         [DataSourceProperty]
         public string HintText
         {
@@ -104,12 +98,30 @@ namespace ModLib.GUI.ViewModels
                 {
                     _hintText = value;
                     OnPropertyChanged();
-                    OnPropertyChanged("IsHintVisible");
+                    OnPropertyChanged(nameof(IsHintVisible));
                 }
             }
         }
-
+        [DataSourceProperty]
         public bool IsHintVisible => !string.IsNullOrWhiteSpace(HintText);
+        [DataSourceProperty]
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (_searchText != value)
+                {
+                    _searchText = value;
+                    OnPropertyChanged();
+                    if (SelectedMod != null && SelectedMod.SettingPropertyGroups.Count > 0)
+                    {
+                        foreach (var group in SelectedMod.SettingPropertyGroups)
+                            group.NotifySearchChanged();
+                    }
+                }
+            }
+        }
 
         public ModSettingsScreenVM()
         {
@@ -124,14 +136,14 @@ namespace ModLib.GUI.ViewModels
             CancelButtonText = new TextObject("{=3CpNUnVl}Cancel", null).ToString();
 
             ModSettingsList.Clear();
-            foreach (var msvm in SettingsDatabase.ModSettingsVMs)
-            {
-                msvm.AddSelectCommand(ExecuteSelect);
-                ModSettingsList.Add(msvm);
-                msvm.SetParent(this);
-                msvm.RefreshValues();
-            }
-            OnPropertyChanged("SelectedMod");
+            //foreach (var msvm in SettingsDatabase.ModSettingsVMs)
+            //{
+            //    msvm.AddSelectCommand(ExecuteSelect);
+            //    ModSettingsList.Add(msvm);
+            //    msvm.RefreshValues();
+            //    msvm.SetParent(this);
+            //}
+            OnPropertyChanged(nameof(SelectedMod));
         }
 
         public bool ExecuteCancel()
@@ -153,20 +165,56 @@ namespace ModLib.GUI.ViewModels
             //Save the changes to file.
             if (ModSettingsList.Any((x) => x.URS.ChangesMade()))
             {
-                InformationManager.ShowInquiry(new InquiryData("Game Needs to Restart",
-                                "The game needs to be restarted to apply mods settings changes. Do you want to close the game now?",
-                                true, true, "Yes", "No",
-                                () =>
-                                {
-                                    ModSettingsList.Where((x) => x.URS.ChangesMade())
-                                    .Do((x) => SettingsDatabase.SaveSettings(x.SettingsInstance))
-                                    .Do((x) => x.URS.ClearStack());
+                //InformationManager.ShowInquiry(new InquiryData("Game Needs to Restart",
+                //                "The game needs to be restarted to apply mods settings changes. Do you want to close the game now?",
+                //                true, true, "Yes", "No",
+                //                () =>
+                //                {
+                //                    ModSettingsList.Where((x) => x.URS.ChangesMade())
+                //                    .Do((x) => SettingsDatabase.SaveSettings(x.SettingsInstance))
+                //                    .Do((x) => x.URS.ClearStack());
 
-                                    Utilities.QuitGame();
-                                }, () => { }));
+                //                    Utilities.QuitGame();
+                //                }, () => { }));
             }
             else
                 ScreenManager.PopScreen();
+        }
+
+        private void ExecuteRevert()
+        {
+            if (SelectedMod != null)
+            {
+                InformationManager.ShowInquiry(new InquiryData("Revert mod settings to defaults",
+                    $"Are you sure you wish to revert all settings for {SelectedMod.ModName} to their default values?",
+                    true, true, "Yes", "No",
+                    () =>
+                    {
+                        SelectedMod.URS.Do(new ComplexAction<KeyValuePair<ModSettingsVM, SettingsBase>>(new KeyValuePair<ModSettingsVM, SettingsBase>(SelectedMod, SelectedMod.SettingsInstance),
+                            (KeyValuePair<ModSettingsVM, SettingsBase> kvp) =>
+                            {
+                                //Do action
+                                //SettingsBase newObj = SettingsDatabase.ResetSettingsInstance(SelectedMod.SettingsInstance);
+                                //kvp.Key.SettingsInstance = newObj;
+                                //kvp.Key.RefreshValues();
+                                //ExecuteSelect(null);
+                                //ExecuteSelect(kvp.Key);
+                            },
+                            (KeyValuePair<ModSettingsVM, SettingsBase> kvp) =>
+                            {
+                                //Undo action
+                              //  SettingsDatabase.OverrideSettingsWithID(kvp.Value, kvp.Value.ID);
+                                kvp.Key.SettingsInstance = kvp.Value;
+                                kvp.Key.RefreshValues();
+                                if (SelectedMod == kvp.Key)
+                                {
+                                    ExecuteSelect(null);
+                                    ExecuteSelect(kvp.Key);
+                                }
+                            }));
+
+                    }, null));
+            }
         }
 
         public void AssignParent(bool remove = false)
@@ -183,11 +231,11 @@ namespace ModLib.GUI.ViewModels
                     SelectedMod.IsSelected = false;
 
                 SelectedMod = msvm;
+                SearchText = "";
 
                 if (SelectedMod != null)
                 {
                     SelectedMod.IsSelected = true;
-                    //TODO:: Update the settings view
                 }
             }
         }

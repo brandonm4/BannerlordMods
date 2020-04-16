@@ -30,12 +30,13 @@ namespace ModLib
 
         public Ref(Func<object> getter, Action<object> setter)
         {
-            this.getter = getter ?? throw new ArgumentNullException("getter");
+            this.getter = getter ?? throw new ArgumentNullException(nameof(getter));
             this.setter = setter;
         }
 
         public Ref(Func<object> getter) : this(getter, null)
         {
+
         }
 
         public Ref(PropertyInfo propInfo, object instance)

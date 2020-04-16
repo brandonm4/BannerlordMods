@@ -13,7 +13,6 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
-using TournamentXPanded.Extensions;
 
 namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 {

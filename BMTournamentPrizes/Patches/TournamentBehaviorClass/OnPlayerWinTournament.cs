@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-
+using ModLib;
 using SandBox.TournamentMissions.Missions;
 
 using System;
@@ -10,10 +10,10 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 
-using TournamentXPanded.Extensions;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
+
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {
@@ -94,12 +94,12 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                 }
                 catch (Exception ex)
                 {
-                    FileLog.Log("ERROR: Tournament XPanded: OnPlayerWinTournament\nError Awarding Prize");
+                    ErrorLog.Log("ERROR: Tournament XPanded: OnPlayerWinTournament\nError Awarding Prize");
 
-                    FileLog.Log("TournamentPrizePool:\n");
+                    ErrorLog.Log("TournamentPrizePool:\n");
                     if (currentPool != null)
-                        FileLog.Log(Newtonsoft.Json.JsonConvert.SerializeObject(currentPool));
-                    FileLog.Log(ex.ToStringFull());
+                        ErrorLog.Log(Newtonsoft.Json.JsonConvert.SerializeObject(currentPool));
+                    ErrorLog.Log(ex.ToStringFull());
 
                     if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
                     {

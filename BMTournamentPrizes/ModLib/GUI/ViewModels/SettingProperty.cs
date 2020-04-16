@@ -1,9 +1,9 @@
 ﻿using ModLib.Attributes;
+using ModLib.GUI.GauntletUI;
 using ModLib.Interfaces;
-
 using System;
 using System.Reflection;
-
+using TaleWorlds.Engine.Screens;
 using TaleWorlds.Library;
 
 namespace ModLib.GUI.ViewModels
@@ -19,23 +19,30 @@ namespace ModLib.GUI.ViewModels
         public SettingPropertyGroupAttribute GroupAttribute { get; private set; }
         public SettingPropertyGroup Group { get; set; }
         public ISerialisableFile SettingsInstance { get; private set; }
-        public SettingType SettingType { get; private set; }
         public UndoRedoStack URS { get; private set; }
-        public ModSettingsScreenVM Parent { get; private set; }
+        public SettingType SettingType { get; private set; }
+        public ModSettingsScreenVM ScreenVM { get; private set; }
         public string HintText { get; private set; }
+        public bool SatisfiesSearch
+        {
+            get
+            {
+                if (ScreenVM == null || ScreenVM.SearchText == "")
+                    return true;
+
+                return Name.ToLower().Contains(ScreenVM.SearchText.ToLower());
+            }
+        }
 
         [DataSourceProperty]
         public string Name => SettingAttribute.DisplayName;
 
         [DataSourceProperty]
         public bool IsIntVisible => SettingType == SettingType.Int;
-
         [DataSourceProperty]
         public bool IsFloatVisible => SettingType == SettingType.Float;
-
         [DataSourceProperty]
-        public bool IsBoolVisible { get => SettingType == SettingType.Bool; set { } }
-
+        public bool IsBoolVisible => SettingType == SettingType.Bool;
         [DataSourceProperty]
         public bool IsEnabled
         {
@@ -46,7 +53,6 @@ namespace ModLib.GUI.ViewModels
                 return Group.GroupToggle;
             }
         }
-
         [DataSourceProperty]
         public bool IsSettingVisible
         {
@@ -56,10 +62,16 @@ namespace ModLib.GUI.ViewModels
                     return false;
                 else if (!Group.GroupToggle)
                     return false;
+                else if (!Group.IsExpanded)
+                    return false;
+                else if (!SatisfiesSearch)
+                    return false;
                 else
                     return true;
             }
         }
+        [DataSourceProperty]
+        public bool IsValueFieldVisible => !IsBoolVisible;
 
         [DataSourceProperty]
         public float FloatValue
@@ -74,11 +86,10 @@ namespace ModLib.GUI.ViewModels
                 {
                     _floatValue = (float)Math.Round((double)value, 2, MidpointRounding.ToEven);
                     OnPropertyChanged();
-                    OnPropertyChanged("ValueString");
+                    OnPropertyChanged(nameof(ValueString));
                 }
             }
         }
-
         [DataSourceProperty]
         public int IntValue
         {
@@ -92,11 +103,10 @@ namespace ModLib.GUI.ViewModels
                 {
                     _intValue = value;
                     OnPropertyChanged();
-                    OnPropertyChanged("ValueString");
+                    OnPropertyChanged(nameof(ValueString));
                 }
             }
         }
-
         [DataSourceProperty]
         public float FinalisedFloatValue
         {
@@ -109,7 +119,6 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
-
         [DataSourceProperty]
         public int FinalisedIntValue
         {
@@ -122,7 +131,6 @@ namespace ModLib.GUI.ViewModels
                 }
             }
         }
-
         [DataSourceProperty]
         public bool BoolValue
         {
@@ -140,32 +148,32 @@ namespace ModLib.GUI.ViewModels
                     if (BoolValue != value)
                     {
                         URS.Do(new SetValueAction<bool>(new Ref(Property, SettingsInstance), value));
-                        //Property.SetValue(SettingsInstance, value);
                         OnPropertyChanged();
                     }
                 }
             }
         }
-
         [DataSourceProperty]
         public float MaxValue => SettingAttribute.MaxValue;
-
         [DataSourceProperty]
         public float MinValue => SettingAttribute.MinValue;
-
         [DataSourceProperty]
         public string ValueString
         {
             get
             {
                 if (SettingType == SettingType.Int)
-                    return IntValue.ToString();
+                    return ((int)Property.GetValue(SettingsInstance)).ToString("0");
                 else if (SettingType == SettingType.Float)
-                    return FloatValue.ToString("0.00");
+                    return ((float)Property.GetValue(SettingsInstance)).ToString("0.00");
                 else
                     return "";
             }
         }
+        [DataSourceProperty]
+        public Action OnHoverAction => OnHover;
+        [DataSourceProperty]
+        public Action OnHoverEndAction => OnHoverEnd;
 
         public SettingProperty(SettingPropertyAttribute settingAttribute, SettingPropertyGroupAttribute groupAttribute, PropertyInfo property, ISerialisableFile instance)
         {
@@ -210,21 +218,31 @@ namespace ModLib.GUI.ViewModels
             URS = urs;
         }
 
-        public void SetParent(ModSettingsScreenVM parent)
+        public void SetScreenVM(ModSettingsScreenVM screenVM)
         {
-            Parent = parent;
+            ScreenVM = screenVM;
         }
 
-        public void OnHover()
+        private void OnHover()
         {
-            if (Parent != null)
-                Parent.HintText = HintText;
+            if (ScreenVM != null)
+                ScreenVM.HintText = HintText;
         }
 
-        public void OnHoverEnd()
+        private void OnHoverEnd()
         {
-            if (Parent != null)
-                Parent.HintText = "";
+            if (ScreenVM != null)
+                ScreenVM.HintText = "";
+        }
+
+        private void OnValueClick()
+        {
+            ScreenManager.PushScreen(new EditValueGauntletScreen(this));
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

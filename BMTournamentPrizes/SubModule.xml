@@ -2,7 +2,7 @@
 <Module>
   <Name value="TournamentsXPanded" />
   <Id value="TournamentsXPanded" />
-  <Version value="e1.2.0" />
+  <Version value="e1.5.0" />
   <SingleplayerModule value="true" />
   <MultiplayerModule value="false" />
   <Official value="false" />
@@ -25,4 +25,17 @@
     </SubModule>
   </SubModules>
   <Xmls />
+  <ModSettings>
+    <ModToggleSettings>
+      <ModToggleSetting Key="DebugMode" Order="2" Text="Enable Debug" Description="desc" DefaultValue="0"/>
+    </ModToggleSettings>
+	<!--
+    <ModNumericSettings>
+      <ModNumericSetting Key="StatusDisplayTime" Order="3" Text="Status Display Time (Ticks)" Description="Time which status will disappear after" DefaultValue="600" MaxValue="2000" MinValue="300"/>
+    </ModNumericSettings>
+    <ModSelectSettings>
+      <ModSelectSetting Key="DebugLevel" Order="3" SelectList="Info,Warning,Error" Text="Debug Level" Description="desc" DefaultValue="0"/>
+    </ModSelectSettings>
+	-->
+  </ModSettings>
 </Module>

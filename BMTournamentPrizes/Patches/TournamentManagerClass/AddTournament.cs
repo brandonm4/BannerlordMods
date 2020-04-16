@@ -44,7 +44,7 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
             //TournamentsXPandedMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);           
             //if (game.Prize == null)
             //{
-            //    FileLog.Log("BMTournamentPrize: AddTournament Detected a missing prize.  Correcting with vanilla item.");
+            //    ErrorLog.Log("BMTournamentPrize: AddTournament Detected a missing prize.  Correcting with vanilla item.");
             //    //Do a final check to make sure nothing is missing
             //    var prize = TournamentPrizePoolBehavior.GetTournamentPrizeVanilla(game.Town.Settlement);
             //    TournamentPrizePoolBehavior.SetTournamentSelectedPrize(game, prize);

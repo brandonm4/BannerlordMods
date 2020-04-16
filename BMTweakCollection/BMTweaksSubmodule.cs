@@ -1,4 +1,5 @@
-﻿using BMTweakCollection.Models;
+﻿using BMTweakCollection.LootTweaks;
+using BMTweakCollection.Models;
 using BMTweakCollection.Patches;
 using BMTweakCollection.Utility;
 using HarmonyLib;
@@ -89,7 +90,10 @@ namespace BMTweakCollection
             }
 
         }
-
+        public override void OnMissionBehaviourInitialize(Mission mission)
+        {          
+                mission.AddMissionBehaviour(new LootBehavior());          
+        }
 
 
         private void FixPerkPeakForm()

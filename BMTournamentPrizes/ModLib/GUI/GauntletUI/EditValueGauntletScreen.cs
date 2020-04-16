@@ -1,43 +1,52 @@
 ﻿using ModLib.GUI.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Engine.Screens;
 using TaleWorlds.GauntletUI.Data;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
-using TaleWorlds.TwoDimension;
 
 namespace ModLib.GUI.GauntletUI
 {
-    internal class ModOptionsGauntletScreen : ScreenBase
+    public class EditValueGauntletScreen : ScreenBase
     {
         private GauntletLayer gauntletLayer;
         private GauntletMovie movie;
-        private ModSettingsScreenVM vm;
+        private EditValueVM vm;
+        private SettingProperty settingProperty = null;
+
+        public EditValueGauntletScreen(SettingProperty settingProperty)
+        {
+            this.settingProperty = settingProperty;
+        }
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            SpriteData spriteData = UIResourceManager.SpriteData;
-            TwoDimensionEngineResourceContext resourceContext = UIResourceManager.ResourceContext;
-            ResourceDepot uiresourceDepot = UIResourceManager.UIResourceDepot;
-            spriteData.SpriteCategories["ui_encyclopedia"].Load(resourceContext, uiresourceDepot);
-            gauntletLayer = new GauntletLayer(1);
+
+            gauntletLayer = new GauntletLayer(4500);
             gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
-            gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
-            gauntletLayer.IsFocusLayer = true;
+            gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("ChatLogHotKeyCategory"));
             ScreenManager.TrySetFocus(gauntletLayer);
+            vm = new EditValueVM(settingProperty);
             AddLayer(gauntletLayer);
-            vm = new ModSettingsScreenVM();
-            movie = gauntletLayer.LoadMovie("ModOptionsScreen", vm);
+            movie = gauntletLayer.LoadMovie("EditValueView", vm);
         }
 
         protected override void OnFrameTick(float dt)
         {
             base.OnFrameTick(dt);
-            // || gauntletLayer.Input.IsGameKeyReleased(34)
             if (gauntletLayer.Input.IsHotKeyReleased("Exit"))
             {
-                vm.ExecuteCancel();
+                vm?.ExecuteCancel();
+            }
+            else if (gauntletLayer.Input.IsHotKeyReleased("FinalizeChat"))
+            {
+                vm?.ExecuteDone();
             }
         }
 
@@ -48,8 +57,7 @@ namespace ModLib.GUI.GauntletUI
             gauntletLayer.ReleaseMovie(movie);
             gauntletLayer = null;
             movie = null;
-            vm.ExecuteSelect(null);
-            vm.AssignParent(true);
+            vm.SettingProperty = null;
             vm = null;
         }
     }

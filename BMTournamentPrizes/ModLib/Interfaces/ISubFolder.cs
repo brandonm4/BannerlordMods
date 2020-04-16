@@ -1,6 +1,6 @@
 ﻿namespace ModLib.Interfaces
 {
-    internal interface ISubFolder
+    interface ISubFolder
     {
         string SubFolder { get; }
     }

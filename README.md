@@ -1,3 +1,4 @@
+![Mount & Blade II: Bannerlord Tournaments XPanded](https://staticdelivery.nexusmods.com/mods/3174/images/headers/27_1586668241.jpg)
 #Mount & Blade II: Bannerlord Tournaments XPanded Module
 
 ##Current Features
@@ -23,6 +24,7 @@
 * All Options are configurable and can be turned on or off 
 		
 
+Provides Tournament Prize options as well as enhances the xp in tournaments and arena fights.  It originally provided xp gain in tournaments but that is now a feature in the core game as of 1.0.6.
 
 Technical Design Decisions/Rules
 I will not override/replace any stock game default model or behavior.  I will allow myself the option to add new behaviors that will work alongside the existing ones, but they will not be replaced by a customized version.

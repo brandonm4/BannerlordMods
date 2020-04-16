@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace ModLib
+namespace TournamentXPanded.Extensions
 {
     public static class ExceptionExtensionMethods
     {

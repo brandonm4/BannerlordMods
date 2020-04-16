@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace TournamentXPanded.Extensions
+namespace BMTweakCollection
 {
     public static class ExceptionExtensionMethods
     {

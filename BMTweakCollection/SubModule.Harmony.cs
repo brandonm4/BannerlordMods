@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Windows.Forms;
 
 using TaleWorlds.Core;
-using TournamentXPanded.Extensions;
 
 namespace BMTweakCollection
 {

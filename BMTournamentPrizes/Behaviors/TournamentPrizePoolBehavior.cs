@@ -98,6 +98,9 @@ namespace TournamentsXPanded.Behaviors
 
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
+            //To get these to line up with the other tournament items, have to move them to somewhere else
+            GameMenu menuArena = ((Dictionary<string, GameMenu>)Traverse.Create(Campaign.Current.GameMenuManager).Field("_gameMenus").GetValue())["town_arena"];
+
             if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0)
             {
                 var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.

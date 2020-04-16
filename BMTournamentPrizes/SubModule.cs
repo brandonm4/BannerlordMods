@@ -21,6 +21,7 @@ using TournamentsXPanded.Models;
 
 
 using ModLib;
+using AutoMapper;
 
 namespace TournamentsXPanded
 {
@@ -32,6 +33,8 @@ namespace TournamentsXPanded
         protected override void OnSubModuleLoad()
         {
 
+
+
             //Setup Logging
             if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
             {
@@ -41,42 +44,50 @@ namespace TournamentsXPanded
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(logpath)))
             {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logpath));
-            }            
+            }
             ErrorLog.LogPath = logpath;
 
-            TournamentXPSettings settings = new TournamentXPSettings();
-            string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
-            if (File.Exists(configPath))
-            {
-                var settingsjson = File.ReadAllText(configPath);
-                 settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
-            }
-            else
-            {
-                JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
-                serializerSettings.Formatting = Formatting.Indented;
-              
-                var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
-                File.WriteAllText(configPath, settingsjson);                
-            }
-            TournamentXPSettings.SetSettings(settings);
 
 
-            try
+            var modnames = Utilities.GetModulesNames().ToList();
+            bool modLibLoaded = false;
+            if (modnames.Contains("ModLib"))
             {
-              //  FileDatabase.Initialise(ModuleFolderName);
-                var modnames = Utilities.GetModulesNames().ToList();
-                if (modnames.Contains("ModLib"))
+                try
                 {
-                   //  SettingsDatabase.RegisterSettings(TournamentXPSettings.Instance);
+                    FileDatabase.Initialise(ModuleFolderName);
+                    TournamentXPSettingsModLib settings = FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
+                    if (settings == null) settings = new TournamentXPSettingsModLib();
+                    SettingsDatabase.RegisterSettings(settings);
+                    modLibLoaded = true;
+                    TournamentXPSettings.SetSettings(settings.GetSettings());
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
+                    modLibLoaded = false;
                 }
             }
-            catch (Exception ex)
+
+            if (!modLibLoaded)
             {
-                ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
+                TournamentXPSettings settings = new TournamentXPSettings();
+                string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
+                if (File.Exists(configPath))
+                {
+                    var settingsjson = File.ReadAllText(configPath);
+                    settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
+                }
+                else
+                {
+                    JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+                    serializerSettings.Formatting = Formatting.Indented;
+
+                    var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
+                    File.WriteAllText(configPath, settingsjson);
+                }
+                TournamentXPSettings.SetSettings(settings);
             }
-
-
 
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
@@ -93,11 +104,12 @@ namespace TournamentsXPanded
                     d.ItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ExcludedItemTypeString);
                 }
             }
-
         }
+
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+
             ShowMessage("Tournaments XPanded Loaded");
         }
 

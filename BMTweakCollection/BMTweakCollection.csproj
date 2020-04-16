@@ -114,6 +114,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\MatchedSizeBanditCampaignBehavior.cs" />
     <Compile Include="BMTweaksSubmodule.cs" />
+    <Compile Include="Helpers\ErrorLog.cs" />
     <Compile Include="ExceptionExtensionMethods.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\CharacterHelpers.cs" />

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TournamentsXPanded;
 
 namespace BMTweakCollection.LootTweaks
 {
@@ -22,7 +23,8 @@ namespace BMTweakCollection.LootTweaks
             private set;
         }
         private float PlayerDropRate { get; set; }
-        private float PlayerMaxValue {
+        private float PlayerMaxValue
+        {
             get
             {
                 return Hero.MainHero.Level * 500 + BaseMaxValue;
@@ -34,7 +36,7 @@ namespace BMTweakCollection.LootTweaks
         public bool HorseDropEnabled { get; set; } = true;
         public float BaseDropRate { get; set; } = 30;
         public float BaseMaxValue { get; set; } = 5000;
-        
+
         public override void AfterStart()
         {
             LootedItems = new List<EquipmentElement>();
@@ -44,7 +46,7 @@ namespace BMTweakCollection.LootTweaks
 
             PartyLooter = BMHelpers.CharacterHelpers.GetCharacterWithHighestSkill(MobileParty.MainParty.Party, DefaultSkills.Roguery);
             SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, PartyLooter, ref explainedNumber, true);
-           
+
             PlayerDropRate = explainedNumber.ResultNumber;
         }
         public override void OnBattleEnded()
@@ -55,18 +57,15 @@ namespace BMTweakCollection.LootTweaks
         {
             if (Mission.Current.CombatType != Mission.MissionCombatType.Combat)
                 return;
-            
+            try
             {
-                if ((affectedAgent.IsMainAgent == false
-                    && !affectedAgent.IsMount))
+
+                if ((affectedAgent.IsMainAgent == false && !affectedAgent.IsMount))
                 {
-                    if (affectedAgent.IsHero)
+                    //Don't get your companion equipment
+                    if (affectedAgent.IsHero && affectedAgent.Team == Agent.Main.Team)
                     {
-                        var characterObject = (CharacterObject)affectedAgent.Character;
-                        if (characterObject != null && characterObject.HeroObject != null && HeroHelper.IsCompanionInPlayerParty(characterObject.HeroObject))
-                        {
-                            return;
-                        }
+                        return;
                     }
 
                     for (int i = 0; i < 12; i++)
@@ -89,13 +88,19 @@ namespace BMTweakCollection.LootTweaks
                                 }
                                 if (equipmentFromSlot.Item.Value > PlayerMaxValue)
                                 {
-                                     typeof(ItemObject).GetProperty("Value").SetValue(equipmentFromSlot.Item, PlayerMaxValue);                                    
+                                    typeof(ItemObject).GetProperty("Value").SetValue(equipmentFromSlot.Item, PlayerMaxValue);
                                 }
                                 LootedItems.Add(equipmentFromSlot);
                             }
                         }
+
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Log("Error OnAgentRemoval");
+                ErrorLog.Log(ex.ToStringFull());
             }
         }
         public void SetObserver(IBattleObserver observer)

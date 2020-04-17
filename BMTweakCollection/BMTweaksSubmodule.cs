@@ -3,6 +3,7 @@ using BMTweakCollection.Models;
 using BMTweakCollection.Patches;
 using BMTweakCollection.Utility;
 using HarmonyLib;
+using ModLib;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,34 +16,52 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-
+using TournamentsXPanded;
 
 namespace BMTweakCollection
 {
     public partial class BMTweakCollectionSubModule : MBSubModuleBase
     {
 
-        public static BMRandomTweaksConfiguration Configuration { get; set; }
+
+        public static string ModuleFolderName { get; } = "BMTweakCollection";
 
         protected override void OnSubModuleLoad()
         {
-            base.OnSubModuleLoad();
+            if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
+            {
+                File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
+            }
+            string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs", "logfile.txt");
+            if (!Directory.Exists(System.IO.Path.GetDirectoryName(logpath)))
+            {
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logpath));
+            }
+            ErrorLog.LogPath = logpath;
 
-            string appSettings = String.Concat(BasePath.Name, "Modules/BMTweakCollection/ModuleData/BMTweakCollection.config.json");
-            var configtxt = File.ReadAllText(appSettings);
-            BMTweakCollectionSubModule.Configuration = JsonConvert.DeserializeObject<BMRandomTweaksConfiguration>(configtxt);
 
-            //Stupid way to do this            
-            //LootCollectorPatch.DoPatching();
+
+
+            try
+            {
+                FileDatabase.Initialise(ModuleFolderName);
+                BMRandomTweaksConfiguration settings = FileDatabase.Get<BMRandomTweaksConfiguration>(BMRandomTweaksConfiguration.InstanceID);
+                if (settings == null) settings = new BMRandomTweaksConfiguration();
+                SettingsDatabase.RegisterSettings(settings);           
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
+            }
+
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            base.OnBeforeInitialModuleScreenSetAsRoot();
-
             ShowMessage("Brandon's Tweak Collection Module Loaded");
         }
         public override void OnGameInitializationFinished(Game game)
@@ -67,7 +86,7 @@ namespace BMTweakCollection
             {
                 //LootCollectorPatch.DoPatching();
                 //var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol");
-              //  _harmony.PatchAll();
+                //  _harmony.PatchAll();
 
                 LootCollectorPatch.DoPatching();
                 BMTweakCollectionSubModule.Harmony.PatchAll();
@@ -91,8 +110,8 @@ namespace BMTweakCollection
 
         }
         public override void OnMissionBehaviourInitialize(Mission mission)
-        {          
-                mission.AddMissionBehaviour(new LootBehavior());          
+        {
+            mission.AddMissionBehaviour(new LootBehavior());
         }
 
 

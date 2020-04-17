@@ -81,7 +81,7 @@ namespace TournamentsXPanded.Models
         #region Prize Selection
 
         [XmlElement]
-        [SettingProperty("3. Prize Selection", "Should the Select Prize from the Prize Pool be enable. ")]
+        [SettingProperty("Prize Selection", "Should the Select Prize from the Prize Pool be enable. ")]
         [SettingPropertyGroup("3. Prize Selection")]
         public bool EnablePrizeSelection { get; set; } = true;
         [XmlElement]
@@ -152,7 +152,7 @@ namespace TournamentsXPanded.Models
 
 
         [XmlElement]
-        [SettingProperty("4. Prize Type Filter")]
+        [SettingProperty("Prize Type Filter")]
         [SettingPropertyGroup("4. Prize Type Filter")]
         public bool EnablePrizeTypeFilterToLists { get; set; } = false;
 

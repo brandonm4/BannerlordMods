@@ -56,6 +56,10 @@
       <HintPath>..\OtherFiles\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ModLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
@@ -127,7 +131,6 @@
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
     <Compile Include="Patches\HarmonyHelpers.cs" />
-    <Compile Include="Patches\Hero.cs" />
     <Compile Include="LootTweaks\LootCollector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StaticPropertyContractResolver.cs" />

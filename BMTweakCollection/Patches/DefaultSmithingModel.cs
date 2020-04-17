@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BMTweakCollection.Models;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
+            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
                 __result = 1;
                 return false; // make sure you only skip if really necessary
@@ -34,7 +35,7 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
+            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
                 __result = 1;
                 return false; // make sure you only skip if really necessary
@@ -51,7 +52,7 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
+            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
                 __result = 1;
                 return false; // make sure you only skip if really necessary
@@ -69,9 +70,9 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result, int count)
         {
-            if (BMTweakCollectionSubModule.Configuration.CustomSmithingModelEnabled)
+            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
-                __result = (count * count + 12) / 36;
+                __result = (count * count + 12) / BMRandomTweaksConfiguration.Instance.CustomSmithingXPDivisor;
                 return false; 
             }
             return true;

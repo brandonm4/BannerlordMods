@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BMTweakCollection.Models;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,9 @@ namespace BMTweakCollection.Patches
         }
         static bool Prefix(ref int __result)
         {
-            if (BMTweakCollectionSubModule.Configuration.MaxHideoutTroopsEnabled)
+            if (BMRandomTweaksConfiguration.Instance.MaxHideoutTroopsEnabled)
             {
-                __result = BMTweakCollectionSubModule.Configuration.MaxHideoutTroops;
+                __result = BMRandomTweaksConfiguration.Instance.MaxHideoutTroops;
                 return false; // make sure you only skip if really necessary
             }
             return false;

@@ -1,4 +1,5 @@
 ﻿using BMTweakCollection.Helpers;
+using BMTweakCollection.Models;
 using Helpers;
 using System;
 using System.Collections.Generic;
@@ -27,22 +28,20 @@ namespace BMTweakCollection.LootTweaks
         {
             get
             {
-                return Hero.MainHero.Level * 500 + BaseMaxValue;
+                return Hero.MainHero.Level * 500 + BMRandomTweaksConfiguration.Instance.BaseMaxValue;
             }
         }
         private CharacterObject PartyLooter { get; set; }
 
         //Move these to config
-        public bool HorseDropEnabled { get; set; } = true;
-        public float BaseDropRate { get; set; } = 30;
-        public float BaseMaxValue { get; set; } = 5000;
+     
 
         public override void AfterStart()
         {
             LootedItems = new List<EquipmentElement>();
 
             ExplainedNumber explainedNumber = new ExplainedNumber();
-            explainedNumber.Add(BaseDropRate);
+            explainedNumber.Add(BMRandomTweaksConfiguration.Instance.BaseDropRate);
 
             PartyLooter = BMHelpers.CharacterHelpers.GetCharacterWithHighestSkill(MobileParty.MainParty.Party, DefaultSkills.Roguery);
             SkillHelper.AddSkillBonusForCharacter(DefaultSkills.Roguery, DefaultSkillEffects.RogueryLootBonus, PartyLooter, ref explainedNumber, true);
@@ -51,7 +50,7 @@ namespace BMTweakCollection.LootTweaks
         }
         public override void OnBattleEnded()
         {
-            PartyLooter.HeroObject.AddSkillXp(DefaultSkills.Roguery, 10f);
+            PartyLooter.HeroObject.AddSkillXp(DefaultSkills.Roguery, BMRandomTweaksConfiguration.Instance.LootSkillXpGain);
         }
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
@@ -71,14 +70,14 @@ namespace BMTweakCollection.LootTweaks
                     for (int i = 0; i < 12; i++)
                     {
                         EquipmentIndex equipmentIndex = (EquipmentIndex)i;
-                        var rdm = MBRandom.RandomFloatRanged(110f);
+                        var rdm = MBRandom.RandomFloatRanged(BMRandomTweaksConfiguration.Instance.LootRandomMaxRoll);
                         EquipmentElement equipmentFromSlot;
                         if (rdm < PlayerDropRate) //Might as well use the player loot rate.  If player looses they get no loot anyway.
                         {
                             if (affectedAgent.Character.Equipment.GetEquipmentFromSlot(equipmentIndex).Item != null)
                             {
                                 equipmentFromSlot = affectedAgent.Character.Equipment.GetEquipmentFromSlot(equipmentIndex);
-                                if (!HorseDropEnabled)
+                                if (!BMRandomTweaksConfiguration.Instance.HorseDropEnabled)
                                 {
                                     if (equipmentFromSlot.Item.ItemType == ItemObject.ItemTypeEnum.HorseHarness
                                         || equipmentFromSlot.Item.ItemType == ItemObject.ItemTypeEnum.Horse)

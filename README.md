@@ -22,7 +22,7 @@
 		* Influcence
 	* Dynamic Amount of renown based on Difficulty
 * All Options are configurable and can be turned on or off 
-		
+* OPTIONAL Integration with ModLib for GUI Configuration		
 
 Provides Tournament Prize options as well as enhances the xp in tournaments and arena fights.  It originally provided xp gain in tournaments but that is now a feature in the core game as of 1.0.6.
 

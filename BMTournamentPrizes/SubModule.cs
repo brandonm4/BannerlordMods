@@ -74,13 +74,15 @@ namespace TournamentsXPanded
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+            string version = typeof(TournamentsXPandedSubModule).Assembly.GetName().Version.ToString();
+
             if (!TournamentXPSettings.Instance.DebugMode)
             {
-                ShowMessage("Tournaments XPanded Loaded", Colors.Cyan);
+                ShowMessage("Tournaments XPanded v" + version + " Loaded", Colors.Cyan);
             }
             else
             {
-                ShowMessage("Tournaments XPanded Loaded {DEBUG MODE}", Colors.Red);
+                ShowMessage("Tournaments XPanded v" + version + " Loaded {DEBUG MODE}", Colors.Red);
             }
         }
 
@@ -99,49 +101,52 @@ namespace TournamentsXPanded
         }
         public override void OnGameInitializationFinished(Game game)
         {
-            ApplyPatches(game);
-            if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
+            if (game.GameType is Campaign)
             {
-                string[] _weaponTemplatesIdTeamSizeOne = new String[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };
-
-                string[] _weaponTemplatesIdTeamSizeTwo = new String[] { "tournament_template_aserai_two_participant_set_v1", "tournament_template_aserai_two_participant_set_v2", "tournament_template_aserai_two_participant_set_v3", "tournament_template_battania_two_participant_set_v1", "tournament_template_battania_two_participant_set_v2", "tournament_template_battania_two_participant_set_v3", "tournament_template_battania_two_participant_set_v4", "tournament_template_battania_two_participant_set_v5", "tournament_template_empire_two_participant_set_v1", "tournament_template_empire_two_participant_set_v2", "tournament_template_empire_two_participant_set_v3", "tournament_template_khuzait_two_participant_set_v1", "tournament_template_khuzait_two_participant_set_v2", "tournament_template_khuzait_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v1", "tournament_template_vlandia_two_participant_set_v2", "tournament_template_vlandia_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v4", "tournament_template_sturgia_two_participant_set_v1", "tournament_template_sturgia_two_participant_set_v2", "tournament_template_sturgia_two_participant_set_v3" };
-
-                string[] _weaponTemplatesIdTeamSizeFour = new String[] { "tournament_template_aserai_four_participant_set_v1", "tournament_template_aserai_four_participant_set_v2", "tournament_template_aserai_four_participant_set_v3", "tournament_template_aserai_four_participant_set_v4", "tournament_template_battania_four_participant_set_v1", "tournament_template_battania_four_participant_set_v2", "tournament_template_battania_four_participant_set_v3", "tournament_template_empire_four_participant_set_v1", "tournament_template_empire_four_participant_set_v2", "tournament_template_empire_four_participant_set_v3", "tournament_template_khuzait_four_participant_set_v1", "tournament_template_khuzait_four_participant_set_v2", "tournament_template_khuzait_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v1", "tournament_template_vlandia_four_participant_set_v2", "tournament_template_vlandia_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v4", "tournament_template_sturgia_four_participant_set_v1", "tournament_template_sturgia_four_participant_set_v2", "tournament_template_sturgia_four_participant_set_v3" };
-
-                RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeOne);
-                RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
-                RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
-            }
-            string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
-            if (File.Exists(customfile))
-            {
-                var configtxt = File.ReadAllText(customfile);
-                var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-                InitCustomItems(customItems);
-            }
-
-            if (TournamentXPSettings.Instance.DebugMode)
-            {
-                CreateDiagnostics();
-            }
-
-            //Try to repair
-            foreach (var settlement in Settlement.All)
-            {
-                if (settlement.HasTournament)
+                ApplyPatches(game);
+                if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
                 {
-                    var tournament = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town) as Fight2TournamentGame;
-                    try
+                    string[] _weaponTemplatesIdTeamSizeOne = new String[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };
+
+                    string[] _weaponTemplatesIdTeamSizeTwo = new String[] { "tournament_template_aserai_two_participant_set_v1", "tournament_template_aserai_two_participant_set_v2", "tournament_template_aserai_two_participant_set_v3", "tournament_template_battania_two_participant_set_v1", "tournament_template_battania_two_participant_set_v2", "tournament_template_battania_two_participant_set_v3", "tournament_template_battania_two_participant_set_v4", "tournament_template_battania_two_participant_set_v5", "tournament_template_empire_two_participant_set_v1", "tournament_template_empire_two_participant_set_v2", "tournament_template_empire_two_participant_set_v3", "tournament_template_khuzait_two_participant_set_v1", "tournament_template_khuzait_two_participant_set_v2", "tournament_template_khuzait_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v1", "tournament_template_vlandia_two_participant_set_v2", "tournament_template_vlandia_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v4", "tournament_template_sturgia_two_participant_set_v1", "tournament_template_sturgia_two_participant_set_v2", "tournament_template_sturgia_two_participant_set_v3" };
+
+                    string[] _weaponTemplatesIdTeamSizeFour = new String[] { "tournament_template_aserai_four_participant_set_v1", "tournament_template_aserai_four_participant_set_v2", "tournament_template_aserai_four_participant_set_v3", "tournament_template_aserai_four_participant_set_v4", "tournament_template_battania_four_participant_set_v1", "tournament_template_battania_four_participant_set_v2", "tournament_template_battania_four_participant_set_v3", "tournament_template_empire_four_participant_set_v1", "tournament_template_empire_four_participant_set_v2", "tournament_template_empire_four_participant_set_v3", "tournament_template_khuzait_four_participant_set_v1", "tournament_template_khuzait_four_participant_set_v2", "tournament_template_khuzait_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v1", "tournament_template_vlandia_four_participant_set_v2", "tournament_template_vlandia_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v4", "tournament_template_sturgia_four_participant_set_v1", "tournament_template_sturgia_four_participant_set_v2", "tournament_template_sturgia_four_participant_set_v3" };
+
+                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeOne);
+                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
+                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
+                }
+                string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
+                if (File.Exists(customfile))
+                {
+                    var configtxt = File.ReadAllText(customfile);
+                    var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+                    InitCustomItems(customItems);
+                }
+
+                if (TournamentXPSettings.Instance.DebugMode)
+                {
+                    CreateDiagnostics();
+                }
+
+                //Try to repair
+                foreach (var settlement in Settlement.All)
+                {
+                    if (settlement.HasTournament)
                     {
-                        if (tournament != null)
+                        var tournament = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town) as Fight2TournamentGame;
+                        try
                         {
-                            tournament.SetFightMode(Fight2TournamentGame.FightMode.Mixed);
+                            if (tournament != null)
+                            {
+                                tournament.SetFightMode(Fight2TournamentGame.FightMode.Mixed);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorLog.Log("Error repairing tournament: " + settlement.Town.StringId);
-                        ErrorLog.Log(ex.ToStringFull());
+                        catch (Exception ex)
+                        {
+                            ErrorLog.Log("Error repairing tournament: " + settlement.Town.StringId);
+                            ErrorLog.Log(ex.ToStringFull());
+                        }
                     }
                 }
             }

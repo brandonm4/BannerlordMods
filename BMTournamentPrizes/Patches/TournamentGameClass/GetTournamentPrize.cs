@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using ModLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,9 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
-using TournamentsXPanded.Models;
 
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Patches.TournamentGameClass
 {

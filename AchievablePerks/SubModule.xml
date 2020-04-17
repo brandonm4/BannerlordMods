@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <Name value="Achievable Perks"/>
+  <Id value="AchievablePerks"/>
+  <Version value="e1.5.4"/>
+  <SingleplayerModule value="true"/>
+  <MultiplayerModule value="false"/>
+  <Official value="false"/>
+  <DependedModules>
+    <DependedModule Id="Native"/>
+    <DependedModule Id="SandBoxCore"/>
+    <DependedModule Id="Sandbox"/>
+    <DependedModule Id="CustomBattle"/>
+    <DependedModule Id="StoryMode" />
+  </DependedModules>
+  <SubModules> 
+   <SubModule>
+      <Name value="AchievablePerks"/>
+      <DLLName value="AchievablePerks.dll"/>
+      <SubModuleClassType value="AchievablePerks.AchievablePerksSubModule"/>
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>  	  
+  </SubModules>
+   <DelayedSubModules/>        
+  <Xmls/>
+</Module>
+

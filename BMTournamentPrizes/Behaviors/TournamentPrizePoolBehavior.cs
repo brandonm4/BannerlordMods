@@ -14,10 +14,11 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
 
-using TournamentsXPanded.Extensions;
+using XPanded.Common.Extensions;
 using TournamentsXPanded.Models;
 using TaleWorlds.Library;
-using ModLib;
+using XPanded.Common.Diagnostics;
+using TournamentsXPanded.Common;
 
 namespace TournamentsXPanded.Behaviors
 {

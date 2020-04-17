@@ -4,7 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
-namespace TournamentsXPanded.Extensions
+namespace XPanded.Common.Extensions
 {
     public static class ItemObjectExtensions
     {

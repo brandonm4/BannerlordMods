@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace TournamentXPanded.Extensions
+namespace XPanded.Common.Extensions
 {
     public static class ExceptionExtensionMethods
     {

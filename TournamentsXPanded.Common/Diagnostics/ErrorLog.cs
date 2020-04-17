@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TournamentsXPanded
+namespace XPanded.Common.Diagnostics
 {
     public class ErrorLog
     {

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using ModLib;
 using SandBox.TournamentMissions.Missions;
 
 using System;
@@ -13,7 +12,8 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
-
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {

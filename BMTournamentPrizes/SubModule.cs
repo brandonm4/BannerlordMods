@@ -19,9 +19,9 @@ using TaleWorlds.MountAndBlade;
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
 
-
-using ModLib;
-using AutoMapper;
+using TournamentsXPanded.Settings;
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded
 {
@@ -33,8 +33,6 @@ namespace TournamentsXPanded
         protected override void OnSubModuleLoad()
         {
             //Setup Logging
-
-
             if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
             {
                 File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
@@ -46,46 +44,8 @@ namespace TournamentsXPanded
             }
             ErrorLog.LogPath = logpath;
 
-            //Load Settings
-            var modnames = Utilities.GetModulesNames().ToList();
-            bool modLibLoaded = false;
-            if (modnames.Contains("ModLib"))
-            {
-                try
-                {
-                    FileDatabase.Initialise(ModuleFolderName);
-                    TournamentXPSettingsModLib settings = FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
-                    if (settings == null) settings = new TournamentXPSettingsModLib();
-                    SettingsDatabase.RegisterSettings(settings);
-                    modLibLoaded = true;
-                    TournamentXPSettings.SetSettings(settings.GetSettings());
-                }
-                catch (Exception ex)
-                {
-                    ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
-                    modLibLoaded = false;
-                }
-            }
-            if (!modLibLoaded)
-            {
-                TournamentXPSettings settings = new TournamentXPSettings();
-                string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
-                if (File.Exists(configPath))
-                {
-                    var settingsjson = File.ReadAllText(configPath);
-                    settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
-                }
-                else
-                {
-                    JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.Formatting = Formatting.Indented;
-
-                    var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
-                    File.WriteAllText(configPath, settingsjson);
-                }
-                TournamentXPSettings.SetSettings(settings);
-            }
-
+            SettingsHelper.GetSettings();
+        
             //Setup Item Filters if needed
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {

@@ -103,7 +103,7 @@ namespace TournamentsXPanded.Behaviors
 
             if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0)
             {
-                var text = new TextObject("Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
+                var text = new TextObject("{=tourn001}Re-roll Prize"); //Was going to put the remaining count, but not updating correctly.
                 starter.AddGameMenuOption("town_arena", "bm_reroll_tournamentprize", text.ToString(),
                     new GameMenuOption.OnConditionDelegate(RerollCondition),
                     new GameMenuOption.OnConsequenceDelegate(RerollConsequence),
@@ -111,12 +111,12 @@ namespace TournamentsXPanded.Behaviors
             }
             if (TournamentXPSettings.Instance.EnablePrizeSelection)
             {
-                starter.AddGameMenuOption("town_arena", "bm_select_tournamentprize", "Select Prize",
+                starter.AddGameMenuOption("town_arena", "bm_select_tournamentprize", new TextObject("{=tourn002}Select Prize").ToString(),
                  new GameMenuOption.OnConditionDelegate(PrizeSelectCondition),
                  new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 1, true);
             }
 
-            starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", "Select Tournament Style",
+            starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", new TextObject("{=tourn003}Select Tournament Style").ToString(),
              new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
              new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, 2, true);
         }
@@ -404,7 +404,7 @@ namespace TournamentsXPanded.Behaviors
             {
                 flag = true;
                 flag1 = false;
-                textObject = new TextObject("Re-roll Attempts Exceeded");
+                textObject = new TextObject("{=tourn004}Re-roll Attempts Exceeded");
             }
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
             return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
@@ -493,7 +493,7 @@ namespace TournamentsXPanded.Behaviors
                 }
                 if (prizeElements.Count > 0)
                 {
-                    string info = "You can choose an item from the list below as your reward if you win the tournament!";
+                    string info = "{=tourn012}You can choose an item from the list below as your reward if you win the tournament!";
                     TextObject descr = new TextObject(info);
 
                     if (TournamentXPSettings.Instance.DebugMode)
@@ -515,7 +515,7 @@ namespace TournamentsXPanded.Behaviors
                     
 
                     InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
-                            "Tournament Prize Selection", descr.ToString(), prizeElements, true, true, "OK", "Cancel",
+                           new TextObject("{=tourn005}Tournament Prize Selection").ToString(), descr.ToString(), prizeElements, true, true, new TextObject("{=tourn006}OK").ToString(), new TextObject("{=tourn007}Cancel").ToString(),
                             new Action<List<InquiryElement>>(OnSelectPrize), new Action<List<InquiryElement>>(OnDeSelectPrize)), true);
                     try
                     {
@@ -588,8 +588,8 @@ namespace TournamentsXPanded.Behaviors
         public static void TournamentTypeSelectConsequence(MenuCallbackArgs args)
         {
             List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
-            tournamentTypeElements.Add(new InquiryElement("melee", "Standard Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
-            tournamentTypeElements.Add(new InquiryElement("melee2", "Individual Only Melee Tournament", new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("melee", new TextObject("{=tourn008}Standard Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("melee2", new TextObject("{=tourn008}Individual Only Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
 #if DEBUG
             //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
             //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
@@ -597,7 +597,7 @@ namespace TournamentsXPanded.Behaviors
             tournamentTypeElements.Add(new InquiryElement("race", "External Application Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
 #endif
             InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
-                    "Tournament Type Selection", "What kind of Tournament would you like to compete in today?", tournamentTypeElements, true, true, "OK", "Cancel",
+                    new TextObject("{=tourn010}Tournament Type Selection").ToString(), new TextObject("{=tourn011}What kind of Tournament would you like to compete in today?").ToString(), tournamentTypeElements, true, true, new TextObject("{=tourn006}OK").ToString(), new TextObject("{=tourn007}Cancel").ToString(),
                     new Action<List<InquiryElement>>(OnSelectTournamentStyle), new Action<List<InquiryElement>>(OnSelectDoNothing)), true);
 
             try

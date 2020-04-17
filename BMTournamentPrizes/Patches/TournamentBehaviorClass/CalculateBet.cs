@@ -62,17 +62,17 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
             var count = instructions.Count();
 
             /* Get all lines before what we want to change */
-            var origCodes = new List<CodeInstruction>(instructions).Take(count - 13);
+            var origCodes = new List<CodeInstruction>(instructions).Take(count - 12).ToList();
 
             // The line we want to change
-            var changeCode = instructions.Skip(count - 13).Take(1).First();
+            var changeCode = origCodes[origCodes.Count() - 1];
             changeCode.operand = TournamentXPSettings.Instance.MaximumBetOdds;
 
             //All the lines after what we want to change
             var afterCodes = new List<CodeInstruction>(instructions).Skip(count - 12);
 
             //Rebuild and return
-            origCodes.AddItem(changeCode);
+            //origCodes.AddItem(changeCode);
             codes = origCodes.Concat(afterCodes).ToList();
 
             // codes.RemoveRange(0, codes.Count - 1);

@@ -168,6 +168,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ModuleData\Languages\str_tournamentxp-de.xml" />
+    <Content Include="ModuleData\Languages\str_tournamentxp-en.xml" />
+    <Content Include="ModuleData\Languages\str_tournamentxp-zho-CN.xml" />
     <Content Include="SubModule.xml" />
   </ItemGroup>
   <ItemGroup>

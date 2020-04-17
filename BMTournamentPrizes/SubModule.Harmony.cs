@@ -6,7 +6,8 @@ using System.Reflection;
 using System.Windows.Forms;
 
 using TaleWorlds.Core;
-
+using TaleWorlds.Library;
+using TournamentsXPanded.Models;
 using TournamentsXPanded.Patches;
 
 namespace TournamentsXPanded
@@ -31,7 +32,9 @@ namespace TournamentsXPanded
                 catch (Exception ex)
                 {
                     //Error(ex, $"Error while resetting patch: {patch.GetType().Name}");
-                    MessageBox.Show("TournamentXP Patch Error", $"Error while applying patch: {patch.GetType().Name}\n" + ex.ToStringFull());
+                    //MessageBox.Show("TournamentXP Patch Error", $"Error while applying patch: {patch.GetType().Name}\n" + ex.ToStringFull());
+                    ErrorLog.Log($"Error while resetting patch: {patch.GetType().Name}");
+                    ErrorLog.Log(ex.ToStringFull());
                 }
 
                 try
@@ -45,19 +48,22 @@ namespace TournamentsXPanded
                         catch (Exception ex)
                         {
                             //  Error(ex, $"Error while applying patch: {patch.GetType().Name}");
+                            ErrorLog.Log($"Error while applying patch: {patch.GetType().Name}");
+                            ErrorLog.Log(ex.ToStringFull());
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    //Error(ex, $"Error while checking if patch is applicable: {patch.GetType().Name}");
+                    ErrorLog.Log($"Error while checking if patch is applicable: {patch.GetType().Name}");
+                    ErrorLog.Log(ex.ToStringFull());
                 }
 
                 var patchApplied = patch.Applied;
                 if (patchApplied)
                     ActivePatches[patch.GetType()] = patch;
-
-                ShowMessage($"{(patchApplied ? "Applied" : "Skipped")} Patch: {patch.GetType().Name}");
+                if (TournamentXPSettings.Instance.DebugMode)
+                    ShowMessage($"{(patchApplied ? "Applied" : "Skipped")} Patch: {patch.GetType().Name}", (patchApplied ? Colors.Cyan : Colors.Red));
             }
         }
 

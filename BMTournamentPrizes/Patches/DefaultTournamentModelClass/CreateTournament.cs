@@ -20,20 +20,20 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
     {
         public override bool Applied { get; protected set; }
 
-        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultTournamentModel).GetMethod("CreateTournament", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultTournamentModel).GetMethod("CreateTournament", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private static readonly MethodInfo PatchMethodInfoTransPile = typeof(CreateTournament).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
         private static readonly MethodInfo PatchMethodInfo = typeof(CreateTournament).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
         public override bool IsApplicable(Game game)
-        {           
-                return true;                      
+        {
+            return true;
         }
 
         public override void Apply(Game game)
         {
             if (Applied) return;
-            TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,               
+            TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
                   prefix: new HarmonyMethod(PatchMethodInfo)
               );
 
@@ -50,7 +50,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             return codes.AsEnumerable();
         }
 
-        private bool Prefix(ref TournamentGame __result, Town town)
+        private static bool Prefix(ref TournamentGame __result, Town town)
         {
             float gameBasicMeleeChance = 65f;
             float rdm = MBRandom.RandomFloatRanged(1f, 100f);
@@ -61,7 +61,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             else
             {
                 var newgame = new Fight2TournamentGame(town);
-                 rdm = MBRandom.RandomFloatRanged(1f, 100f);
+                rdm = MBRandom.RandomFloatRanged(1f, 100f);
                 if (rdm < 50f)
                 {
                     newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
@@ -72,7 +72,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             return false;
         }
 
-        
+
     }
 }
 

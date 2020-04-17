@@ -32,9 +32,6 @@ namespace TournamentsXPanded
 
         protected override void OnSubModuleLoad()
         {
-
-
-
             //Setup Logging
             if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
             {
@@ -47,8 +44,7 @@ namespace TournamentsXPanded
             }
             ErrorLog.LogPath = logpath;
 
-
-
+            //Load Settings
             var modnames = Utilities.GetModulesNames().ToList();
             bool modLibLoaded = false;
             if (modnames.Contains("ModLib"))
@@ -68,7 +64,6 @@ namespace TournamentsXPanded
                     modLibLoaded = false;
                 }
             }
-
             if (!modLibLoaded)
             {
                 TournamentXPSettings settings = new TournamentXPSettings();
@@ -89,6 +84,7 @@ namespace TournamentsXPanded
                 TournamentXPSettings.SetSettings(settings);
             }
 
+            //Setup Item Filters if needed
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
                 //Eventually plan to let people define their own
@@ -104,6 +100,9 @@ namespace TournamentsXPanded
                     d.ItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ExcludedItemTypeString);
                 }
             }
+
+            //Add localizations
+            LocalizedTextManager.LoadLocalizationXmls();
         }
 
 
@@ -125,16 +124,7 @@ namespace TournamentsXPanded
                     campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
                 }
             }
-        }
-
-        public override void OnGameLoaded(Game game, object initializerObject)
-        {
-            //if (TournamentXPSettings.Instance.DebugMode)
-            //{
-            //    DoDebugPopup();
-            //}
-        }
-
+        }       
         public override void OnGameInitializationFinished(Game game)
         {
             ApplyPatches(game);
@@ -256,7 +246,6 @@ namespace TournamentsXPanded
             }
             return settings;
         }
-
         public static void SaveModSettingValue(Dictionary<string, string> newSettings)
         {
             // write to save settings to anywhere you want

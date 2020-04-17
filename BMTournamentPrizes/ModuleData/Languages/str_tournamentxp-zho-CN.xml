@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="简体中文" />
+    <string id="tourn001">Re-roll Prize</string>
+    <string id="tourn002">Select Prize</string>
+    <string id="tourn003">Select Tournament Style</string>
+    <string id="tourn004">Re-roll Attempts Exceeded</string>
+    <string id="tourn005">Tournament Prize Selection</string>
+    <string id="tourn006">OK</string>
+    <string id="tourn007">Cancel</string>
+    <string id="tourn008">Standard Group Melee</string>
+    <string id="tourn009">PVP/Deathmatch Melee</string>
+    <string id="tourn010">Tournament Type Selection</string>
+    <string id="tourn011">What kind of Tournament would you like to compete in today?</string>
+    <string id="tourn012">You can choose an item from the list below as your reward if you win the tournament!</string>
+  </tags>
+  <strings>
+  </strings>
+</base>

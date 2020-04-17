@@ -26,14 +26,14 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
         private static readonly MethodInfo PatchMethodInfo = typeof(CreateTournament).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
         public override bool IsApplicable(Game game)
-        {           
-                return true;                      
+        {
+            return true;
         }
 
         public override void Apply(Game game)
         {
             if (Applied) return;
-            TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,               
+            TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
                   prefix: new HarmonyMethod(PatchMethodInfo)
               );
 
@@ -61,18 +61,18 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             else
             {
                 var newgame = new Fight2TournamentGame(town);
-                 rdm = MBRandom.RandomFloatRanged(1f, 100f);
-                if (rdm < 50f)
-                {
-                    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
-                }
+                //rdm = MBRandom.RandomFloatRanged(1f, 100f);
+                //if (rdm < 50f)
+                //{
+                //    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
+                //}
                 __result = newgame;
             }
 
             return false;
         }
 
-        
+
     }
 }
 

@@ -26,9 +26,9 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
 
         public override bool IsApplicable(Game game)
         {
-       
-                return true;
-           
+
+            return true;
+
         }
 
         public override void Reset()
@@ -57,8 +57,8 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
         {
             //__result currently has stock item.
             try
-            {            
-            __result = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);                
+            {
+                __result = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
             }
             catch (Exception ex)
             {

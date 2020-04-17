@@ -33,6 +33,8 @@ namespace TournamentsXPanded
         protected override void OnSubModuleLoad()
         {
             //Setup Logging
+
+
             if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
             {
                 File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
@@ -44,6 +46,7 @@ namespace TournamentsXPanded
             }
             ErrorLog.LogPath = logpath;
 
+            //Load Settings
             var modnames = Utilities.GetModulesNames().ToList();
             bool modLibLoaded = false;
             if (modnames.Contains("ModLib"))
@@ -63,7 +66,6 @@ namespace TournamentsXPanded
                     modLibLoaded = false;
                 }
             }
-
             if (!modLibLoaded)
             {
                 TournamentXPSettings settings = new TournamentXPSettings();
@@ -84,6 +86,7 @@ namespace TournamentsXPanded
                 TournamentXPSettings.SetSettings(settings);
             }
 
+            //Setup Item Filters if needed
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
                 //Eventually plan to let people define their own
@@ -100,6 +103,9 @@ namespace TournamentsXPanded
                 }
             }
 
+            //Add localizations
+            LocalizedTextManager.LoadLocalizationXmls();
+
 #if DEBUG
             TournamentXPSettings.Instance.DebugMode = true;
 #endif
@@ -114,7 +120,7 @@ namespace TournamentsXPanded
             }
             else
             {
-                ShowMessage("Tournaments XPanded Loaded: DEBUG MODE", Colors.Red);
+                ShowMessage("Tournaments XPanded Loaded {DEBUG MODE}", Colors.Red);
             }
         }
 
@@ -131,15 +137,6 @@ namespace TournamentsXPanded
                 }
             }
         }
-
-        public override void OnGameLoaded(Game game, object initializerObject)
-        {
-            //if (TournamentXPSettings.Instance.DebugMode)
-            //{
-            //    DoDebugPopup();
-            //}
-        }
-
         public override void OnGameInitializationFinished(Game game)
         {
             ApplyPatches(game);
@@ -167,8 +164,28 @@ namespace TournamentsXPanded
             {
                 CreateDiagnostics();
             }
-        }
 
+            //Try to repair
+            foreach (var settlement in Settlement.All)
+            {
+                if (settlement.HasTournament)
+                {
+                    var tournament = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town) as Fight2TournamentGame;
+                    try
+                    {
+                        if (tournament != null)
+                        {
+                            tournament.SetFightMode(Fight2TournamentGame.FightMode.Mixed);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorLog.Log("Error repairing tournament: " + settlement.Town.StringId);
+                        ErrorLog.Log(ex.ToStringFull());
+                    }
+                }
+            }
+        }
         protected void CreateDiagnostics()
         {
             var diag = "Tournaments XPanded Settings infomation\n";
@@ -178,7 +195,7 @@ namespace TournamentsXPanded
             var settingsjson = JsonConvert.SerializeObject(TournamentXPSettings.Instance, serializerSettings);
             diag += settingsjson;
             diag += "\n\n\nCustom Item List";
-            diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTourneyItems.Select( x=> x.StringId), serializerSettings);
+            diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTourneyItems.Select(x => x.StringId), serializerSettings);
             diag += "\n\n\nAll stored prize pools\n";
             try
             {
@@ -187,6 +204,10 @@ namespace TournamentsXPanded
 
                 var cleanList = allPools.Select(x => new { x.Id, x.SelectedPrizeStringId, x.RemainingRerolls, TownStringId = x.Town.StringId, PrizeCount = x.Prizes.Count });
                 diag += JsonConvert.SerializeObject(cleanList, serializerSettings);
+
+                //   List<string> towns = new List<string>();
+
+
             }
             catch
             {
@@ -194,7 +215,6 @@ namespace TournamentsXPanded
             }
             File.WriteAllText(configPath, diag);
         }
-        
         protected void DoDebugPopup()
         {
             var patches = "Patch Status\n";
@@ -292,7 +312,6 @@ namespace TournamentsXPanded
             }
             return settings;
         }
-
         public static void SaveModSettingValue(Dictionary<string, string> newSettings)
         {
             // write to save settings to anywhere you want

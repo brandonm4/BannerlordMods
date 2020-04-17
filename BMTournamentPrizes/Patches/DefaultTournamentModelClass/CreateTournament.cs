@@ -61,11 +61,11 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             else
             {
                 var newgame = new Fight2TournamentGame(town);
-                rdm = MBRandom.RandomFloatRanged(1f, 100f);
-                if (rdm < 50f)
-                {
-                    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
-                }
+                //rdm = MBRandom.RandomFloatRanged(1f, 100f);
+                //if (rdm < 50f)
+                //{
+                //    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
+                //}
                 __result = newgame;
             }
 

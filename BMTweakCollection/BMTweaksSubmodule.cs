@@ -62,7 +62,7 @@ namespace BMTweakCollection
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            ShowMessage("Brandon's Tweak Collection Module Loaded");
+            ShowMessage("Brandon's Tweak Collection Module Loaded", Colors.Green);
         }
         public override void OnGameInitializationFinished(Game game)
         {

@@ -50,7 +50,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
         //REVISIT - convert to transpiler patch to just change our prize payment
         // All we really need to change is instead of giving an ItemObject - which has no ItemModifers, we give them an ItemRosterEquipement, which can have ItemModifiers
-        public static bool Prefix(ref TournamentBehavior __instance)
+        static bool Prefix(ref TournamentBehavior __instance)
         {
             //Override Standard behavior
             if (Campaign.Current.GameMode != CampaignGameMode.Campaign)
@@ -88,7 +88,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                     {
                         currentPool = TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Settlement);
                         prizeStringId = __instance.TournamentGame.Prize.StringId;
-                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }

@@ -314,7 +314,7 @@ namespace TournamentsXPanded.Models
 
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
-        [SettingProperty("EnableItemModifiersForPrizes")]
+        [SettingProperty("EnableItemModifiersForPrizes", "Warning: May cause item loss, bug in core game.")]
         public bool EnableItemModifiersForPrizes { get; set; } = false;
 
         #endregion Prize Selection

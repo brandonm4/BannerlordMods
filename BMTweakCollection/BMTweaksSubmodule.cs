@@ -62,7 +62,7 @@ namespace BMTweakCollection
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            ShowMessage("Brandon's Tweak Collection Module Loaded");
+            ShowMessage("Brandon's Tweak Collection Module Loaded", Colors.Green);
         }
         public override void OnGameInitializationFinished(Game game)
         {
@@ -78,17 +78,11 @@ namespace BMTweakCollection
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
-            if (campaignGameStarter != null)
-            {
-                // ItemTweaks.MakeCivilianSaddles(12);
-            }
+         
             try
             {
-                //LootCollectorPatch.DoPatching();
-                //var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol");
-                //  _harmony.PatchAll();
-
-                LootCollectorPatch.DoPatching();
+          
+               // LootCollectorPatch.DoPatching();
                 BMTweakCollectionSubModule.Harmony.PatchAll();
             }
             catch (Exception exception1)

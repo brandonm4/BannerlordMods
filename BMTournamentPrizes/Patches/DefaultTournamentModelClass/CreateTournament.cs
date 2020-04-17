@@ -20,7 +20,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
     {
         public override bool Applied { get; protected set; }
 
-        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultTournamentModel).GetMethod("CreateTournament", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultTournamentModel).GetMethod("CreateTournament", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private static readonly MethodInfo PatchMethodInfoTransPile = typeof(CreateTournament).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
         private static readonly MethodInfo PatchMethodInfo = typeof(CreateTournament).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
@@ -50,7 +50,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             return codes.AsEnumerable();
         }
 
-        private bool Prefix(ref TournamentGame __result, Town town)
+        private static bool Prefix(ref TournamentGame __result, Town town)
         {
             float gameBasicMeleeChance = 65f;
             float rdm = MBRandom.RandomFloatRanged(1f, 100f);

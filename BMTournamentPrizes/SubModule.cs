@@ -32,9 +32,6 @@ namespace TournamentsXPanded
 
         protected override void OnSubModuleLoad()
         {
-
-
-
             //Setup Logging
             if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
             {
@@ -46,8 +43,6 @@ namespace TournamentsXPanded
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logpath));
             }
             ErrorLog.LogPath = logpath;
-
-
 
             var modnames = Utilities.GetModulesNames().ToList();
             bool modLibLoaded = false;
@@ -104,13 +99,23 @@ namespace TournamentsXPanded
                     d.ItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ExcludedItemTypeString);
                 }
             }
+
+#if DEBUG
+            TournamentXPSettings.Instance.DebugMode = true;
+#endif
         }
 
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-
-            ShowMessage("Tournaments XPanded Loaded");
+            if (!TournamentXPSettings.Instance.DebugMode)
+            {
+                ShowMessage("Tournaments XPanded Loaded", Colors.Cyan);
+            }
+            else
+            {
+                ShowMessage("Tournaments XPanded Loaded: DEBUG MODE", Colors.Red);
+            }
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -157,8 +162,39 @@ namespace TournamentsXPanded
                 var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
                 InitCustomItems(customItems);
             }
+
+            if (TournamentXPSettings.Instance.DebugMode)
+            {
+                CreateDiagnostics();
+            }
         }
 
+        protected void CreateDiagnostics()
+        {
+            var diag = "Tournaments XPanded Settings infomation\n";
+            string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpdiagnostics.log");
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+            serializerSettings.Formatting = Formatting.Indented;
+            var settingsjson = JsonConvert.SerializeObject(TournamentXPSettings.Instance, serializerSettings);
+            diag += settingsjson;
+            diag += "\n\n\nCustom Item List";
+            diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTourneyItems.Select( x=> x.StringId), serializerSettings);
+            diag += "\n\n\nAll stored prize pools\n";
+            try
+            {
+                List<TournamentPrizePool> allPools = new List<TournamentPrizePool>();
+                MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref allPools);
+
+                var cleanList = allPools.Select(x => new { x.Id, x.SelectedPrizeStringId, x.RemainingRerolls, TownStringId = x.Town.StringId, PrizeCount = x.Prizes.Count });
+                diag += JsonConvert.SerializeObject(cleanList, serializerSettings);
+            }
+            catch
+            {
+
+            }
+            File.WriteAllText(configPath, diag);
+        }
+        
         protected void DoDebugPopup()
         {
             var patches = "Patch Status\n";

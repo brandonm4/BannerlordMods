@@ -130,7 +130,7 @@ namespace BMTweakCollection.Patches
                         num++;
                     }
                 }
-                ___LootedItems.AddToCounts(itemRosterElement, -num, true);
+                ___LootedItems.AddToCounts(itemRosterElement.EquipmentElement, -num, true);
             }
             partyToReceiveLoot.ItemRoster.Add(itemRosterElements);
             for (int l = ___LootedPrisoners.Count<TroopRosterElement>() - 1; l >= 0; l--)

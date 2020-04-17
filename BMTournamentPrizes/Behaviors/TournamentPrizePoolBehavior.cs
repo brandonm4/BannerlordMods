@@ -734,6 +734,9 @@ namespace TournamentsXPanded.Behaviors
         }
         public static List<ItemObject.ItemTypeEnum> GetActivePrizeTypes()
         {
+            if (!TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
+                return _allValidTypes;
+
             List<ItemObject.ItemTypeEnum> validTypes = new List<ItemObject.ItemTypeEnum>();
             if (TournamentXPSettings.Instance.EnableItemType_BodyArmor)
             {
@@ -853,6 +856,8 @@ namespace TournamentsXPanded.Behaviors
                 return new[] { TournamentXPSettings.Instance.RenownPerHeroPropertyHeroBase, TournamentXPSettings.Instance.RenownPerHeroPropertyIsNoble, TournamentXPSettings.Instance.RenownPerHeroPropertyIsNotable, TournamentXPSettings.Instance.RenownPerHeroPropertyIsCommander, TournamentXPSettings.Instance.RenownPerHeroPropertyIsMinorFactionHero, TournamentXPSettings.Instance.RenownPerHeroPropertyIsMinorFactionLeader, TournamentXPSettings.Instance.RenownPerHeroPropertyIsMajorFactionLeader };
             }
         }
+
+        public static List<ItemObject.ItemTypeEnum> _allValidTypes = new List<ItemObject.ItemTypeEnum>() { ItemObject.ItemTypeEnum.BodyArmor, ItemObject.ItemTypeEnum.Bow, ItemObject.ItemTypeEnum.Cape, ItemObject.ItemTypeEnum.Crossbow, ItemObject.ItemTypeEnum.HandArmor, ItemObject.ItemTypeEnum.HeadArmor, ItemObject.ItemTypeEnum.Horse, ItemObject.ItemTypeEnum.HorseHarness, ItemObject.ItemTypeEnum.LegArmor, ItemObject.ItemTypeEnum.OneHandedWeapon, ItemObject.ItemTypeEnum.Polearm, ItemObject.ItemTypeEnum.Shield, ItemObject.ItemTypeEnum.Thrown, ItemObject.ItemTypeEnum.TwoHandedWeapon };
         #endregion Rewards and Calculations
     }
 }

@@ -37,7 +37,7 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
             Applied = true;
         }
 
-        public static void Prefix(TournamentGame tournament)
+        private static void Prefix(TournamentGame tournament)
         {
             TournamentPrizePoolBehavior.ClearTournamentPrizes(tournament.Town.Settlement);
         }

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using ModLib;
 using SandBox.TournamentMissions.Missions;
 
 using System;
@@ -13,7 +12,8 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
-
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 {
@@ -88,7 +88,11 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                     {
                         currentPool = TournamentPrizePoolBehavior.GetTournamentPrizePool(__instance.Settlement);
                         prizeStringId = __instance.TournamentGame.Prize.StringId;
-                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+
+                        //Beta1.2
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
+                        //Release1.1.1
+                        //Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }

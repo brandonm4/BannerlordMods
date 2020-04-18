@@ -27,7 +27,9 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
             if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
             {
+#pragma warning disable CS1717 // Assignment made to same variable
                 xpAmount = xpAmount;
+#pragma warning restore CS1717 // Assignment made to same variable
             }
             if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
             {

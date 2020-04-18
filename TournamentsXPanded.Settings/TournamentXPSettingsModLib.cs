@@ -2,21 +2,18 @@
 
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
 using ModLib;
 using ModLib.Attributes;
 using AutoMapper;
+using TournamentsXPanded.Settings;
 
 namespace TournamentsXPanded.Models
 {
     public class TournamentXPSettingsModLib : SettingsBase
     {
         public const string InstanceID = "TournamentXPSettings";
-        private static TournamentXPSettingsModLib _instance = null;
         public override string ModName => "Tournaments XPanded";
-        public override string ModuleFolderName => TournamentsXPandedSubModule.ModuleFolderName;      
+        public override string ModuleFolderName => SettingsHelper.ModuleFolderName;      
         public static TournamentXPSettingsModLib Instance
         {
             get
@@ -314,7 +311,7 @@ namespace TournamentsXPanded.Models
 
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
-        [SettingProperty("EnableItemModifiersForPrizes")]
+        [SettingProperty("EnableItemModifiersForPrizes", "Warning: May cause item loss, bug in core game.")]
         public bool EnableItemModifiersForPrizes { get; set; } = false;
 
         #endregion Prize Selection
@@ -351,23 +348,5 @@ namespace TournamentsXPanded.Models
 
     }
 
-    public enum PrizeListMode
-    {
-        Vanilla,
-        Custom,
-        TownVanilla,
-        TownCustom,
-        TownOnly,
-    }
-
-    public enum RenownHeroTier
-    {
-        HeroBase,
-        IsNoble,
-        IsNotable,
-        IsCommander,
-        IsMinorFactionHero,
-        IsMinorFactionLeader,
-        IsMajorFactionLeader,
-    };
+  
 }

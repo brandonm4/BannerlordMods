@@ -1,21 +1,19 @@
-﻿using HarmonyLib;
+﻿using AchievablePerks.Diagnostics;
+using AchievablePerks.Patches;
+using HarmonyLib;
+using ModLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Windows.Forms;
 
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TournamentsXPanded.Models;
-using TournamentsXPanded.Patches;
-using XPanded.Common.Diagnostics;
-using XPanded.Common.Extensions;
 
-namespace TournamentsXPanded
+namespace AchievablePerks
 {
-    public partial class TournamentsXPandedSubModule
+    public partial class AchievablePerksSubModule
     {
-        internal static readonly Harmony Harmony = new Harmony(nameof(TournamentsXPanded));
+        internal static readonly Harmony Harmony = new Harmony(nameof(AchievablePerks));
         public static IDictionary<Type, IPatch> ActivePatches = new Dictionary<Type, IPatch>();
 
         #region HarmoryPatches
@@ -63,7 +61,7 @@ namespace TournamentsXPanded
                 var patchApplied = patch.Applied;
                 if (patchApplied)
                     ActivePatches[patch.GetType()] = patch;
-                if (TournamentXPSettings.Instance.DebugMode)
+                if (AchievablePerksSettings.Instance.DebugMode)
                     ShowMessage($"{(patchApplied ? "Applied" : "Skipped")} Patch: {patch.GetType().Name}", (patchApplied ? Colors.Cyan : Colors.Red));
             }
         }
@@ -80,7 +78,7 @@ namespace TournamentsXPanded
                 var patchInterfaceType = typeof(IPatch);
                 _patches = new LinkedList<IPatch>();
 
-                foreach (var type in typeof(TournamentsXPandedSubModule).Assembly.GetTypes())
+                foreach (var type in typeof(AchievablePerksSubModule).Assembly.GetTypes())
                 {
                     if (type.IsInterface || type.IsAbstract)
                         continue;
@@ -96,14 +94,10 @@ namespace TournamentsXPanded
                     catch (TargetInvocationException tie)
                     {
                         //     Error(tie.InnerException, $"Failed to create instance of patch: {type.FullName}");
-                        ErrorLog.Log($"Failed to create instance of patch: {type.FullName}");
-                        ErrorLog.Log(tie.ToStringFull());
                     }
                     catch (Exception ex)
                     {
                         // Error(ex, $"Failed to create instance of patch: {type.FullName}");
-                        ErrorLog.Log($"Failed to create instance of patch: {type.FullName}");
-                        ErrorLog.Log(ex.ToStringFull());
                     }
                 }
 

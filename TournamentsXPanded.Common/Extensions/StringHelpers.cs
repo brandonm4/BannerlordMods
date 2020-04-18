@@ -1,8 +1,7 @@
 ﻿using System;
+using TournamentsXPanded.Common;
 
-using TournamentsXPanded.Models;
-
-namespace TournamentLib.Extensions
+namespace XPanded.Common.Extensions
 {
     public static class TournamentStringExtensions
     {

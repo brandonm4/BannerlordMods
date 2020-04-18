@@ -34,7 +34,7 @@ namespace BMTweakCollection.LootTweaks
         private CharacterObject PartyLooter { get; set; }
 
         //Move these to config
-     
+
 
         public override void AfterStart()
         {
@@ -85,11 +85,26 @@ namespace BMTweakCollection.LootTweaks
                                         continue;
                                     }
                                 }
-                                if (equipmentFromSlot.Item.Value > PlayerMaxValue)
+
+                                float itemValue = (float)equipmentFromSlot.Item.Value + 0.1f;
+                                if (itemValue > 1.3f * PlayerMaxValue || itemValue < 0.8f * PlayerMaxValue)
                                 {
-                                    typeof(ItemObject).GetProperty("Value").SetValue(equipmentFromSlot.Item, PlayerMaxValue);
+                                    equipmentFromSlot = this.GetEquipmentWithModifier(equipmentFromSlot.Item, PlayerMaxValue / itemValue);
+                                    itemValue = (float)equipmentFromSlot.ItemValue;                                   
                                 }
-                                LootedItems.Add(equipmentFromSlot);
+                                if (itemValue > PlayerMaxValue * 1.3f)
+                                {
+                                    float single = PlayerMaxValue / (Math.Max(PlayerMaxValue, itemValue));
+                                    if (MBRandom.RandomFloatRanged(itemValue) < single)
+                                    {
+                                        LootedItems.Add(equipmentFromSlot);
+                                    }
+                                }
+                                else
+                                {
+                                    LootedItems.Add(equipmentFromSlot);
+                                }
+
                             }
                         }
 
@@ -105,6 +120,35 @@ namespace BMTweakCollection.LootTweaks
         public void SetObserver(IBattleObserver observer)
         {
             this.BattleObserver = observer;
+        }
+
+        public EquipmentElement GetEquipmentWithModifier(ItemObject item, float targetValueFactor)
+        {
+            ItemModifierGroup itemModifierGroup;
+            ArmorComponent armorComponent = item.ArmorComponent;
+            if (armorComponent != null)
+            {
+                itemModifierGroup = armorComponent.ItemModifierGroup;
+            }
+            else
+            {
+                itemModifierGroup = null;
+            }
+            ItemModifierGroup itemModifierGroup1 = itemModifierGroup ?? Campaign.Current.ItemModifierGroupss.FirstOrDefault<ItemModifierGroup>((ItemModifierGroup x) => x.ItemTypeEnum == item.ItemType);
+            ItemModifier itemModifierWithTarget = null;
+            if (itemModifierGroup1 != null)
+            {
+                itemModifierWithTarget = itemModifierGroup1.GetItemModifierWithTarget(targetValueFactor);
+                if (itemModifierWithTarget != null)
+                {
+                    float single = (itemModifierWithTarget.PriceMultiplier < targetValueFactor ? itemModifierWithTarget.PriceMultiplier / targetValueFactor : targetValueFactor / itemModifierWithTarget.PriceMultiplier);
+                    if ((1f < targetValueFactor ? 1f / targetValueFactor : targetValueFactor) > single)
+                    {
+                        itemModifierWithTarget = null;
+                    }
+                }
+            }
+            return new EquipmentElement(item, itemModifierWithTarget);
         }
     }
 }

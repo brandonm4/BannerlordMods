@@ -19,9 +19,9 @@ using TaleWorlds.MountAndBlade;
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Models;
 
-
-using ModLib;
-using AutoMapper;
+using TournamentsXPanded.Settings;
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded
 {
@@ -33,8 +33,6 @@ namespace TournamentsXPanded
         protected override void OnSubModuleLoad()
         {
             //Setup Logging
-
-
             if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
             {
                 File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
@@ -46,46 +44,8 @@ namespace TournamentsXPanded
             }
             ErrorLog.LogPath = logpath;
 
-            //Load Settings
-            var modnames = Utilities.GetModulesNames().ToList();
-            bool modLibLoaded = false;
-            if (modnames.Contains("ModLib"))
-            {
-                try
-                {
-                    FileDatabase.Initialise(ModuleFolderName);
-                    TournamentXPSettingsModLib settings = FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
-                    if (settings == null) settings = new TournamentXPSettingsModLib();
-                    SettingsDatabase.RegisterSettings(settings);
-                    modLibLoaded = true;
-                    TournamentXPSettings.SetSettings(settings.GetSettings());
-                }
-                catch (Exception ex)
-                {
-                    ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
-                    modLibLoaded = false;
-                }
-            }
-            if (!modLibLoaded)
-            {
-                TournamentXPSettings settings = new TournamentXPSettings();
-                string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
-                if (File.Exists(configPath))
-                {
-                    var settingsjson = File.ReadAllText(configPath);
-                    settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
-                }
-                else
-                {
-                    JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
-                    serializerSettings.Formatting = Formatting.Indented;
-
-                    var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
-                    File.WriteAllText(configPath, settingsjson);
-                }
-                TournamentXPSettings.SetSettings(settings);
-            }
-
+            SettingsHelper.GetSettings();
+        
             //Setup Item Filters if needed
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
@@ -114,13 +74,15 @@ namespace TournamentsXPanded
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+            string version = typeof(TournamentsXPandedSubModule).Assembly.GetName().Version.ToString();
+
             if (!TournamentXPSettings.Instance.DebugMode)
             {
-                ShowMessage("Tournaments XPanded Loaded", Colors.Cyan);
+                ShowMessage("Tournaments XPanded v" + version + " Loaded", Colors.Cyan);
             }
             else
             {
-                ShowMessage("Tournaments XPanded Loaded {DEBUG MODE}", Colors.Red);
+                ShowMessage("Tournaments XPanded v" + version + " Loaded {DEBUG MODE}", Colors.Red);
             }
         }
 
@@ -139,30 +101,54 @@ namespace TournamentsXPanded
         }
         public override void OnGameInitializationFinished(Game game)
         {
-            ApplyPatches(game);
-            if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
+            if (game.GameType is Campaign)
             {
-                string[] _weaponTemplatesIdTeamSizeOne = new String[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };
+                ApplyPatches(game);
+                if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
+                {
+                    string[] _weaponTemplatesIdTeamSizeOne = new String[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };
 
-                string[] _weaponTemplatesIdTeamSizeTwo = new String[] { "tournament_template_aserai_two_participant_set_v1", "tournament_template_aserai_two_participant_set_v2", "tournament_template_aserai_two_participant_set_v3", "tournament_template_battania_two_participant_set_v1", "tournament_template_battania_two_participant_set_v2", "tournament_template_battania_two_participant_set_v3", "tournament_template_battania_two_participant_set_v4", "tournament_template_battania_two_participant_set_v5", "tournament_template_empire_two_participant_set_v1", "tournament_template_empire_two_participant_set_v2", "tournament_template_empire_two_participant_set_v3", "tournament_template_khuzait_two_participant_set_v1", "tournament_template_khuzait_two_participant_set_v2", "tournament_template_khuzait_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v1", "tournament_template_vlandia_two_participant_set_v2", "tournament_template_vlandia_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v4", "tournament_template_sturgia_two_participant_set_v1", "tournament_template_sturgia_two_participant_set_v2", "tournament_template_sturgia_two_participant_set_v3" };
+                    string[] _weaponTemplatesIdTeamSizeTwo = new String[] { "tournament_template_aserai_two_participant_set_v1", "tournament_template_aserai_two_participant_set_v2", "tournament_template_aserai_two_participant_set_v3", "tournament_template_battania_two_participant_set_v1", "tournament_template_battania_two_participant_set_v2", "tournament_template_battania_two_participant_set_v3", "tournament_template_battania_two_participant_set_v4", "tournament_template_battania_two_participant_set_v5", "tournament_template_empire_two_participant_set_v1", "tournament_template_empire_two_participant_set_v2", "tournament_template_empire_two_participant_set_v3", "tournament_template_khuzait_two_participant_set_v1", "tournament_template_khuzait_two_participant_set_v2", "tournament_template_khuzait_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v1", "tournament_template_vlandia_two_participant_set_v2", "tournament_template_vlandia_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v4", "tournament_template_sturgia_two_participant_set_v1", "tournament_template_sturgia_two_participant_set_v2", "tournament_template_sturgia_two_participant_set_v3" };
 
-                string[] _weaponTemplatesIdTeamSizeFour = new String[] { "tournament_template_aserai_four_participant_set_v1", "tournament_template_aserai_four_participant_set_v2", "tournament_template_aserai_four_participant_set_v3", "tournament_template_aserai_four_participant_set_v4", "tournament_template_battania_four_participant_set_v1", "tournament_template_battania_four_participant_set_v2", "tournament_template_battania_four_participant_set_v3", "tournament_template_empire_four_participant_set_v1", "tournament_template_empire_four_participant_set_v2", "tournament_template_empire_four_participant_set_v3", "tournament_template_khuzait_four_participant_set_v1", "tournament_template_khuzait_four_participant_set_v2", "tournament_template_khuzait_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v1", "tournament_template_vlandia_four_participant_set_v2", "tournament_template_vlandia_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v4", "tournament_template_sturgia_four_participant_set_v1", "tournament_template_sturgia_four_participant_set_v2", "tournament_template_sturgia_four_participant_set_v3" };
+                    string[] _weaponTemplatesIdTeamSizeFour = new String[] { "tournament_template_aserai_four_participant_set_v1", "tournament_template_aserai_four_participant_set_v2", "tournament_template_aserai_four_participant_set_v3", "tournament_template_aserai_four_participant_set_v4", "tournament_template_battania_four_participant_set_v1", "tournament_template_battania_four_participant_set_v2", "tournament_template_battania_four_participant_set_v3", "tournament_template_empire_four_participant_set_v1", "tournament_template_empire_four_participant_set_v2", "tournament_template_empire_four_participant_set_v3", "tournament_template_khuzait_four_participant_set_v1", "tournament_template_khuzait_four_participant_set_v2", "tournament_template_khuzait_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v1", "tournament_template_vlandia_four_participant_set_v2", "tournament_template_vlandia_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v4", "tournament_template_sturgia_four_participant_set_v1", "tournament_template_sturgia_four_participant_set_v2", "tournament_template_sturgia_four_participant_set_v3" };
 
-                RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeOne);
-                RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
-                RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
-            }
-            string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
-            if (File.Exists(customfile))
-            {
-                var configtxt = File.ReadAllText(customfile);
-                var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-                InitCustomItems(customItems);
-            }
+                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeOne);
+                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
+                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
+                }
+                string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
+                if (File.Exists(customfile))
+                {
+                    var configtxt = File.ReadAllText(customfile);
+                    var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+                    InitCustomItems(customItems);
+                }
 
-            if (TournamentXPSettings.Instance.DebugMode)
-            {
-                CreateDiagnostics();
+                if (TournamentXPSettings.Instance.DebugMode)
+                {
+                    CreateDiagnostics();
+                }
+
+                //Try to repair
+                foreach (var settlement in Settlement.All)
+                {
+                    if (settlement.HasTournament)
+                    {
+                        var tournament = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town) as Fight2TournamentGame;
+                        try
+                        {
+                            if (tournament != null)
+                            {
+                                tournament.SetFightMode(Fight2TournamentGame.FightMode.Mixed);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorLog.Log("Error repairing tournament: " + settlement.Town.StringId);
+                            ErrorLog.Log(ex.ToStringFull());
+                        }
+                    }
+                }
             }
         }
         protected void CreateDiagnostics()
@@ -183,6 +169,10 @@ namespace TournamentsXPanded
 
                 var cleanList = allPools.Select(x => new { x.Id, x.SelectedPrizeStringId, x.RemainingRerolls, TownStringId = x.Town.StringId, PrizeCount = x.Prizes.Count });
                 diag += JsonConvert.SerializeObject(cleanList, serializerSettings);
+
+                //   List<string> towns = new List<string>();
+
+
             }
             catch
             {

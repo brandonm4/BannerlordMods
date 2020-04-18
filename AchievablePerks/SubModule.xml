@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
-  <Name value="Tournaments XPanded"/>
-  <Id value="TournamentsXPanded"/>
-  <Version value="e1.5.6"/>
+  <Name value="Achievable Perks"/>
+  <Id value="AchievablePerks"/>
+  <Version value="e1.5.4"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>
@@ -15,9 +15,9 @@
   </DependedModules>
   <SubModules> 
    <SubModule>
-      <Name value="TournamentsXPanded"/>
-      <DLLName value="TournamentsXPanded.dll"/>
-      <SubModuleClassType value="TournamentsXPanded.TournamentsXPandedSubModule"/>
+      <Name value="AchievablePerks"/>
+      <DLLName value="AchievablePerks.dll"/>
+      <SubModuleClassType value="AchievablePerks.AchievablePerksSubModule"/>
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />

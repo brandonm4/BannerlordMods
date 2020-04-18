@@ -3,6 +3,7 @@
 using SandBox.TournamentMissions.Missions;
 
 using System;
+using System.Linq;
 using System.Reflection;
 
 using TaleWorlds.CampaignSystem;
@@ -91,13 +92,10 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                         prizeStringId = __instance.TournamentGame.Prize.StringId;
 
                         //Beta1.2
-#if BETA12
-                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
-#endif
+                       // Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
                         //Release1.1.1
-#if RELEASE111
                         Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
-#endif
+
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }

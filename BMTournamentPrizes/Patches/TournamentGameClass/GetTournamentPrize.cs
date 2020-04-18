@@ -1,15 +1,14 @@
 ﻿using HarmonyLib;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -26,9 +25,7 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
 
         public override bool IsApplicable(Game game)
         {
-
             return true;
-
         }
 
         public override void Reset()

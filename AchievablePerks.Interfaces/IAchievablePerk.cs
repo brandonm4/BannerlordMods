@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AchievablePerks.Interfaces
 {
-   public interface IAchievablePerk
+    public interface IAchievablePerk
     {
         bool IsConditionMet { get; set; }
         AppliesTo PerkAppliesTo { get; set; }
-        void OnGain();
-        void OnDailyTick();
-        void OnWeeklyTick();
 
+        void OnGain();
+
+        void OnDailyTick();
+
+        void OnWeeklyTick();
     }
 
     [Flags]

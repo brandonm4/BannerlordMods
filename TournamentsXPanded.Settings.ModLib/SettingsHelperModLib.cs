@@ -1,11 +1,9 @@
 ﻿using ModLib;
-using ModLib.GUI.GauntletUI;
 using ModLib.GUI.ViewModels;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Engine.Screens;
@@ -15,14 +13,16 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.TwoDimension;
+
 using TournamentsXPanded.Models;
+
 using XPanded.Common.Diagnostics;
 
 namespace TournamentsXPanded.Settings
 {
     public static class SettingsHelperModLib
     {
-        public static bool GetModLibSettings(bool forceDebug = false, bool forceMenu = false)
+        public static TournamentXPSettingsModLib GetModLibSettings(bool forceDebug = false, bool forceMenu = false)
         {
             var modnames = Utilities.GetModulesNames().ToList();
             if (modnames.Contains("Bannerlord.MBOptionScreen"))
@@ -45,14 +45,14 @@ namespace TournamentsXPanded.Settings
                 SettingsDatabase.RegisterSettings(settings);
                 if (forceDebug)
                     settings.DebugMode = true;
-                TournamentXPSettings.SetSettings(settings.GetSettings());
+                //        TournamentXPSettings.SetSettings(settings.GetSettings());
+                return settings;
             }
             catch (Exception ex)
             {
                 ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
-                return false;
+                return null;
             }
-            return true;
         }
     }
 

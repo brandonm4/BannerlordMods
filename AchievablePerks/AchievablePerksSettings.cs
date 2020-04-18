@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AchievablePerks
+﻿namespace AchievablePerks
 {
     public class AchievablePerksSettings
     {
-        static AchievablePerksSettings _instance;
+        private static AchievablePerksSettings _instance;
+
         public static AchievablePerksSettings Instance
         {
             get

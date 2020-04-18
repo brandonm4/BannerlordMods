@@ -1,13 +1,15 @@
 ﻿using BMTweakCollection.Helpers;
+
 using HarmonyLib;
+
 using Helpers;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
@@ -15,12 +17,10 @@ using TaleWorlds.Library;
 
 namespace BMTweakCollection.Patches
 {
-
     //public static class LootCollectorInfo
     //{
     //public static Type ClassType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
     //}
-
 
     // [HarmonyPatch(Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))]
 
@@ -62,9 +62,7 @@ namespace BMTweakCollection.Patches
                 }
                 MessageBox.Show(string.Concat("Tournament XP Error patching:\n", str, " \n\n", message));
             }
-
         }
-
 
         internal static bool GiveShareOfLootToPartyPre(ref object __instance, PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount)
         {
@@ -73,7 +71,6 @@ namespace BMTweakCollection.Patches
             var ___LootedPrisoners = LootCollectorType.GetProperty("LootedPrisoners", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
             var ___CasualtiesInBattle = LootCollectorType.GetProperty("CasualtiesInBattle", BindingFlags.Public | BindingFlags.Instance).GetValue(__instance) as TroopRoster;
             var ___LootedItems = LootCollectorType.GetProperty("LootedItems", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as ItemRoster;
-
 
             bool flag = winnerParty == PartyBase.MainParty;
             List<TroopRosterElement> troopRosterElements = new List<TroopRosterElement>();
@@ -206,7 +203,6 @@ namespace BMTweakCollection.Patches
             return num;
         }
 
-
         private static IEnumerable<ItemRosterElement> LootCasualties2(ICollection<TroopRosterElement> shareFromCasualties, float lootChance)
         {
             // MobileParty.GetMainPartySkillCounsellor(DefaultSkills.Roguery).GetSkillValue(DefaultSkills.Roguery)
@@ -240,6 +236,7 @@ namespace BMTweakCollection.Patches
             }
             return itemRosters;
         }
+
         private static IEnumerable<ItemRosterElement> LootCasualties(ICollection<TroopRosterElement> shareFromCasualties, float lootFactor, bool playerWin = false)
         {
             EquipmentElement equipmentElement;
@@ -336,7 +333,6 @@ namespace BMTweakCollection.Patches
             return itemRosters;
         }
 
-
         private static Equipment GetRandomEquipment(CharacterObject ch)
         {
             if (ch.IsHero)
@@ -359,9 +355,6 @@ namespace BMTweakCollection.Patches
             }
             return items;
         }
-
-       
-
 
         public static List<EquipmentElement> GetRandomItems(Equipment equipment, float targetValue = 0f)
         {

@@ -5,20 +5,19 @@ using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-
-using XPanded.Common.Extensions;
-using TournamentsXPanded.Models;
-using TaleWorlds.Library;
-using XPanded.Common.Diagnostics;
 using TournamentsXPanded.Common;
+using TournamentsXPanded.Models;
+
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Behaviors
 {
@@ -63,7 +62,7 @@ namespace TournamentsXPanded.Behaviors
                         obj.SelectedPrizeStringId = townPrize.StringId;
                         obj.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
                     }
-                }                
+                }
             }
             return obj;
         }
@@ -80,9 +79,6 @@ namespace TournamentsXPanded.Behaviors
             currentPool.SelectedPrizeStringId = "";
             currentPool.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
         }
-
-      
-
 
         #region Events
 
@@ -143,14 +139,14 @@ namespace TournamentsXPanded.Behaviors
         #region Prizes
 
         public static ItemObject GenerateTournamentPrize(TournamentGame tournamentGame, TournamentPrizePool currentPool = null, bool keepTownPrize = true)
-        {          
+        {
             var numItemsToGet = TournamentXPSettings.Instance.NumberOfPrizeOptions;
             bool bRegenAllPrizes = false;
             if (currentPool == null)
             {
                 bRegenAllPrizes = true;
                 currentPool = GetTournamentPrizePool(tournamentGame.Town.Settlement);
-            }            
+            }
             var allitems = GetItemStringsRevised(tournamentGame, TournamentPrizePoolBehavior.GetActivePrizeTypes());
 
             //Add any existing items if we are filling in missing ones from an already generated pool
@@ -178,7 +174,6 @@ namespace TournamentsXPanded.Behaviors
                 ErrorLog.Log("ERROR: GetTournamentPrize existingprizes\n" + ex.ToStringFull());
             }
 
-
             //If the totoal pool of unique items is less than our desired number, reduce our pool size.
             if (allitems.Count() < numItemsToGet)
             {
@@ -203,27 +198,30 @@ namespace TournamentsXPanded.Behaviors
 
                 if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
                 {
+#if BETA12
                     if (TournamentXPSettings.Instance.TownProsperityAffectsItemModifiers)
                     {
-
                         var ee = GetEquipmentWithModifier(pickedPrize, pickedPrize.Value * GetProsperityModifier(tournamentGame.Town.Settlement));
                         itemModifier = ee.ItemModifier;
                     }
                     else
                     {
-                        if (pickedPrize.HasArmorComponent)
+#endif
+                    if (pickedPrize.HasArmorComponent)
+                    {
+                        ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
+                        if (itemModifierGroup != null)
                         {
-                            ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
-                            if (itemModifierGroup != null)
-                            {
-                                itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
-                            }
-                            else
-                            {
-                                itemModifier = null;
-                            }
+                            itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                        }
+                        else
+                        {
+                            itemModifier = null;
                         }
                     }
+#if BETA12
+                }
+#endif
                 }
                 currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
                 // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
@@ -250,7 +248,6 @@ namespace TournamentsXPanded.Behaviors
            && !x.EquipmentElement.Item.NotMerchandise
               ).Select(x => x.EquipmentElement.Item.StringId).ToList();
 
-         
             //if (list.Count == 0)
             //{
             //    list = TournamentPrizePoolBehavior.CustomTourneyItems;
@@ -266,26 +263,26 @@ namespace TournamentsXPanded.Behaviors
             return list;
         }
 
-        public static List<string> GetItemStringsRevised(TournamentGame tournamentGame,  List<ItemObject.ItemTypeEnum> validTypes)
+        public static List<string> GetItemStringsRevised(TournamentGame tournamentGame, List<ItemObject.ItemTypeEnum> validTypes)
         {
             string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
             List<string> allitems = new List<string>();
             if (TournamentXPSettings.Instance.PrizeListIncludeLegacy)
-            {               
+            {
                 allitems = allitems.Concat(strArray.ToList()).ToList();
             }
             if (TournamentXPSettings.Instance.PrizeListIncludeCustom && TournamentPrizePoolBehavior.CustomTourneyItems != null && TournamentPrizePoolBehavior.CustomTourneyItems.Count > 0)
             {
                 try
-                {                   
+                {
                     var customItems = TournamentPrizePoolBehavior.CustomTourneyItems.Where(x => validTypes.Contains(x.ItemType));
                     if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsCustom)
                     {
                         customItems = customItems.Where(x => x.Value >= MathF.Floor(TournamentPrizePoolBehavior.GetMinPrizeValue()) && x.Value <= MathF.Ceiling(TournamentPrizePoolBehavior.GetMaxPrizeValue()));
-                    }                  
+                    }
                     allitems = allitems.Concat(customItems.Select(x => x.StringId).ToList()).ToList();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ErrorLog.Log("Error adding custom items to prize pool.");
                     ErrorLog.Log(ex.ToStringFull());
@@ -304,14 +301,14 @@ namespace TournamentsXPanded.Behaviors
             {
                 int _minValue = 1600;
                 int _maxValue = 5000;
-              
+
                 List<string> vanillaItems;
                 if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanilla)
                 {
                     _minValue = TournamentPrizePoolBehavior.GetMinPrizeValue();
                     _maxValue = TournamentPrizePoolBehavior.GetMaxPrizeValue();
                 }
-                vanillaItems = ItemObject.All.Where(x => x.Culture == tournamentGame.Town.Settlement.Culture && validTypes.Contains(x.ItemType) && x.Value >= _minValue && x.Value <=_maxValue).Select(x => x.StringId).ToList();
+                vanillaItems = ItemObject.All.Where(x => x.Culture == tournamentGame.Town.Settlement.Culture && validTypes.Contains(x.ItemType) && x.Value >= _minValue && x.Value <= _maxValue).Select(x => x.StringId).ToList();
                 if (vanillaItems.Count == 0)
                 {
                     vanillaItems = ItemObject.All.Where(x => validTypes.Contains(x.ItemType) && x.Value >= _minValue && x.Value <= _maxValue).Select(x => x.StringId).ToList();
@@ -454,7 +451,7 @@ namespace TournamentsXPanded.Behaviors
                 }
             }
             catch (Exception ex)
-            {                
+            {
                 ErrorLog.Log("Re-roll Prize Pool");
                 ErrorLog.Log(ex.ToStringFull());
             }
@@ -522,14 +519,13 @@ namespace TournamentsXPanded.Behaviors
                         descr.SetTextVariable("MAX", TournamentPrizePoolBehavior.GetMaxPrizeValue().ToString());
                         descr.SetTextVariable("PROSPERITY", currentPool.Town.GetProsperityLevel().ToString());
                         var types = "";
-                        foreach(var t in TournamentPrizePoolBehavior.GetActivePrizeTypes())
+                        foreach (var t in TournamentPrizePoolBehavior.GetActivePrizeTypes())
                         {
                             types += t.ToString() + ", ";
                         }
                         types = types.Substring(0, types.Length - 2);
                         descr.SetTextVariable("TYPES", types);
                     }
-                    
 
                     InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
                            new TextObject("{=tourn005}Tournament Prize Selection").ToString(), descr.ToString(), prizeElements, true, true, new TextObject("{=tourn006}OK").ToString(), new TextObject("{=tourn007}Cancel").ToString(),
@@ -550,7 +546,7 @@ namespace TournamentsXPanded.Behaviors
                 }
             }
             catch (Exception ex)
-            {               
+            {
                 ErrorLog.Log("ERROR: BMTournamentXP: Tournament Prize Selection");
                 ErrorLog.Log(ex.ToStringFull());
             }
@@ -567,7 +563,6 @@ namespace TournamentsXPanded.Behaviors
                     currentPool.SelectedPrizeStringId = prizeSelections.First().Identifier.ToString();
                     var prize = Game.Current.ObjectManager.GetObject<ItemObject>(prizeSelections.First().Identifier.ToString());
                     SetTournamentSelectedPrize(tournamentGame, prize);
-                    
                 }
                 catch (Exception ex)
                 {
@@ -750,6 +745,7 @@ namespace TournamentsXPanded.Behaviors
 
             return threat;
         }
+
         public static List<ItemObject.ItemTypeEnum> GetActivePrizeTypes()
         {
             if (!TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
@@ -815,8 +811,8 @@ namespace TournamentsXPanded.Behaviors
 
             return validTypes;
         }
-      
 
+#if BETA12
         public static EquipmentElement GetEquipmentWithModifier(ItemObject item, float targetValueFactor)
         {
             ItemModifierGroup itemModifierGroup;
@@ -845,15 +841,15 @@ namespace TournamentsXPanded.Behaviors
             }
             return new EquipmentElement(item, itemModifierWithTarget);
         }
+#endif
 
         public static int GetMinPrizeValue(Settlement settlement = null)
         {
             return MathF.Floor(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel))) * GetProsperityModifier(settlement));
         }
+
         public static int GetMaxPrizeValue(Settlement settlement = null)
         {
-            
-            
             return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * GetProsperityModifier(settlement));
         }
 
@@ -867,9 +863,11 @@ namespace TournamentsXPanded.Behaviors
                     case SettlementComponent.ProsperityLevel.Low:
                         prosperityMod = TournamentXPSettings.Instance.TownProsperityLow;
                         break;
+
                     case SettlementComponent.ProsperityLevel.Mid:
                         prosperityMod = TournamentXPSettings.Instance.TownProsperityMid;
                         break;
+
                     case SettlementComponent.ProsperityLevel.High:
                         prosperityMod = TournamentXPSettings.Instance.TownProsperityHigh;
                         break;
@@ -895,6 +893,7 @@ namespace TournamentsXPanded.Behaviors
         }
 
         public static List<ItemObject.ItemTypeEnum> _allValidTypes = new List<ItemObject.ItemTypeEnum>() { ItemObject.ItemTypeEnum.BodyArmor, ItemObject.ItemTypeEnum.Bow, ItemObject.ItemTypeEnum.Cape, ItemObject.ItemTypeEnum.Crossbow, ItemObject.ItemTypeEnum.HandArmor, ItemObject.ItemTypeEnum.HeadArmor, ItemObject.ItemTypeEnum.Horse, ItemObject.ItemTypeEnum.HorseHarness, ItemObject.ItemTypeEnum.LegArmor, ItemObject.ItemTypeEnum.OneHandedWeapon, ItemObject.ItemTypeEnum.Polearm, ItemObject.ItemTypeEnum.Shield, ItemObject.ItemTypeEnum.Thrown, ItemObject.ItemTypeEnum.TwoHandedWeapon };
+
         #endregion Rewards and Calculations
     }
 }

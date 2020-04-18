@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
+﻿using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
 namespace BMTweakCollection.Helpers
 {
     public partial class BMHelpers
     {
-     public partial  class CharacterHelpers
+        public partial class CharacterHelpers
         {
             public static CharacterObject GetCharacterWithHighestSkill(PartyBase party, SkillObject skill)
             {

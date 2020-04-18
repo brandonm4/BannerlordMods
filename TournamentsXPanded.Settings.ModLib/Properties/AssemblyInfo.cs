@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TournamentsXPanded.Settings")]
+[assembly: AssemblyTitle("TournamentsXPanded.Settings.ModLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TournamentsXPanded.Settings")]
+[assembly: AssemblyProduct("TournamentsXPanded.Settings.ModLib")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("66ad0016-bc49-4990-9f31-8ae1cebf3806")]
+[assembly: Guid("f85c2304-1c13-4c7f-be92-a272435df84d")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
+
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
@@ -16,7 +14,7 @@ namespace BMTweakCollection.Models
     public class DefaultSettlementFoodModelPatch1
     {
         public static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
-        {            
+        {
             if (!(town.Settlement.SiegeEvent != null && town.IsUnderSiege &&
                 town.Settlement.SiegeEvent.BesiegerCamp.SiegeParties.Any<PartyBase>((PartyBase party) => party.MobileParty == Hero.MainHero.PartyBelongedTo)))
             {
@@ -29,10 +27,10 @@ namespace BMTweakCollection.Models
                     en.Add(4.0f, new TextObject("Citizen food drive"));
 
                 __result = en.ResultNumber;
-            }            
+            }
         }
 
-        static bool Prepare()
+        private static bool Prepare()
         {
             return true;
         }
@@ -41,7 +39,6 @@ namespace BMTweakCollection.Models
     [HarmonyPatch(typeof(DefaultMobilePartyFoodConsumptionModel), "CalculateDailyFoodConsumptionf")]
     public class FoodConsumptionBehaviorPatch1
     {
-       
         public static void Postfix(ref float __result, MobileParty party, StatExplainer explainer)
         {
             //For now only do hero
@@ -71,13 +68,10 @@ namespace BMTweakCollection.Models
                 }
             }
         }
-        static bool Prepare()
+
+        private static bool Prepare()
         {
             return true;
         }
-
-
-        
     }
-    
 }

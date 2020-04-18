@@ -1,24 +1,24 @@
-using System.Linq;
 using JetBrains.Annotations;
 
-namespace CommunityPatch {
+using System.Linq;
 
-  [PublicAPI]
-  internal static class HarmonyHelpers {
+namespace CommunityPatch
+{
+    [PublicAPI]
+    internal static class HarmonyHelpers
+    {
+        public static bool AlreadyPatched(HarmonyLib.Patches patchInfo)
+          => patchInfo != null && patchInfo.Owners.Any();
 
-    public static bool AlreadyPatched(HarmonyLib.Patches patchInfo)
-      => patchInfo != null && patchInfo.Owners.Any();
+        public static bool AlreadyPatchedByOthers(HarmonyLib.Patches patchInfo)
+        {
+            if (patchInfo == null)
+                return false;
 
-    public static bool AlreadyPatchedByOthers(HarmonyLib.Patches patchInfo) {
-      if (patchInfo == null)
-        return false;
+            if (patchInfo.Owners.Count > 1)
+                return true;
 
-      if (patchInfo.Owners.Count > 1)
-        return true;
-
-      return patchInfo.Owners.Count == 1 && patchInfo.Owners[0] != nameof(CommunityPatch);
+            return patchInfo.Owners.Count == 1 && patchInfo.Owners[0] != nameof(CommunityPatch);
+        }
     }
-
-  }
-
 }

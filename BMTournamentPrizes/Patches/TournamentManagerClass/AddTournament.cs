@@ -33,8 +33,8 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
         {
             if (Applied) return;
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
-           //       prefix: new HarmonyMethod(PatchMethodInfo),
-                  postfix:new HarmonyMethod(PatchMethodInfoPost)
+                  //       prefix: new HarmonyMethod(PatchMethodInfo),
+                  postfix: new HarmonyMethod(PatchMethodInfoPost)
               );
 
             Applied = true;
@@ -42,7 +42,7 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
 
         private static void Prefix(TournamentGame game)
         {
-            //TournamentsXPandedMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);           
+            //TournamentsXPandedMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);
             //if (game.Prize == null)
             //{
             //    ErrorLog.Log("BMTournamentPrize: AddTournament Detected a missing prize.  Correcting with vanilla item.");

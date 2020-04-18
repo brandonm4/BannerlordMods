@@ -1,12 +1,8 @@
 ﻿using BMTweakCollection.Models;
+
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 
 namespace BMTweakCollection.Patches
 {
@@ -15,9 +11,9 @@ namespace BMTweakCollection.Patches
     {
         public DefaultTroopCountLimitModelPatch1()
         {
-
         }
-        static bool Prefix(ref int __result)
+
+        private static bool Prefix(ref int __result)
         {
             if (BMRandomTweaksConfiguration.Instance.MaxHideoutTroopsEnabled)
             {

@@ -1,25 +1,21 @@
 ﻿using HarmonyLib;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors.Towns;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.PlayerTownVisitCampaignBehaviorClass
 {
-    class town_arena_on_init : PatchBase<town_arena_on_init>
+    internal class town_arena_on_init : PatchBase<town_arena_on_init>
     {
         public override bool Applied { get; protected set; }
 
@@ -40,6 +36,7 @@ namespace TournamentsXPanded.Patches.PlayerTownVisitCampaignBehaviorClass
 
             Applied = true;
         }
+
         public override void Reset()
         {
         }
@@ -57,7 +54,6 @@ namespace TournamentsXPanded.Patches.PlayerTownVisitCampaignBehaviorClass
             }
             else
             {
-
                 TextObject name = Campaign.Current.TournamentManager.GetTournamentGame(Settlement.CurrentSettlement.Town).Prize.Name;
 
                 //Need to turn this into a transpiler instead
@@ -84,5 +80,3 @@ namespace TournamentsXPanded.Patches.PlayerTownVisitCampaignBehaviorClass
         }
     }
 }
-
-

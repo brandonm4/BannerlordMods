@@ -1,18 +1,18 @@
 ﻿using HarmonyLib;
+
 using SandBox.TournamentMissions.Missions;
 
 using System;
-using System.Linq;
 using System.Reflection;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 
-
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -51,7 +51,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
         //REVISIT - convert to transpiler patch to just change our prize payment
         // All we really need to change is instead of giving an ItemObject - which has no ItemModifers, we give them an ItemRosterEquipement, which can have ItemModifiers
-        static bool Prefix(ref TournamentBehavior __instance)
+        private static bool Prefix(ref TournamentBehavior __instance)
         {
             //Override Standard behavior
             if (Campaign.Current.GameMode != CampaignGameMode.Campaign)
@@ -91,9 +91,13 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                         prizeStringId = __instance.TournamentGame.Prize.StringId;
 
                         //Beta1.2
+#if BETA12
                         Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
+#endif
                         //Release1.1.1
-                        //Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+#if RELEASE111
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+#endif
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }

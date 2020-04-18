@@ -1,29 +1,32 @@
 ﻿using BMTweakCollection.Helpers;
 using BMTweakCollection.Models;
+
 using Helpers;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+
 using TournamentsXPanded;
 
 namespace BMTweakCollection.LootTweaks
 {
     public class LootBehavior : MissionLogic, IBattleSignaller, IMissionBehavior
     {
-
         public static List<EquipmentElement> LootedItems { get; set; } = new List<EquipmentElement>();
+
         public IBattleObserver BattleObserver
         {
             get;
             private set;
         }
+
         private float PlayerDropRate { get; set; }
+
         private float PlayerMaxValue
         {
             get
@@ -31,10 +34,10 @@ namespace BMTweakCollection.LootTweaks
                 return Hero.MainHero.Level * 500 + BMRandomTweaksConfiguration.Instance.BaseMaxValue;
             }
         }
+
         private CharacterObject PartyLooter { get; set; }
 
         //Move these to config
-
 
         public override void AfterStart()
         {
@@ -48,17 +51,18 @@ namespace BMTweakCollection.LootTweaks
 
             PlayerDropRate = explainedNumber.ResultNumber;
         }
+
         public override void OnBattleEnded()
         {
             PartyLooter.HeroObject.AddSkillXp(DefaultSkills.Roguery, BMRandomTweaksConfiguration.Instance.LootSkillXpGain);
         }
+
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
             if (Mission.Current.CombatType != Mission.MissionCombatType.Combat)
                 return;
             try
             {
-
                 if ((affectedAgent.IsMainAgent == false && !affectedAgent.IsMount))
                 {
                     //Don't get your companion equipment
@@ -90,7 +94,7 @@ namespace BMTweakCollection.LootTweaks
                                 if (itemValue > 1.3f * PlayerMaxValue || itemValue < 0.8f * PlayerMaxValue)
                                 {
                                     equipmentFromSlot = this.GetEquipmentWithModifier(equipmentFromSlot.Item, PlayerMaxValue / itemValue);
-                                    itemValue = (float)equipmentFromSlot.ItemValue;                                   
+                                    itemValue = (float)equipmentFromSlot.ItemValue;
                                 }
                                 if (itemValue > PlayerMaxValue * 1.3f)
                                 {
@@ -104,10 +108,8 @@ namespace BMTweakCollection.LootTweaks
                                 {
                                     LootedItems.Add(equipmentFromSlot);
                                 }
-
                             }
                         }
-
                     }
                 }
             }
@@ -117,6 +119,7 @@ namespace BMTweakCollection.LootTweaks
                 ErrorLog.Log(ex.ToStringFull());
             }
         }
+
         public void SetObserver(IBattleObserver observer)
         {
             this.BattleObserver = observer;

@@ -1,17 +1,14 @@
 ﻿using HarmonyLib;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 
-using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
@@ -40,6 +37,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 
             Applied = true;
         }
+
         public override void Reset()
         {
         }
@@ -72,11 +70,8 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 
             return false;
         }
-
-
     }
 }
-
 
 //public override TournamentGame CreateTournament(Town town)
 //{

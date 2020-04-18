@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.MountAndBlade;
+
 using TournamentsXPanded.Common.Patches;
+
 using XPanded.Common.Diagnostics;
 
 namespace TournamentsXPanded.Common

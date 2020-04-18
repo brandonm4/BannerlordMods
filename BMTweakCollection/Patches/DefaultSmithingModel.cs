@@ -1,10 +1,7 @@
 ﻿using BMTweakCollection.Models;
+
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 
 namespace BMTweakCollection.Patches
@@ -14,9 +11,9 @@ namespace BMTweakCollection.Patches
     {
         public DefaultSmithingModelPatch1()
         {
-
         }
-        static bool Prefix(ref int __result)
+
+        private static bool Prefix(ref int __result)
         {
             if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
@@ -26,14 +23,15 @@ namespace BMTweakCollection.Patches
             return true;
         }
     }
+
     [HarmonyPatch(typeof(DefaultSmithingModel), "GetEnergyCostForSmithing")]
     public class DefaultSmithingModelPatch2
     {
         public DefaultSmithingModelPatch2()
         {
-
         }
-        static bool Prefix(ref int __result)
+
+        private static bool Prefix(ref int __result)
         {
             if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
@@ -43,14 +41,15 @@ namespace BMTweakCollection.Patches
             return true;
         }
     }
+
     [HarmonyPatch(typeof(DefaultSmithingModel), "GetEnergyCostForSmelting")]
     public class DefaultSmithingModelPatch3
     {
         public DefaultSmithingModelPatch3()
         {
-
         }
-        static bool Prefix(ref int __result)
+
+        private static bool Prefix(ref int __result)
         {
             if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
@@ -66,14 +65,14 @@ namespace BMTweakCollection.Patches
     {
         public DefaultSmithingModelPatch4()
         {
-
         }
-        static bool Prefix(ref int __result, int count)
+
+        private static bool Prefix(ref int __result, int count)
         {
             if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
             {
                 __result = (count * count + 12) / BMRandomTweaksConfiguration.Instance.CustomSmithingXPDivisor;
-                return false; 
+                return false;
             }
             return true;
         }
@@ -81,7 +80,7 @@ namespace BMTweakCollection.Patches
 
     //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmithing")]
     //public class DefaultSmithingModelPatch5
-    //{    
+    //{
     //    public static void Postfix(ref int __result)
     //    {
     //        __result = __result * 3;
@@ -120,8 +119,6 @@ namespace BMTweakCollection.Patches
     //    }
     //}
 }
-
-
 
 /*
  public override int GetSkillXpForRefining(ref Crafting.RefiningFormula refineFormula)

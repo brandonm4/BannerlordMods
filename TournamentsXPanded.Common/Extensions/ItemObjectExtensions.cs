@@ -112,7 +112,7 @@ namespace XPanded.Common.Extensions
                     }
                     flag = true;
                     break;
-                }         
+                }
             }
             return flag;
         }

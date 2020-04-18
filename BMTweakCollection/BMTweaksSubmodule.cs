@@ -1,33 +1,25 @@
 ﻿using BMTweakCollection.LootTweaks;
 using BMTweakCollection.Models;
-using BMTweakCollection.Patches;
-using BMTweakCollection.Utility;
-using HarmonyLib;
+
 using ModLib;
-using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+
 using TournamentsXPanded;
 
 namespace BMTweakCollection
 {
     public partial class BMTweakCollectionSubModule : MBSubModuleBase
     {
-
-
         public static string ModuleFolderName { get; } = "BMTweakCollection";
 
         protected override void OnSubModuleLoad()
@@ -43,27 +35,24 @@ namespace BMTweakCollection
             }
             ErrorLog.LogPath = logpath;
 
-
-
-
             try
             {
                 FileDatabase.Initialise(ModuleFolderName);
                 BMRandomTweaksConfiguration settings = FileDatabase.Get<BMRandomTweaksConfiguration>(BMRandomTweaksConfiguration.InstanceID);
                 if (settings == null) settings = new BMRandomTweaksConfiguration();
-                SettingsDatabase.RegisterSettings(settings);           
+                SettingsDatabase.RegisterSettings(settings);
             }
             catch (Exception ex)
             {
                 ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
             }
-
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             ShowMessage("Brandon's Tweak Collection Module Loaded", Colors.Green);
         }
+
         public override void OnGameInitializationFinished(Game game)
         {
             base.OnGameInitializationFinished(game);
@@ -78,11 +67,10 @@ namespace BMTweakCollection
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
             CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
-         
+
             try
             {
-          
-               // LootCollectorPatch.DoPatching();
+                // LootCollectorPatch.DoPatching();
                 BMTweakCollectionSubModule.Harmony.PatchAll();
             }
             catch (Exception exception1)
@@ -101,13 +89,12 @@ namespace BMTweakCollection
                 }
                 MessageBox.Show(string.Concat("Error patching:\n", str, " \n\n", message));
             }
-
         }
+
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
             mission.AddMissionBehaviour(new LootBehavior());
         }
-
 
         private void FixPerkPeakForm()
         {
@@ -190,6 +177,7 @@ namespace BMTweakCollection
                 );
             }
         }
+
         public static void ShowMessage(string msg, Color? color = null)
         {
             if (color == null)
@@ -197,6 +185,5 @@ namespace BMTweakCollection
 
             InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }
-
     }
 }

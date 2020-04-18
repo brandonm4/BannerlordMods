@@ -1,7 +1,10 @@
 ﻿using AchievablePerks.Diagnostics;
 using AchievablePerks.Patches;
+
 using HarmonyLib;
+
 using ModLib;
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;

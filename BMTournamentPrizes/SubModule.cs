@@ -1,17 +1,13 @@
-﻿using HarmonyLib;
+﻿using Newtonsoft.Json;
 
-
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -21,6 +17,7 @@ using TournamentsXPanded.Common;
 using TournamentsXPanded.Models;
 
 using TournamentsXPanded.Settings;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -29,18 +26,13 @@ namespace TournamentsXPanded
     public partial class TournamentsXPandedSubModule : XPandedSubModuleBase
     {
         private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
-       
 
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
 
-
-
-
-
             SettingsHelper.GetSettings();
-        
+
             //Setup Item Filters if needed
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
@@ -65,7 +57,6 @@ namespace TournamentsXPanded
             TournamentXPSettings.Instance.DebugMode = true;
 #endif
         }
-
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
@@ -94,6 +85,7 @@ namespace TournamentsXPanded
                 }
             }
         }
+
         public override void OnGameInitializationFinished(Game game)
         {
             if (game.GameType is Campaign)
@@ -146,6 +138,7 @@ namespace TournamentsXPanded
                 }
             }
         }
+
         protected void CreateDiagnostics()
         {
             var diag = "Tournaments XPanded Settings infomation\n";
@@ -166,15 +159,13 @@ namespace TournamentsXPanded
                 diag += JsonConvert.SerializeObject(cleanList, serializerSettings);
 
                 //   List<string> towns = new List<string>();
-
-
             }
             catch
             {
-
             }
             File.WriteAllText(configPath, diag);
         }
+
         protected void DoDebugPopup()
         {
             var patches = "Patch Status\n";
@@ -217,7 +208,6 @@ namespace TournamentsXPanded
             InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }
 
-
         private void InitCustomItems(List<string> customItems)
         {
             List<ItemObject> tourneyItems = new List<ItemObject>();
@@ -256,12 +246,13 @@ namespace TournamentsXPanded
                 //InformationManager.ShowInquiry(new InquiryData("Tournament Prize Errors",
                 //    info,
                 //    true, false, "Ok", "No", null, null, ""), false);
-
             }
         }
 
         /* Mod Settings Interfaces */
+
         #region ModSettings
+
         public static Dictionary<string, string> GetModSettingValue()
         {
             Dictionary<string, string> settings = new Dictionary<string, string>();
@@ -272,6 +263,7 @@ namespace TournamentsXPanded
             }
             return settings;
         }
+
         public static void SaveModSettingValue(Dictionary<string, string> newSettings)
         {
             // write to save settings to anywhere you want
@@ -286,8 +278,7 @@ namespace TournamentsXPanded
             }
         }
 
-
-        #endregion
+        #endregion ModSettings
 
         internal const int OBJ_PRIZEPOOL = 4106000;
         internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;

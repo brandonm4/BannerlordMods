@@ -1,10 +1,9 @@
-﻿
-
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using ModLib;
+﻿using ModLib;
 using ModLib.Attributes;
-using AutoMapper;
+
+using System.Reflection;
+using System.Xml.Serialization;
+
 using TournamentsXPanded.Settings;
 
 namespace TournamentsXPanded.Models
@@ -13,20 +12,36 @@ namespace TournamentsXPanded.Models
     {
         public const string InstanceID = "TournamentXPSettings";
         public override string ModName => "Tournaments XPanded";
-        public override string ModuleFolderName => SettingsHelper.ModuleFolderName;      
+        public override string ModuleFolderName => SettingsHelper.ModuleFolderName;
+
         public static TournamentXPSettingsModLib Instance
         {
             get
-            {          
+            {
                 return (TournamentXPSettingsModLib)SettingsDatabase.GetSettings(InstanceID);
             }
         }
 
         public TournamentXPSettings GetSettings()
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<TournamentXPSettingsModLib, TournamentXPSettings>());
-            var mapper = new Mapper(config);
-            TournamentXPSettings dto = mapper.Map<TournamentXPSettings>(Instance);
+            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TournamentXPSettingsModLib, TournamentXPSettings>());
+            //var mapper = new Mapper(config);
+            //TournamentXPSettings dto = mapper.Map<TournamentXPSettings>(Instance);
+            TournamentXPSettings dto = new TournamentXPSettings();
+            PropertyInfo[] propertiesML = typeof(TournamentXPSettingsModLib).GetProperties();
+            PropertyInfo[] propertiesTXP = typeof(TournamentXPSettings).GetProperties();
+
+            foreach (PropertyInfo pTXP in propertiesTXP)
+            {
+                foreach (PropertyInfo pML in propertiesML)
+                {
+                    if (pTXP.Name == pML.Name)
+                    {
+                        pTXP.SetValue(dto, pML.GetValue(TournamentXPSettingsModLib.Instance));
+                        break;
+                    }
+                }
+            }
             return dto;
         }
 
@@ -40,25 +55,31 @@ namespace TournamentsXPanded.Models
         #endregion Debug Settings
 
         #region XP Adjustments
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("Enable Tournament XP")]
         public bool IsTournamentXPEnabled { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("TournamentXPAdjustment", 0, 10f)]
         public float TournamentXPAdjustment { get; set; } = 1.0f;
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("Enable Arena XP")]
         public bool IsArenaXPEnabled { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("ArenaXPAdjustment", 0, 10f)]
         public float ArenaXPAdjustment { get; set; } = 1.0f;
 
         #endregion XP Adjustments
+
         #region Other
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("Equipment Filter (Remove Spears)", "Removes spears from tournament footmen")]
@@ -81,28 +102,33 @@ namespace TournamentsXPanded.Models
         [SettingProperty("Prize Selection", "Should the Select Prize from the Prize Pool be enable. ")]
         [SettingPropertyGroup("3. Prize Selection")]
         public bool EnablePrizeSelection { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("3. Prize Selection")]
         [SettingProperty("Prizes Per Pool", 0, 10)]
         public int NumberOfPrizeOptions { get; set; } = 3;
+
         [XmlElement]
         [SettingPropertyGroup("3. Prize Selection")]
         [SettingProperty("Include Town Inventory")]
         public bool PrizeListIncludeTown { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("3. Prize Selection")]
         [SettingProperty("Include Vanilla")]
         public bool PrizeListIncludeVanilla { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("3. Prize Selection")]
         [SettingProperty("Include Custom")]
         public bool PrizeListIncludeCustom { get; set; } = false;
+
         [XmlElement]
         [SettingPropertyGroup("3. Prize Selection")]
         [SettingProperty("Include Legacy")]
         public bool PrizeListIncludeLegacy { get; set; } = true;
 
-        [XmlElement]      
+        [XmlElement]
         [SettingProperty("Town Prize Min Value", 0, 10000, "Any item below this value will not be used.")]
         [SettingPropertyGroup("3. Prize Selection")]
         public int TownPrizeMin { get; set; } = 1600;
@@ -116,37 +142,41 @@ namespace TournamentsXPanded.Models
         [SettingProperty("Prize Value Per Level", 0, 10000)]
         [SettingPropertyGroup("3. Prize Selection")]
         public int PrizeValueMaxIncreasePerLevel { get; set; } = 500;
+
         [XmlElement]
         [SettingProperty("Prize Value Per Level", 0, 10000)]
         [SettingPropertyGroup("3. Prize Selection")]
         public int PrizeValueMinIncreasePerLevel { get; set; } = 10;
 
-
         [XmlElement]
         [SettingProperty("Prize Value Filters Vanilla Items")]
         [SettingPropertyGroup("3. Prize Selection")]
         public bool TownPrizeMinMaxAffectsVanilla { get; set; }
+
         [XmlElement]
         [SettingProperty("Prize Value Filters Custom Items")]
         [SettingPropertyGroup("3. Prize Selection")]
         public bool TownPrizeMinMaxAffectsCustom { get; set; }
+
         [XmlElement]
         [SettingProperty("Town Prosperity Affects Prize Value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public bool TownProsperityAffectsPrizeValues { get; set; } = true;
+
         [XmlElement]
         [SettingProperty("Town Prosperity: Low", 0, 1f, "Setting is a decimal so .65 means 65% of max value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public float TownProsperityLow { get; set; } = .65f;
+
         [XmlElement]
         [SettingProperty("Town Prosperity: Mid", 0, 2f, "Setting is a decimal so 1.0 means 100% of max value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public float TownProsperityMid { get; set; } = 1.0f;
+
         [XmlElement]
         [SettingProperty("Town Prosperity: High", 0, 3f, "Setting is a decimal so 1.3 means 130% of max value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public float TownProsperityHigh { get; set; } = 1.3f;
-
 
         [XmlElement]
         [SettingProperty("Prize Type Filter")]
@@ -156,27 +186,33 @@ namespace TournamentsXPanded.Models
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Bow")]
-        public bool EnableItemType_Bow { get; set; } = true;       
+        public bool EnableItemType_Bow { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Crossbow")]
-        public bool EnableItemType_Crossbow { get; set; } = true;                         
+        public bool EnableItemType_Crossbow { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType OneHanded Weapon")]
         public bool EnableItemType_OneHandedWeapon { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Polearm")]
         public bool EnableItemType_Polearm { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Shield")]
         public bool EnableItemType_Shield { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Thrown")]
         public bool EnableItemType_Thrown { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType TwoHanded Weapon")]
@@ -186,18 +222,22 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType HeadArmor")]
         public bool EnableItemType_HeadArmor { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType HandArmor")]
         public bool EnableItemType_HandArmor { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType BodyArmor")]
         public bool EnableItemType_BodyArmor { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Leg Armor")]
         public bool EnableItemType_LegArmor { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Cape/Shoulders")]
@@ -207,13 +247,11 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Horse")]
         public bool EnableItemType_Horse { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("4. Prize Type Filter")]
         [SettingProperty("Allow ItemType Horse Harness/Saddle")]
         public bool EnableItemType_HorseHarness { get; set; } = true;
-
-      
-       
 
         #region Bonus Winnings
 
@@ -251,26 +289,32 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 1", 0f, 50f)]
         public float RenownTroopTier1 { get; set; } = .15f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 2", 0f, 50f)]
         public float RenownTroopTier2 { get; set; } = .25f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 3", 0f, 50f)]
         public float RenownTroopTier3 { get; set; } = .35f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 4", 0f, 50f)]
         public float RenownTroopTier4 { get; set; } = .45f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 5", 0f, 50f)]
         public float RenownTroopTier5 { get; set; } = .55f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 6", 0f, 50f)]
         public float RenownTroopTier6 { get; set; } = .65f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Tier 7", 0f, 50f)]
@@ -280,26 +324,32 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Hero Base", 0f, 50f)]
         public float RenownPerHeroPropertyHeroBase { get; set; } = 1f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown IsNoble", 0f, 50f)]
         public float RenownPerHeroPropertyIsNoble { get; set; } = 3f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown IsBotable", 0f, 50f)]
         public float RenownPerHeroPropertyIsNotable { get; set; } = 1f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown IsCommander", 0f, 50f)]
         public float RenownPerHeroPropertyIsCommander { get; set; } = 1f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Minor Faction Hero", 0f, 50f)]
         public float RenownPerHeroPropertyIsMinorFactionHero { get; set; } = 2f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Minor Faction Leader", 0f, 50f)]
         public float RenownPerHeroPropertyIsMinorFactionLeader { get; set; } = 5f;
+
         [XmlElement]
         [SettingPropertyGroup("6. Bonus Renown Configuration")]
         [SettingProperty("Bonus Renown Major Faction Leader", 0f, 50f)]
@@ -311,26 +361,31 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("7. Other")]
         [SettingProperty("Enable Tournament Type Selection")]
         public bool EnableTournamentTypeSelection { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("7. Other")]
-        [SettingProperty("Enable Random Tournament Type at Spawn", "If enabled this setting will randomize the tournament type between Melee Group, and solo free-for-all.")]       
+        [SettingProperty("Enable Random Tournament Type at Spawn", "If enabled this setting will randomize the tournament type between Melee Group, and solo free-for-all.")]
         public bool EnableTournamentRandomSelection { get; set; } = true;
 
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Enable ItemModifiers For Prizes", "Warning: May cause item loss, bug in core game. Seems OK in BL-1.2.0Beta")]
         public bool EnableItemModifiersForPrizes { get; set; } = false;
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Town Prosperity Affects ItemModifiers", "If ItemModifiers are on, this setting will make them lean towards better if high prosperity or worse if it's low prosperity.")]
         public bool TownProsperityAffectsItemModifiers { get; set; } = false;
+
         #endregion Prize Selection
 
         #region Match Odds
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("OppenentDifficultyAffectsOdds", "Not working in 1.5-beta")]
         public bool OppenentDifficultyAffectsOdds { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Max Odds", 4f, 10f, "Maximum Odds for Tournament Bets")]
@@ -338,25 +393,18 @@ namespace TournamentsXPanded.Models
 
         #endregion Match Odds
 
-
         #region UnImplemented
 
         [XmlElement]
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("TournamentBonusMoneyBaseNamedCharLevel", 0, 1)]
         public int TournamentBonusMoneyBaseNamedCharLevel { get; set; } = 0;
+
         [XmlElement]
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("CompanionsWinPrizes(Not Active)")]
         public bool CompanionsWinPrizes { get; set; } = false;
 
         #endregion UnImplemented
-
-      
-
-
-
     }
-
-  
 }

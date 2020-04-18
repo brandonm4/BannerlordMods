@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 
 using TaleWorlds.Core;
+
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 

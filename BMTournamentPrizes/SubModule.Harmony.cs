@@ -1,14 +1,15 @@
 ﻿using HarmonyLib;
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Windows.Forms;
 
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
-using TournamentsXPanded.Patches;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -17,7 +18,6 @@ namespace TournamentsXPanded
     public partial class TournamentsXPandedSubModule
     {
         internal static readonly Harmony Harmony = new Harmony(nameof(TournamentsXPanded));
-        
 
         #region HarmoryPatches
 

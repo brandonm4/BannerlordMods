@@ -17,6 +17,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Common;
 using TournamentsXPanded.Models;
 
 using TournamentsXPanded.Settings;
@@ -25,24 +26,18 @@ using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded
 {
-    public partial class TournamentsXPandedSubModule : MBSubModuleBase
+    public partial class TournamentsXPandedSubModule : XPandedSubModuleBase
     {
         private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
-        public static string ModuleFolderName { get; } = "TournamentsXPanded";
+       
 
         protected override void OnSubModuleLoad()
         {
-            //Setup Logging
-            if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
-            {
-                File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
-            }
-            string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs", "logfile.txt");
-            if (!Directory.Exists(System.IO.Path.GetDirectoryName(logpath)))
-            {
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logpath));
-            }
-            ErrorLog.LogPath = logpath;
+            base.OnSubModuleLoad();
+
+
+
+
 
             SettingsHelper.GetSettings();
         

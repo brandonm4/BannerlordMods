@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-
+using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass

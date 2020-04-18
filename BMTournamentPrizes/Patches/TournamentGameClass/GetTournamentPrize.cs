@@ -9,7 +9,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
-
+using TournamentsXPanded.Common.Patches;
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 

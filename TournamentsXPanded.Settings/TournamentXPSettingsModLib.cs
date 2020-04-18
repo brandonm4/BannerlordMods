@@ -135,15 +135,15 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("3. Prize Selection")]
         public bool TownProsperityAffectsPrizeValues { get; set; } = true;
         [XmlElement]
-        [SettingProperty("Town Prosperity: Low", 0, 10f)]
+        [SettingProperty("Town Prosperity: Low", 0, 1f, "Setting is a decimal so .65 means 65% of max value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public float TownProsperityLow { get; set; } = .65f;
         [XmlElement]
-        [SettingProperty("Town Prosperity: Mid", 0, 10f)]
+        [SettingProperty("Town Prosperity: Mid", 0, 2f, "Setting is a decimal so 1.0 means 100% of max value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public float TownProsperityMid { get; set; } = 1.0f;
         [XmlElement]
-        [SettingProperty("Town Prosperity: High", 0, 10f)]
+        [SettingProperty("Town Prosperity: High", 0, 3f, "Setting is a decimal so 1.3 means 130% of max value")]
         [SettingPropertyGroup("3. Prize Selection")]
         public float TownProsperityHigh { get; set; } = 1.3f;
 
@@ -307,13 +307,23 @@ namespace TournamentsXPanded.Models
 
         #endregion Bonus Winnings
 
-        
+        [XmlElement]
+        [SettingPropertyGroup("7. Other")]
+        [SettingProperty("Enable Tournament Type Selection")]
+        public bool EnableTournamentTypeSelection { get; set; } = true;
+        [XmlElement]
+        [SettingPropertyGroup("7. Other")]
+        [SettingProperty("Enable Random Tournament Type at Spawn", "If enabled this setting will randomize the tournament type between Melee Group, and solo free-for-all.")]       
+        public bool EnableTournamentRandomSelection { get; set; } = true;
 
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
-        [SettingProperty("EnableItemModifiersForPrizes", "Warning: May cause item loss, bug in core game.")]
+        [SettingProperty("Enable ItemModifiers For Prizes", "Warning: May cause item loss, bug in core game. Seems OK in BL-1.2.0Beta")]
         public bool EnableItemModifiersForPrizes { get; set; } = false;
-
+        [XmlElement]
+        [SettingPropertyGroup("98. Experimental")]
+        [SettingProperty("Town Prosperity Affects ItemModifiers", "If ItemModifiers are on, this setting will make them lean towards better if high prosperity or worse if it's low prosperity.")]
+        public bool TownProsperityAffectsItemModifiers { get; set; } = false;
         #endregion Prize Selection
 
         #region Match Odds
@@ -323,7 +333,7 @@ namespace TournamentsXPanded.Models
         public bool OppenentDifficultyAffectsOdds { get; set; } = true;
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
-        [SettingProperty("Max Odds", 4f, 10f, "Maximum Odds for Tournament Bets - not working in 1.5-beta")]
+        [SettingProperty("Max Odds", 4f, 10f, "Maximum Odds for Tournament Bets")]
         public float MaximumBetOdds { get; set; } = 4;
 
         #endregion Match Odds

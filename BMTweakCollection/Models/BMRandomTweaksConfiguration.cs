@@ -15,7 +15,6 @@ namespace BMTweakCollection.Models
     {
 
         public const string InstanceID = "BMRandomTweaksConfiguration";
-        private static BMRandomTweaksConfiguration _instance = null;
         public override string ModName => "BM Tweaks Collection";
         public override string ModuleFolderName => BMTweakCollectionSubModule.ModuleFolderName;
         public static BMRandomTweaksConfiguration Instance

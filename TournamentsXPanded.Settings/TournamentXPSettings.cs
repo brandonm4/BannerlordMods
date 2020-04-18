@@ -184,6 +184,7 @@ namespace TournamentsXPanded.Models
 
       
         public bool EnableItemModifiersForPrizes { get; set; } = false;
+        public bool TownProsperityAffectsItemModifiers { get; set; } = false;
 
         #endregion Prize Selection
 
@@ -195,8 +196,9 @@ namespace TournamentsXPanded.Models
 
         #endregion Match Odds
 
+        public bool EnableTournamentTypeSelection { get; set; } = true;
+        public bool EnableTournamentRandomSelection { get; set; } = true;
         public bool DebugMode { get; set; } = false;
-
         #region UnImplemented
 
        

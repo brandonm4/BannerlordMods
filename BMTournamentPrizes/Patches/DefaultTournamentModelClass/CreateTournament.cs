@@ -12,6 +12,7 @@ using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
@@ -27,7 +28,7 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 
         public override bool IsApplicable(Game game)
         {
-            return true;
+            return TournamentXPSettings.Instance.EnableTournamentRandomSelection;
         }
 
         public override void Apply(Game game)

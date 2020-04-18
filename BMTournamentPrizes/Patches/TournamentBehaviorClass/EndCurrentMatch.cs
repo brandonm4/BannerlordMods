@@ -12,6 +12,7 @@ using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
+using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass

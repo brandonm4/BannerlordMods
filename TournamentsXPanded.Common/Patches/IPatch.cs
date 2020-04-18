@@ -1,19 +1,16 @@
 using TaleWorlds.Core;
 
-namespace TournamentsXPanded.Patches
+namespace TournamentsXPanded.Common.Patches
 {
-    public abstract class PatchBase<TPatch> : IPatch where TPatch : IPatch
+    public interface IPatch
     {
-        public static TPatch ActivePatch
-      => (TPatch)TournamentsXPandedSubModule.ActivePatches[typeof(TPatch)];
+        bool IsApplicable(Game game);
 
-        public abstract bool IsApplicable(Game game);
+        void Apply(Game game);
 
-        public abstract void Apply(Game game);
+        bool Applied { get; }
 
-        public abstract bool Applied { get; protected set; }
-
-        public abstract void Reset();
+        void Reset();
     }
 }
 

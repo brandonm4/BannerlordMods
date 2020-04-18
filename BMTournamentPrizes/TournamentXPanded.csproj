@@ -62,11 +62,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SandBox">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\SandBox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SandBox.ViewModelCollection">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.ViewModelCollection.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\SandBox.ViewModelCollection.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -80,58 +80,59 @@
     <Reference Include="System.Xml" />
     <Reference Include="TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.CampaignSystem.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Core">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.DotNet">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.DotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Engine">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.Engine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Engine.GauntletUI">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.GauntletUI.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.Engine.GauntletUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.GauntletUI">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.GauntletUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.GauntletUI.Data">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.Data.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.GauntletUI.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.InputSystem">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.InputSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Library">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.Library.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.Localization.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.PlayerServices">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlayerServices.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.PlayerServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.SaveSystem">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.SaveSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.TwoDimension">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.TwoDimension.dll</HintPath>
+      <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.TwoDimension.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -139,8 +140,7 @@
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
-    <Compile Include="Patches\IPatch.cs" />
-    <Compile Include="Patches\PatchBase.cs" />
+    <Compile Include="Patches\PlayerTownVisitCampaignBehaviorClass\town_arena_on_init.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\CalculateBet.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\AfterStart.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\EndCurrentMatch.cs" />
@@ -160,14 +160,9 @@
     <Compile Include="Models\TournamentEquipmentRestrictor.cs" />
     <Compile Include="Models\TournamentPrizePool.cs" />
     <Compile Include="Models\TournamentReward.cs" />
-    <Compile Include="SubModule.Harmony.cs">
-      <DependentUpon>SubModule.cs</DependentUpon>
-    </Compile>
+    <Compile Include="SubModule.Harmony.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModuleData\Languages\str_tournamentxp-de.xml" />
-    <Content Include="ModuleData\Languages\str_tournamentxp-en.xml" />
-    <Content Include="ModuleData\Languages\str_tournamentxp-zho-CN.xml" />
     <Content Include="Properties\AssemblyInfo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
@@ -199,18 +194,19 @@
     <ProjectReference Include="..\TournamentsXPanded.Settings\TournamentsXPanded.Settings.csproj">
       <Project>{66ad0016-bc49-4990-9f31-8ae1cebf3806}</Project>
       <Name>TournamentsXPanded.Settings</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="ModuleData\Languages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v16.0\TextTemplating\Microsoft.TextTemplating.targets" />
   <PropertyGroup>
     <TransformOnBuild>true</TransformOnBuild>
-	<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-</PropertyGroup>
-
+    <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+  </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>c:\windows\system32\xcopy.exe /Y "$(ProjectDir)SubModule.xml" "$(MOD_FOLDER)"
 

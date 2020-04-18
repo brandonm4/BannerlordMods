@@ -117,9 +117,12 @@ namespace TournamentsXPanded.Behaviors
                  new GameMenuOption.OnConsequenceDelegate(PrizeSelectConsequence), false, 1, true);
             }
 
-            starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", new TextObject("{=tourn003}Select Tournament Style").ToString(),
-             new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
-             new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, 2, true);
+            if (TournamentXPSettings.Instance.EnableTournamentTypeSelection)
+            {
+                starter.AddGameMenuOption("town_arena", "bm_select_tournamenttype", new TextObject("{=tourn003}Select Tournament Style").ToString(),
+                 new GameMenuOption.OnConditionDelegate(TournamentTypeSelectCondition),
+                 new GameMenuOption.OnConsequenceDelegate(TournamentTypeSelectConsequence), false, 2, true);
+            }
         }
 
         private void OnCleanSave()
@@ -148,7 +151,7 @@ namespace TournamentsXPanded.Behaviors
                 bRegenAllPrizes = true;
                 currentPool = GetTournamentPrizePool(tournamentGame.Town.Settlement);
             }            
-            var allitems = GetItemStringsRevised(tournamentGame, TournamentPrizePoolBehavior.GetMinPrizeValue(), TournamentPrizePoolBehavior.GetMaxPrizeValue(), TournamentPrizePoolBehavior.GetActivePrizeTypes());
+            var allitems = GetItemStringsRevised(tournamentGame, TournamentPrizePoolBehavior.GetActivePrizeTypes());
 
             //Add any existing items if we are filling in missing ones from an already generated pool
             var pickeditems = new List<string>();
@@ -200,16 +203,25 @@ namespace TournamentsXPanded.Behaviors
 
                 if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
                 {
-                    if (pickedPrize.HasArmorComponent)
+                    if (TournamentXPSettings.Instance.TownProsperityAffectsItemModifiers)
                     {
-                        ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
-                        if (itemModifierGroup != null)
+
+                        var ee = GetEquipmentWithModifier(pickedPrize, pickedPrize.Value * GetProsperityModifier(tournamentGame.Town.Settlement));
+                        itemModifier = ee.ItemModifier;
+                    }
+                    else
+                    {
+                        if (pickedPrize.HasArmorComponent)
                         {
-                            itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
-                        }
-                        else
-                        {
-                            itemModifier = null;
+                            ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
+                            if (itemModifierGroup != null)
+                            {
+                                itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                            }
+                            else
+                            {
+                                itemModifier = null;
+                            }
                         }
                     }
                 }
@@ -233,8 +245,8 @@ namespace TournamentsXPanded.Behaviors
             var list = roster.Where(x =>
             x.Amount > 0
             && validtypes.Contains(x.EquipmentElement.Item.ItemType)
-           && x.EquipmentElement.Item.Value >= minValue
-           && x.EquipmentElement.Item.Value <= maxValue
+           && x.EquipmentElement.Item.Value >= MathF.Floor(minValue)
+           && x.EquipmentElement.Item.Value <= MathF.Ceiling(maxValue)
            && !x.EquipmentElement.Item.NotMerchandise
               ).Select(x => x.EquipmentElement.Item.StringId).ToList();
 
@@ -254,7 +266,7 @@ namespace TournamentsXPanded.Behaviors
             return list;
         }
 
-        public static List<string> GetItemStringsRevised(TournamentGame tournamentGame, int minValue, int maxMalue, List<ItemObject.ItemTypeEnum> validTypes)
+        public static List<string> GetItemStringsRevised(TournamentGame tournamentGame,  List<ItemObject.ItemTypeEnum> validTypes)
         {
             string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
             List<string> allitems = new List<string>();
@@ -269,7 +281,7 @@ namespace TournamentsXPanded.Behaviors
                     var customItems = TournamentPrizePoolBehavior.CustomTourneyItems.Where(x => validTypes.Contains(x.ItemType));
                     if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsCustom)
                     {
-                        customItems = customItems.Where(x => x.Value >= TournamentPrizePoolBehavior.GetMinPrizeValue() && x.Value <= TournamentPrizePoolBehavior.GetMaxPrizeValue());
+                        customItems = customItems.Where(x => x.Value >= MathF.Floor(TournamentPrizePoolBehavior.GetMinPrizeValue()) && x.Value <= MathF.Ceiling(TournamentPrizePoolBehavior.GetMaxPrizeValue()));
                     }                  
                     allitems = allitems.Concat(customItems.Select(x => x.StringId).ToList()).ToList();
                 }
@@ -281,18 +293,23 @@ namespace TournamentsXPanded.Behaviors
             }
             if (TournamentXPSettings.Instance.PrizeListIncludeTown)
             {
-                var townItems = GetValidTownItems(tournamentGame, minValue, maxMalue, validTypes);
+                int _minValue = 1600;
+                int _maxValue = 5000;
+                _minValue = TournamentPrizePoolBehavior.GetMinPrizeValue();
+                _maxValue = TournamentPrizePoolBehavior.GetMaxPrizeValue();
+                var townItems = GetValidTownItems(tournamentGame, _minValue, _maxValue, validTypes);
                 allitems = allitems.Concat(townItems).ToList();
             }
             if (TournamentXPSettings.Instance.PrizeListIncludeVanilla)
             {
-                float _minValue = 1600f;
-                float _maxValue = 5000f;
+                int _minValue = 1600;
+                int _maxValue = 5000;
+              
                 List<string> vanillaItems;
                 if (TournamentXPSettings.Instance.TownPrizeMinMaxAffectsVanilla)
                 {
-                    _minValue = minValue;
-                    _maxValue = maxMalue;
+                    _minValue = TournamentPrizePoolBehavior.GetMinPrizeValue();
+                    _maxValue = TournamentPrizePoolBehavior.GetMaxPrizeValue();
                 }
                 vanillaItems = ItemObject.All.Where(x => x.Culture == tournamentGame.Town.Settlement.Culture && validTypes.Contains(x.ItemType) && x.Value >= _minValue && x.Value <=_maxValue).Select(x => x.StringId).ToList();
                 if (vanillaItems.Count == 0)
@@ -550,6 +567,7 @@ namespace TournamentsXPanded.Behaviors
                     currentPool.SelectedPrizeStringId = prizeSelections.First().Identifier.ToString();
                     var prize = Game.Current.ObjectManager.GetObject<ItemObject>(prizeSelections.First().Identifier.ToString());
                     SetTournamentSelectedPrize(tournamentGame, prize);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -589,7 +607,7 @@ namespace TournamentsXPanded.Behaviors
         {
             List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
             tournamentTypeElements.Add(new InquiryElement("melee", new TextObject("{=tourn008}Standard Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
-            tournamentTypeElements.Add(new InquiryElement("melee2", new TextObject("{=tourn008}Individual Only Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+            tournamentTypeElements.Add(new InquiryElement("melee2", new TextObject("{=tourn009}Individual Only Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
 #if DEBUG
             //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
             //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
@@ -797,30 +815,49 @@ namespace TournamentsXPanded.Behaviors
 
             return validTypes;
         }
-        public static int GetMinPrizeValue(Settlement settlement = null)
+      
+
+        public static EquipmentElement GetEquipmentWithModifier(ItemObject item, float targetValueFactor)
         {
-
-            var prosperityMod = 1f;
-            if (settlement != null && TournamentXPSettings.Instance.TownProsperityAffectsPrizeValues)
+            ItemModifierGroup itemModifierGroup;
+            ArmorComponent armorComponent = item.ArmorComponent;
+            if (armorComponent != null)
             {
-                switch (settlement.Town.GetProsperityLevel())
-                {
-                    case SettlementComponent.ProsperityLevel.Low:
-                        prosperityMod = TournamentXPSettings.Instance.TownProsperityLow;
-                        break;
-                    case SettlementComponent.ProsperityLevel.Mid:
-                        prosperityMod = TournamentXPSettings.Instance.TownProsperityMid;
-                        break;
-                    case SettlementComponent.ProsperityLevel.High:
-                        prosperityMod = TournamentXPSettings.Instance.TownProsperityHigh;
-                        break;
-                }                
+                itemModifierGroup = armorComponent.ItemModifierGroup;
             }
-
-            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel) )) * prosperityMod);
+            else
+            {
+                itemModifierGroup = null;
+            }
+            ItemModifierGroup itemModifierGroup1 = itemModifierGroup ?? Campaign.Current.ItemModifierGroupss.FirstOrDefault<ItemModifierGroup>((ItemModifierGroup x) => x.ItemTypeEnum == item.ItemType);
+            ItemModifier itemModifierWithTarget = null;
+            if (itemModifierGroup1 != null)
+            {
+                itemModifierWithTarget = itemModifierGroup1.GetItemModifierWithTarget(targetValueFactor);
+                if (itemModifierWithTarget != null)
+                {
+                    float single = (itemModifierWithTarget.PriceMultiplier < targetValueFactor ? itemModifierWithTarget.PriceMultiplier / targetValueFactor : targetValueFactor / itemModifierWithTarget.PriceMultiplier);
+                    if ((1f < targetValueFactor ? 1f / targetValueFactor : targetValueFactor) > single)
+                    {
+                        itemModifierWithTarget = null;
+                    }
+                }
+            }
+            return new EquipmentElement(item, itemModifierWithTarget);
         }
 
+        public static int GetMinPrizeValue(Settlement settlement = null)
+        {
+            return MathF.Floor(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel))) * GetProsperityModifier(settlement));
+        }
         public static int GetMaxPrizeValue(Settlement settlement = null)
+        {
+            
+            
+            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * GetProsperityModifier(settlement));
+        }
+
+        public static float GetProsperityModifier(Settlement settlement)
         {
             var prosperityMod = 1f;
             if (settlement != null && TournamentXPSettings.Instance.TownProsperityAffectsPrizeValues)
@@ -838,9 +875,9 @@ namespace TournamentsXPanded.Behaviors
                         break;
                 }
             }
-
-            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * prosperityMod);
+            return prosperityMod;
         }
+
         public static float[] RenownPerTroopTier
         {
             get

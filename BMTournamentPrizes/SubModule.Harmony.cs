@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 using TournamentsXPanded.Patches;
 using XPanded.Common.Diagnostics;
@@ -16,11 +17,11 @@ namespace TournamentsXPanded
     public partial class TournamentsXPandedSubModule
     {
         internal static readonly Harmony Harmony = new Harmony(nameof(TournamentsXPanded));
-        public static IDictionary<Type, IPatch> ActivePatches = new Dictionary<Type, IPatch>();
+        
 
         #region HarmoryPatches
 
-        private static void ApplyPatches(Game game)
+        protected static void ApplyPatches(Game game)
         {
             //ActivePatches.Clear();
 

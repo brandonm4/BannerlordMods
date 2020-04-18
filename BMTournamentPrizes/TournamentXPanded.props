@@ -2,11 +2,18 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
 
+    <!-- Path to Game dlls -->
+    <MOUNT_AND_BLADE_BIN>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\</MOUNT_AND_BLADE_BIN>
+
     <!-- Path to Mount and Blade folder -->
     <MOUNT_AND_BLADE_DIR>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\</MOUNT_AND_BLADE_DIR>
 
     <!-- Path to mod folder-->
     <MOD_FOLDER>$(MOUNT_AND_BLADE_DIR)Modules\TournamentsXPanded\</MOD_FOLDER>
-	
+
+    <E111>$(MOUNT_AND_BLADE_BIN)e1.1.1\</E111>
+    <E120>$(MOUNT_AND_BLADE_BIN)e1.2.0\</E120>
+
+    <ELIVE>$(E120)</ELIVE>
   </PropertyGroup>
 </Project>

@@ -169,7 +169,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModuleData\Languages\str_tournamentxp-ru.xml" />
+    <Content Include="ModuleData\Languages\CN\str_tournamentxp-CNs.xml" />
+    <Content Include="ModuleData\Languages\RU\str_tournamentxp-ru.xml" />
+    <Content Include="ModuleData\Languages\str_tournamentxp-en.xml" />
     <Content Include="Properties\AssemblyInfo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
@@ -216,8 +218,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>c:\windows\system32\xcopy.exe /Y "$(ProjectDir)SubModule.xml" "$(MOD_FOLDER)"
-
-c:\windows\system32\xcopy.exe /Y "$(ProjectDir)ModuleData\Languages" "$(MOD_FOLDER)\ModuleData\Languages"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

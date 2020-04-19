@@ -49,7 +49,10 @@ namespace TournamentsXPanded.Settings
                 }
                 var modnames = Utilities.GetModulesNames().ToList();
                 bool modLibLoaded = false;
-                if (modnames.Contains("ModLib") && !overrideSettings)
+                if (
+                    (modnames.Contains("ModLib")
+                    || modnames.Contains("Bannerlord.MBOptionScreen")
+                    ) && !overrideSettings)
                 {
                     //    modLibLoaded =  SettingsHelperModLib.GetModLibSettings(forceDebug, forceMenu);
 

@@ -68,6 +68,8 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
             xpAmount = MathF.Round(power * single);
 
             return false;
+
+            
     }
 
         public override bool IsApplicable(Game game)

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 
 using TournamentsXPanded.Settings;
+using XPanded.Common.Diagnostics;
 
 namespace TournamentsXPanded.Models
 {
@@ -29,9 +30,7 @@ namespace TournamentsXPanded.Models
             //TournamentXPSettings dto = mapper.Map<TournamentXPSettings>(Instance);
             TournamentXPSettings dto = new TournamentXPSettings();
             PropertyInfo[] propertiesML = typeof(TournamentXPSettingsModLib).GetProperties();
-            PropertyInfo[] propertiesTXP = typeof(TournamentXPSettings).GetProperties();
-
-            foreach (PropertyInfo pTXP in propertiesTXP)
+            foreach (PropertyInfo pTXP in typeof(TournamentXPSettings).GetProperties())
             {
                 foreach (PropertyInfo pML in propertiesML)
                 {
@@ -45,7 +44,7 @@ namespace TournamentsXPanded.Models
                     }
                     catch(Exception ex)
                     {
-
+                        ErrorLog.Log("Error in assigning ModLib property to TXPSettings: " + pTXP.Name.ToString() + "\n" + ex.ToStringFull());
                     }
                 }
             }

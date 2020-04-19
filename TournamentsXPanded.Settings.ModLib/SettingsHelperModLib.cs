@@ -24,18 +24,19 @@ namespace TournamentsXPanded.Settings
     {
         public static TournamentXPSettings GetModLibSettings(bool forceDebug = false, bool forceMenu = false)
         {
-            var modnames = Utilities.GetModulesNames().ToList();
-            if (modnames.Contains("Bannerlord.MBOptionScreen"))
-            {
-                if (forceMenu)
-                {
-                    //Reenable ModLib settings menu option
-                    Module.CurrentModule.AddInitialStateOption(new InitialStateOption("ModOptionsMenu", new TextObject("ModLib Options"), 9990, () =>
-                    {
-                        ScreenManager.PushScreen(new ModOptionsGauntletScreen());
-                    }, false));
-                }
-            }
+            //var modnames = Utilities.GetModulesNames().ToList();
+            //if (modnames.Contains("Bannerlord.MBOptionScreen"))
+            //{
+            //    if (forceMenu)
+            //    {
+            //        //Reenable ModLib settings menu option
+            //        //Probably not needed anymore
+            //        Module.CurrentModule.AddInitialStateOption(new InitialStateOption("ModOptionsMenu", new TextObject("ModLib Options"), 9990, () =>
+            //        {
+            //            ScreenManager.PushScreen(new ModOptionsGauntletScreen());
+            //        }, false));
+            //    }
+            //}
 
             try
             {
@@ -56,49 +57,49 @@ namespace TournamentsXPanded.Settings
         }
     }
 
-    internal class ModOptionsGauntletScreen : ScreenBase
-    {
-        private GauntletLayer gauntletLayer;
-        private GauntletMovie movie;
-        private ModSettingsScreenVM vm;
+    //internal class ModOptionsGauntletScreen : ScreenBase
+    //{
+    //    private GauntletLayer gauntletLayer;
+    //    private GauntletMovie movie;
+    //    private ModSettingsScreenVM vm;
 
-        protected override void OnInitialize()
-        {
-            base.OnInitialize();
-            SpriteData spriteData = UIResourceManager.SpriteData;
-            TwoDimensionEngineResourceContext resourceContext = UIResourceManager.ResourceContext;
-            ResourceDepot uiresourceDepot = UIResourceManager.UIResourceDepot;
-            spriteData.SpriteCategories["ui_encyclopedia"].Load(resourceContext, uiresourceDepot);
-            gauntletLayer = new GauntletLayer(1);
-            gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
-            gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
-            gauntletLayer.IsFocusLayer = true;
-            ScreenManager.TrySetFocus(gauntletLayer);
-            AddLayer(gauntletLayer);
-            vm = new ModSettingsScreenVM();
-            movie = gauntletLayer.LoadMovie("ModOptionsScreen", vm);
-        }
+    //    protected override void OnInitialize()
+    //    {
+    //        base.OnInitialize();
+    //        SpriteData spriteData = UIResourceManager.SpriteData;
+    //        TwoDimensionEngineResourceContext resourceContext = UIResourceManager.ResourceContext;
+    //        ResourceDepot uiresourceDepot = UIResourceManager.UIResourceDepot;
+    //        spriteData.SpriteCategories["ui_encyclopedia"].Load(resourceContext, uiresourceDepot);
+    //        gauntletLayer = new GauntletLayer(1);
+    //        gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.All);
+    //        gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
+    //        gauntletLayer.IsFocusLayer = true;
+    //        ScreenManager.TrySetFocus(gauntletLayer);
+    //        AddLayer(gauntletLayer);
+    //        vm = new ModSettingsScreenVM();
+    //        movie = gauntletLayer.LoadMovie("ModOptionsScreen", vm);
+    //    }
 
-        protected override void OnFrameTick(float dt)
-        {
-            base.OnFrameTick(dt);
-            // || gauntletLayer.Input.IsGameKeyReleased(34)
-            if (gauntletLayer.Input.IsHotKeyReleased("Exit"))
-            {
-                vm.ExecuteCancel();
-            }
-        }
+    //    protected override void OnFrameTick(float dt)
+    //    {
+    //        base.OnFrameTick(dt);
+    //        // || gauntletLayer.Input.IsGameKeyReleased(34)
+    //        if (gauntletLayer.Input.IsHotKeyReleased("Exit"))
+    //        {
+    //            vm.ExecuteCancel();
+    //        }
+    //    }
 
-        protected override void OnFinalize()
-        {
-            base.OnFinalize();
-            RemoveLayer(gauntletLayer);
-            gauntletLayer.ReleaseMovie(movie);
-            gauntletLayer = null;
-            movie = null;
-            vm.ExecuteSelect(null);
-            vm.AssignParent(true);
-            vm = null;
-        }
-    }
+    //    protected override void OnFinalize()
+    //    {
+    //        base.OnFinalize();
+    //        RemoveLayer(gauntletLayer);
+    //        gauntletLayer.ReleaseMovie(movie);
+    //        gauntletLayer = null;
+    //        movie = null;
+    //        vm.ExecuteSelect(null);
+    //        vm.AssignParent(true);
+    //        vm = null;
+    //    }
+    //}
 }

@@ -73,6 +73,9 @@
       <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.ViewModelCollection.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="StoryMode">
+      <HintPath>..\..\BannerlordVersions\target\StoryMode.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -131,6 +134,7 @@
     <Compile Include="Patches\DefaultSettlementFoodModel.cs" />
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
+    <Compile Include="Patches\FirstPhaseCampaignBehavior.cs" />
     <Compile Include="Patches\HarmonyHelpers.cs" />
     <Compile Include="LootTweaks\LootCollector.cs" />
     <Compile Include="Patches\PatchPartyScreenLogic.cs" />

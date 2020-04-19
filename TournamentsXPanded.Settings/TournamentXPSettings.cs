@@ -156,6 +156,13 @@
         public bool EnableItemModifiersForPrizes { get; set; } = false;
         public bool TownProsperityAffectsItemModifiers { get; set; } = false;
 
+
+        public float BonusRenownMostKills { get; set; } = 0f;
+        public float BonusRenownMostDamage { get; set; } = 0f;
+        public float BonusRenownFirstKill { get; set; } = 0f;
+        public float BonusRenownLeastDamage { get; set; } = 0f;
+
+
         #endregion Prize Selection
 
         #region Match Odds

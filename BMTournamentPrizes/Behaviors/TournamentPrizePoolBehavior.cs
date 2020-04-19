@@ -198,7 +198,7 @@ namespace TournamentsXPanded.Behaviors
 
                 if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
                 {
-                    /* BETA12
+                    /* BETA12 */
                     if (TournamentXPSettings.Instance.TownProsperityAffectsItemModifiers)
                     {
                         var ee = GetEquipmentWithModifier(pickedPrize, pickedPrize.Value * GetProsperityModifier(tournamentGame.Town.Settlement));
@@ -206,22 +206,22 @@ namespace TournamentsXPanded.Behaviors
                     }
                     else
                     {
-                    */
-                    if (pickedPrize.HasArmorComponent)
-                    {
-                        ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
-                        if (itemModifierGroup != null)
+                        /* BETA12 END */
+                        if (pickedPrize.HasArmorComponent)
                         {
-                            itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                            ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
+                            if (itemModifierGroup != null)
+                            {
+                                itemModifier = itemModifierGroup.GetRandomItemModifier(1f);
+                            }
+                            else
+                            {
+                                itemModifier = null;
+                            }
                         }
-                        else
-                        {
-                            itemModifier = null;
-                        }
+                        /* BETA12*/
                     }
-/* BETA12
-                }
-                */
+
                 }
                 currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
                 // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
@@ -812,7 +812,7 @@ namespace TournamentsXPanded.Behaviors
             return validTypes;
         }
 
-        /* BETA12
+        /* BETA12 */
         public static EquipmentElement GetEquipmentWithModifier(ItemObject item, float targetValueFactor)
         {
             ItemModifierGroup itemModifierGroup;
@@ -841,7 +841,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return new EquipmentElement(item, itemModifierWithTarget);
         }
-        */
+        /* BETA12 END */
 
         public static int GetMinPrizeValue(Settlement settlement = null)
         {

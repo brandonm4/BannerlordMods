@@ -22,7 +22,7 @@ namespace TournamentsXPanded.Settings
 {
     public static class SettingsHelperModLib
     {
-        public static TournamentXPSettingsModLib GetModLibSettings(bool forceDebug = false, bool forceMenu = false)
+        public static TournamentXPSettings GetModLibSettings(bool forceDebug = false, bool forceMenu = false)
         {
             var modnames = Utilities.GetModulesNames().ToList();
             if (modnames.Contains("Bannerlord.MBOptionScreen"))
@@ -46,7 +46,7 @@ namespace TournamentsXPanded.Settings
                 if (forceDebug)
                     settings.DebugMode = true;
                 //        TournamentXPSettings.SetSettings(settings.GetSettings());
-                return settings;
+                return settings.GetSettings();
             }
             catch (Exception ex)
             {

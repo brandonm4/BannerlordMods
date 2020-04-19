@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-
+using SandBox;
+using SandBox.TournamentMissions.Missions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -139,6 +140,20 @@ namespace TournamentsXPanded
             }
         }
 
+        public override void OnMissionBehaviourInitialize(Mission mission)
+        {
+            if (!mission.HasMissionBehaviour<TournamentXPandedTournamentBehavior>() &&
+             (mission.HasMissionBehaviour<TournamentArcheryMissionController>()
+             || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
+             || mission.HasMissionBehaviour<TownHorseRaceMissionController>()
+             || mission.HasMissionBehaviour<TournamentFightMissionController>()
+             ))
+            {
+                mission.AddMissionBehaviour(new TournamentXPandedTournamentBehavior());
+            }
+        }
+
+        #region Local Methods
         protected void CreateDiagnostics()
         {
             var diag = "Tournaments XPanded Settings infomation\n";
@@ -200,13 +215,7 @@ namespace TournamentsXPanded
             }
         }
 
-        public static void ShowMessage(string msg, Color? color = null)
-        {
-            if (color == null)
-                color = Color.White;
-
-            InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
-        }
+        
 
         private void InitCustomItems(List<string> customItems)
         {
@@ -248,7 +257,7 @@ namespace TournamentsXPanded
                 //    true, false, "Ok", "No", null, null, ""), false);
             }
         }
-
+        #endregion
         /* Mod Settings Interfaces */
 
         #region ModSettings

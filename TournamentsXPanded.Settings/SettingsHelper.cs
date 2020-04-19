@@ -43,7 +43,10 @@ namespace TournamentsXPanded.Settings
                         forceMenu = true;
                     }
                 }
-
+                else
+                {
+                    File.WriteAllText(overridefile, "");                 
+                }
                 var modnames = Utilities.GetModulesNames().ToList();
                 bool modLibLoaded = false;
                 if (modnames.Contains("ModLib") && !overrideSettings)
@@ -55,8 +58,6 @@ namespace TournamentsXPanded.Settings
                     Assembly assembly = Assembly.LoadFile(modlibsettingsdll);
                     Type settingsHelperModLibType = assembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib");
 
-                    Type TournamentXPSettingsModLib = assembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib.TournamentXPSettingsModLib");
-
                     TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug, forceMenu });
                     if (osettings != null)
                     {
@@ -66,18 +67,19 @@ namespace TournamentsXPanded.Settings
                 }
                 if (!modLibLoaded)
                 {
+                    JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+                    serializerSettings.Formatting = Formatting.Indented;
                     TournamentXPSettings settings = new TournamentXPSettings();
                     string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
                     if (File.Exists(configPath))
                     {
                         var settingsjson = File.ReadAllText(configPath);
                         settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
+                        //write new file to get latest updates
+                        File.WriteAllText(configPath, settingsjson);
                     }
                     else
-                    {
-                        JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
-                        serializerSettings.Formatting = Formatting.Indented;
-
+                    {                      
                         var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
                         File.WriteAllText(configPath, settingsjson);
                     }

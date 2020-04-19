@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
+    <Compile Include="Behaviors\TournamentXPandedTournamentBehavior.cs" />
     <Compile Include="defines.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
@@ -163,9 +164,12 @@
     <Compile Include="Models\TournamentEquipmentRestrictor.cs" />
     <Compile Include="Models\TournamentPrizePool.cs" />
     <Compile Include="Models\TournamentReward.cs" />
-    <Compile Include="SubModule.Harmony.cs" />
+    <Compile Include="SubModule.Harmony.cs">
+      <DependentUpon>SubModule.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ModuleData\Languages\str_tournamentxp-ru.xml" />
     <Content Include="Properties\AssemblyInfo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
@@ -203,7 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="ModuleData\Languages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v16.0\TextTemplating\Microsoft.TextTemplating.targets" />

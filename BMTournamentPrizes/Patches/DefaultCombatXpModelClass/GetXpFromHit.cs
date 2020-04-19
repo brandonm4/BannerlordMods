@@ -19,28 +19,56 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
         private static readonly MethodInfo TargetMethodInfo = typeof(DefaultCombatXpModel).GetMethod("GetXpFromHit", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-        private static readonly MethodInfo PatchMethodInfo = typeof(GetXpFromHit).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(GetXpFromHit).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
-        private static void Postfix(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
+        private static bool Prefix(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
         {
-            int num = attackedTroop.MaxHitPoints();
-            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
+//            int num = attackedTroop.MaxHitPoints();
+//            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
 
-            if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
+            //            if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
+            //            {
+            //#pragma warning disable CS1717 // Assignment made to same variable
+            //                xpAmount = xpAmount;
+            //#pragma warning restore CS1717 // Assignment made to same variable
+            //            }
+            //            if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
+            //            {
+            //                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.ArenaXPAdjustment);
+            //            }
+            //            if (missionType == CombatXpModel.MissionTypeEnum.Tournament)
+            //            {
+            //                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
+            //            }
+
+     
+            float single;
+            int num = attackedTroop.MaxHitPoints();
+            float power = 0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0)));
+            if (missionType == CombatXpModel.MissionTypeEnum.NoXp)
             {
-#pragma warning disable CS1717 // Assignment made to same variable
-                xpAmount = xpAmount;
-#pragma warning restore CS1717 // Assignment made to same variable
+                single = 0f;
             }
-            if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
+            else if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
             {
-                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.ArenaXPAdjustment);
+                single = TournamentXPSettings.Instance.ArenaXPAdjustment;
             }
-            if (missionType == CombatXpModel.MissionTypeEnum.Tournament)
+            else if (missionType == CombatXpModel.MissionTypeEnum.Tournament)
             {
-                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
+                single = TournamentXPSettings.Instance.TournamentXPAdjustment;
             }
-        }
+            else if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
+            {
+                single = 0.9f;
+            }
+            else
+            {
+                single = (missionType == CombatXpModel.MissionTypeEnum.Battle ? 1f : 1f);
+            }
+            xpAmount = MathF.Round(power * single);
+
+            return false;
+    }
 
         public override bool IsApplicable(Game game)
         {
@@ -52,9 +80,9 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
             if (Applied) return;
 
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
-              postfix: new HarmonyMethod(PatchMethodInfo)
+              prefix: new HarmonyMethod(PatchMethodInfo)
               {
-                  priority = Priority.Low,
+                  priority = Priority.First,
                   //before = new[] { "that.other.harmony.user" }
               }
               );

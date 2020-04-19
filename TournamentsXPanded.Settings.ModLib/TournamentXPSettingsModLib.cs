@@ -1,6 +1,6 @@
 ﻿using ModLib;
 using ModLib.Attributes;
-
+using System;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -35,10 +35,17 @@ namespace TournamentsXPanded.Models
             {
                 foreach (PropertyInfo pML in propertiesML)
                 {
-                    if (pTXP.Name == pML.Name)
+                    try
                     {
-                        pTXP.SetValue(dto, pML.GetValue(TournamentXPSettingsModLib.Instance));
-                        break;
+                        if (pTXP.Name == pML.Name && pML.Name != "Instance")
+                        {
+                            pTXP.SetValue(dto, pML.GetValue(TournamentXPSettingsModLib.Instance));
+                            break;
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+
                     }
                 }
             }
@@ -404,6 +411,22 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("CompanionsWinPrizes(Not Active)")]
         public bool CompanionsWinPrizes { get; set; } = false;
+        [XmlElement]
+        [SettingPropertyGroup("99. Not Used")]
+        [SettingProperty("BonusRenownMostKills", 0f, 5f)]
+        public float BonusRenownMostKills { get; set; } = 0f;
+        [XmlElement]
+        [SettingPropertyGroup("99. Not Used")]
+        [SettingProperty("BonusRenownMostDamage", 0f, 5f)]
+        public float BonusRenownMostDamage { get; set; } = 0f;
+        [XmlElement]
+        [SettingPropertyGroup("99. Not Used")]
+        [SettingProperty("BonusRenownFirstKill", 0f, 5f)]
+        public float BonusRenownFirstKill { get; set; } = 0f;
+        [XmlElement]
+        [SettingPropertyGroup("99. Not Used")]
+        [SettingProperty("BonusRenownLeastDamage", 0f, 5f)]
+        public float BonusRenownLeastDamage { get; set; } = 0f;
 
         #endregion UnImplemented
     }

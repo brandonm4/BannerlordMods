@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
+using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 using TournamentsXPanded.Common.Patches;
@@ -28,6 +29,14 @@ namespace TournamentsXPanded.Common
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logpath));
             }
             ErrorLog.LogPath = logpath;
+        }
+
+        public static void ShowMessage(string msg, Color? color = null)
+        {
+            if (color == null)
+                color = Color.White;
+
+            InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }
     }
 }

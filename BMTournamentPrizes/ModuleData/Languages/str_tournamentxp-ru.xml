@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="Русский" />
+  </tags>
+  <strings>
+    <string id="tourn001" text="Переиграть призы" />
+    <string id="tourn002" text="Выберите приз" />
+    <string id="tourn003" text="Выберите Стиль Турнира" />
+    <string id="tourn004" text="Превышено количество попыток переигрывания" />
+    <string id="tourn005" text="Выбор Приза Турнира" />
+    <string id="tourn006" text="ОК" />
+    <string id="tourn007" text="Отмена" />
+    <string id="tourn008" text="Стандартная группа ближнего боя" />
+    <string id="tourn009" text="Смертельный бой в ближнем бою" />
+    <string id="tourn010" text="Выберите Тип Турнира" />
+    <string id="tourn011" text="В каком Турнире вы хотели бы участвовать сегодня?" />
+    <string id="tourn012" text="Вы можете выбрать предмет из списка ниже в качестве награды, если выиграете Турнир!" />
+  </strings>
+</base>

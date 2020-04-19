@@ -1,3 +1,6 @@
+#define VERSION111
+//#define VERSION120
+
 using TaleWorlds.Core;
 
 namespace TournamentsXPanded.Common.Patches

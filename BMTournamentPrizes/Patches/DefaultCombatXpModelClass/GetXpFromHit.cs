@@ -23,25 +23,27 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
         private static bool Prefix(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
         {
-            //            int num = attackedTroop.MaxHitPoints();
-            //            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
 
-            //            if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
-            //            {
-            //#pragma warning disable CS1717 // Assignment made to same variable
-            //                xpAmount = xpAmount;
-            //#pragma warning restore CS1717 // Assignment made to same variable
-            //            }
-            //            if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
-            //            {
-            //                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.ArenaXPAdjustment);
-            //            }
-            //            if (missionType == CombatXpModel.MissionTypeEnum.Tournament)
-            //            {
-            //                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
-            //            }
+#if VERSION111
+            int num = attackedTroop.MaxHitPoints();
+            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
 
-
+            if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
+            {
+#pragma warning disable CS1717 // Assignment made to same variable
+                xpAmount = xpAmount;
+#pragma warning restore CS1717 // Assignment made to same variable
+            }
+            if (missionType == CombatXpModel.MissionTypeEnum.PracticeFight)
+            {
+                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.ArenaXPAdjustment);
+            }
+            if (missionType == CombatXpModel.MissionTypeEnum.Tournament)
+            {
+                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
+            }
+#endif
+#if VERSION120
             float single;
             int num = attackedTroop.MaxHitPoints();
             float power = 0.4f * ((attackedTroop.GetPower() + 0.5f) * (Math.Min(damage, num) + (isFatal ? num : 0)));
@@ -66,7 +68,7 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
                 single = (missionType == CombatXpModel.MissionTypeEnum.Battle ? 1f : 1f);
             }
             xpAmount = MathF.Round(power * single);
-
+#endif
             return false;
 
 

@@ -202,12 +202,14 @@ namespace TournamentsXPanded.Behaviors
             currentPool.Prizes = new ItemRoster();
             foreach (var id in pickeditems)
             {
+
+
                 ItemModifier itemModifier = null;
                 var pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(id);
-
+#if VERSION120
                 if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
                 {
-                    /* BETA12 */
+              
                     if (TournamentXPSettings.Instance.TownProsperityAffectsItemModifiers)
                     {
                         var ee = GetEquipmentWithModifier(pickedPrize, pickedPrize.Value * GetProsperityModifier(tournamentGame.Town.Settlement));
@@ -215,7 +217,7 @@ namespace TournamentsXPanded.Behaviors
                     }
                     else
                     {
-                        /* BETA12 END */
+                  
                         if (pickedPrize.HasArmorComponent)
                         {
                             ItemModifierGroup itemModifierGroup = pickedPrize.ArmorComponent.ItemModifierGroup;
@@ -228,10 +230,11 @@ namespace TournamentsXPanded.Behaviors
                                 itemModifier = null;
                             }
                         }
-                        /* BETA12*/
+                       
                     }
 
                 }
+#endif
                 currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
                 // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
             }
@@ -408,9 +411,9 @@ namespace TournamentsXPanded.Behaviors
             typeof(TournamentGame).GetProperty("Prize").SetValue(tournamentGame, prize);
         }
 
-        #endregion Prizes
+#endregion Prizes
 
-        #region Menu Entries
+#region Menu Entries
 
         private static bool RerollCondition(MenuCallbackArgs args)
         {
@@ -692,9 +695,9 @@ namespace TournamentsXPanded.Behaviors
         {
         }
 
-        #endregion Menu Entries
+#endregion Menu Entries
 
-        #region Rewards and Calculations
+#region Rewards and Calculations
 
         public static float GetRenownValue(CharacterObject character)
         {
@@ -828,7 +831,7 @@ namespace TournamentsXPanded.Behaviors
             return validTypes;
         }
 
-        /* BETA12 */
+#if VERSION120
         public static EquipmentElement GetEquipmentWithModifier(ItemObject item, float targetValueFactor)
         {
             ItemModifierGroup itemModifierGroup;
@@ -857,7 +860,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return new EquipmentElement(item, itemModifierWithTarget);
         }
-        /* BETA12 END */
+#endif
 
         public static int GetMinPrizeValue(Settlement settlement = null)
         {
@@ -910,6 +913,6 @@ namespace TournamentsXPanded.Behaviors
 
         public static List<ItemObject.ItemTypeEnum> _allValidTypes = new List<ItemObject.ItemTypeEnum>() { ItemObject.ItemTypeEnum.BodyArmor, ItemObject.ItemTypeEnum.Bow, ItemObject.ItemTypeEnum.Cape, ItemObject.ItemTypeEnum.Crossbow, ItemObject.ItemTypeEnum.HandArmor, ItemObject.ItemTypeEnum.HeadArmor, ItemObject.ItemTypeEnum.Horse, ItemObject.ItemTypeEnum.HorseHarness, ItemObject.ItemTypeEnum.LegArmor, ItemObject.ItemTypeEnum.OneHandedWeapon, ItemObject.ItemTypeEnum.Polearm, ItemObject.ItemTypeEnum.Shield, ItemObject.ItemTypeEnum.Thrown, ItemObject.ItemTypeEnum.TwoHandedWeapon };
 
-        #endregion Rewards and Calculations
+#endregion Rewards and Calculations
     }
 }

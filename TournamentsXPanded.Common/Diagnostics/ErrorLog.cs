@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace XPanded.Common.Diagnostics
 {
-    public class ErrorLog
+    public static class ErrorLog
     {
         public static string LogPath { get; set; }
 
@@ -12,7 +13,7 @@ namespace XPanded.Common.Diagnostics
             {
                 using (var sw = new StreamWriter(LogPath, true))
                 {
-                    sw.WriteLine(text);
+                    sw.WriteLine(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss") + "\n" + text);
                 }
             }
         }

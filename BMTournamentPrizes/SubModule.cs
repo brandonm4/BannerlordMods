@@ -114,7 +114,14 @@ namespace TournamentsXPanded
 
                 if (TournamentXPSettings.Instance.DebugMode)
                 {
-                    CreateDiagnostics();
+                    try
+                    {
+                        CreateDiagnostics();
+                    }
+                    catch(Exception ex)
+                    {
+                        ErrorLog.Log("ERROR CREATING DIAGNOSTICS\n" + ex.ToStringFull());
+                    }
                 }
 
                 //Try to repair
@@ -158,15 +165,27 @@ namespace TournamentsXPanded
         {
             var diag = "Tournaments XPanded Settings infomation\n";
             string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpdiagnostics.log");
+            if (!Directory.Exists(Path.GetDirectoryName(configPath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(configPath));
+            }
             JsonSerializerSettings serializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
             };
-            var settingsjson = JsonConvert.SerializeObject(TournamentXPSettings.Instance, serializerSettings);
-            diag += settingsjson;
-            diag += "\n\n\nCustom Item List";
-            diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTourneyItems.Select(x => x.StringId), serializerSettings);
-            diag += "\n\n\nAll stored prize pools\n";
+            try
+            {
+                var settingsjson = JsonConvert.SerializeObject(TournamentXPSettings.Instance, serializerSettings);
+                diag += settingsjson;
+                diag += "\n\n\nCustom Item List";
+                diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTourneyItems.Select(x => x.StringId), serializerSettings);
+                diag += "\n\n\nAll stored prize pools\n";
+            }
+            catch (Exception ex)
+            {
+                diag += "ERROR SERIALIZING SETTINGS\n";
+                diag += ex.ToStringFull() + "\n";
+            }
             try
             {
                 List<TournamentPrizePool> allPools = new List<TournamentPrizePool>();
@@ -177,8 +196,10 @@ namespace TournamentsXPanded
 
                 //   List<string> towns = new List<string>();
             }
-            catch
+            catch (Exception ex)
             {
+                diag += "ERROR SERIALIZING PRIZEPOOLS\n";
+                diag += ex.ToStringFull() + "\n";
             }
             File.WriteAllText(configPath, diag);
         }

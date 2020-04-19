@@ -1,19 +1,8 @@
-﻿<#@ template debug="true" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ assembly name="System.IO" #>
-<#@ import namespace="System.IO" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Collections.Generic" #>
-<#@ output extension=".xml" #>
-<?xml version="1.0" encoding="utf-8"?>
-<# 
-var properties = File.ReadAllText("E:\\Users\\Brandon\\OneDrive - Mathis Consulting, LLC\\Development\\BannerLord\\BrandonMods\\BMTournamentPrizes\\version.txt");
-#>
+﻿<?xml version="1.0" encoding="utf-8"?> 
 <Module>
   <Name value="Tournaments XPanded"/>
   <Id value="TournamentsXPanded"/>
-  <Version value="e<#= properties #>"/>
+  <Version value="e1.5.11"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>

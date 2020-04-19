@@ -96,10 +96,13 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                         prizeStringId = __instance.TournamentGame.Prize.StringId;
 
                         //Beta1.2
+#if VERSION120
                         Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
+#endif
                         //Release1.1.1
-                        //Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
-
+#if VERSION111
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+#endif
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }

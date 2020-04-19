@@ -1,19 +1,8 @@
 ﻿using ModLib;
-using ModLib.GUI.ViewModels;
 
 using System;
-using System.Linq;
-
-using TaleWorlds.Engine;
-using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.Engine.Screens;
-using TaleWorlds.GauntletUI.Data;
-using TaleWorlds.InputSystem;
-using TaleWorlds.Library;
-using TaleWorlds.Localization;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.TwoDimension;
-
+using System.IO;
+using System.Reflection;
 using TournamentsXPanded.Models;
 
 using XPanded.Common.Diagnostics;
@@ -22,38 +11,51 @@ namespace TournamentsXPanded.Settings
 {
     public static class SettingsHelperModLib
     {
-        public static TournamentXPSettings GetModLibSettings(bool forceDebug = false, bool forceMenu = false)
+        public static TournamentXPSettings GetModLibSettings(bool forceDebug = false)
         {
-            //var modnames = Utilities.GetModulesNames().ToList();
-            //if (modnames.Contains("Bannerlord.MBOptionScreen"))
-            //{
-            //    if (forceMenu)
-            //    {
-            //        //Reenable ModLib settings menu option
-            //        //Probably not needed anymore
-            //        Module.CurrentModule.AddInitialStateOption(new InitialStateOption("ModOptionsMenu", new TextObject("ModLib Options"), 9990, () =>
-            //        {
-            //            ScreenManager.PushScreen(new ModOptionsGauntletScreen());
-            //        }, false));
-            //    }
-            //}
-
             try
             {
-                FileDatabase.Initialise(SettingsHelper.ModuleFolderName);
-                TournamentXPSettingsModLib settings = FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
-                if (settings == null) settings = new TournamentXPSettingsModLib();
-                SettingsDatabase.RegisterSettings(settings);
-                if (forceDebug)
-                    settings.DebugMode = true;
-                //        TournamentXPSettings.SetSettings(settings.GetSettings());
-                return settings.GetSettings();
+                var settings = GetSettingsFromModLib(forceDebug);
+                return settings;
             }
             catch (Exception ex)
             {
+                //Modlib failed to initialize - try loading it from MBOptionScreen instead
+
+                var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "Bannerlord.MBOptionScreen", "bin", "Win64_Shipping_Client", "ModLib.dll");
+                modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
+                if (File.Exists(modlibsettingsdll))
+                {
+                    try
+                    {
+                        Assembly assembly = Assembly.LoadFile(modlibsettingsdll);
+                        var settings = GetSettingsFromModLib(forceDebug);
+                        return settings;
+                    }
+                    catch(Exception ex2)
+                    {
+                        ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex2.ToStringFull());
+                    }
+                }
                 ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
-                return null;
             }
+            return null;
+        }
+
+        internal static TournamentXPSettings GetSettingsFromModLib(bool forceDebug = false)
+        {
+            FileDatabase.Initialise(SettingsHelper.ModuleFolderName);
+            TournamentXPSettingsModLib settings = FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
+            if (settings == null)
+            {
+                settings = new TournamentXPSettingsModLib();
+            }
+            SettingsDatabase.RegisterSettings(settings);
+            if (forceDebug)
+            {
+                settings.DebugMode = true;
+            }            
+            return settings.GetSettings();
         }
     }
 

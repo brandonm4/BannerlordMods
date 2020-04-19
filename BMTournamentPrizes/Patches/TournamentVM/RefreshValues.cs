@@ -28,7 +28,11 @@ namespace TournamentsXPanded.Patches.TournamentVMClass
 
         public override void Apply(Game game)
         {
-            if (Applied) return;
+            if (Applied)
+            {
+                return;
+            }
+
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
                   postfix: new HarmonyMethod(PatchMethodInfo)
               );
@@ -53,7 +57,7 @@ namespace TournamentsXPanded.Patches.TournamentVMClass
                     __instance.PrizeItemName = ire.EquipmentElement.GetModifiedItemName().ToString();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

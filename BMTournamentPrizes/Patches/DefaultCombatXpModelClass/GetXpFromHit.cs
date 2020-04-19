@@ -23,8 +23,8 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
         private static bool Prefix(CharacterObject attackerTroop, CharacterObject attackedTroop, int damage, bool isFatal, CombatXpModel.MissionTypeEnum missionType, out int xpAmount)
         {
-//            int num = attackedTroop.MaxHitPoints();
-//            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
+            //            int num = attackedTroop.MaxHitPoints();
+            //            xpAmount = MBMath.Round(0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0))));
 
             //            if (missionType == CombatXpModel.MissionTypeEnum.SimulationBattle)
             //            {
@@ -41,10 +41,10 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
             //                xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
             //            }
 
-     
+
             float single;
             int num = attackedTroop.MaxHitPoints();
-            float power = 0.4f * ((attackedTroop.GetPower() + 0.5f) * (float)(Math.Min(damage, num) + (isFatal ? num : 0)));
+            float power = 0.4f * ((attackedTroop.GetPower() + 0.5f) * (Math.Min(damage, num) + (isFatal ? num : 0)));
             if (missionType == CombatXpModel.MissionTypeEnum.NoXp)
             {
                 single = 0f;
@@ -69,8 +69,8 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
             return false;
 
-            
-    }
+
+        }
 
         public override bool IsApplicable(Game game)
         {
@@ -79,7 +79,10 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
 
         public override void Apply(Game game)
         {
-            if (Applied) return;
+            if (Applied)
+            {
+                return;
+            }
 
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
               prefix: new HarmonyMethod(PatchMethodInfo)

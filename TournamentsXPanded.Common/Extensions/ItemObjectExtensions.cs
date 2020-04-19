@@ -13,8 +13,10 @@ namespace XPanded.Common.Extensions
             string mountdesc = "Speed: {SPEED}\nManeuver: {MANEUVER}\nHealth: {HEALTH}\n";
 
             string desc = "{NAME}\n";
-            Dictionary<string, string> keyValues = new Dictionary<string, string>();
-            keyValues.Add("NAME", item.Name.ToString());
+            Dictionary<string, string> keyValues = new Dictionary<string, string>
+            {
+                { "NAME", item.Name.ToString() }
+            };
 
             if (item.IsCraftedWeapon)
             {
@@ -122,8 +124,10 @@ namespace XPanded.Common.Extensions
             string mountdesc = "Speed: {SPEED}\nManeuver: {MANEUVER}\nHealth: {HEALTH}\n";
 
             string desc = "{NAME}\n";
-            Dictionary<string, string> keyValues = new Dictionary<string, string>();
-            keyValues.Add("NAME", equipmentElement.GetModifiedItemName().ToString());
+            Dictionary<string, string> keyValues = new Dictionary<string, string>
+            {
+                { "NAME", equipmentElement.GetModifiedItemName().ToString() }
+            };
 
             if (equipmentElement.Item.IsCraftedWeapon)
             {

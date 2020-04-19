@@ -21,7 +21,7 @@ namespace BMTweakCollection.Patches
             ItemRosterElement[] copyOfAllElements = __instance.RightOwnerParty.ItemRoster.GetCopyOfAllElements();
             int totalItemCount = __instance.RightOwnerParty.ItemRoster.Count;
             ItemRosterElement[] cleanItemRoster = new ItemRosterElement[totalItemCount];
-            Array.Copy((Array)copyOfAllElements, 0, cleanItemRoster, 0, totalItemCount);
+            Array.Copy(copyOfAllElements, 0, cleanItemRoster, 0, totalItemCount);
             Array.Sort<ItemRosterElement>(cleanItemRoster, (ItemRosterElement left, ItemRosterElement right) =>
             {
                 EquipmentElement equipmentElement = left.EquipmentElement;
@@ -30,7 +30,7 @@ namespace BMTweakCollection.Patches
                 return itemValue.CompareTo(equipmentElement.ItemValue);
             });
             ItemRosterElement[] itemRosterElementArray = cleanItemRoster;
-            for (int i = 0; i < (int)itemRosterElementArray.Length; i++)
+            for (int i = 0; i < itemRosterElementArray.Length; i++)
             {
                 ItemRosterElement rosterElement = itemRosterElementArray[i];
                 ItemObject item = rosterElement.EquipmentElement.Item;

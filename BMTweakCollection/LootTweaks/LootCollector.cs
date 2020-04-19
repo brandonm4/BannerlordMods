@@ -183,7 +183,7 @@ namespace BMTweakCollection.Patches
             else if (partyToReceiveLoot.LeaderHero != null)
             {
                 int gold = ConvertLootToGold(LootCasualties(troopRosterElements1, 0.5f));
-                gold = MBMath.Round((float)gold * 0.5f * explainedNumber.ResultNumber);
+                gold = MBMath.Round(gold * 0.5f * explainedNumber.ResultNumber);
                 GiveGoldAction.ApplyBetweenCharacters(null, partyToReceiveLoot.LeaderHero, gold, false);
                 return false;
             }
@@ -198,7 +198,7 @@ namespace BMTweakCollection.Patches
             {
                 int amount = lootedItemsRecoveredFromCasualty.Amount;
                 EquipmentElement equipmentElement = lootedItemsRecoveredFromCasualty.EquipmentElement;
-                num = num + amount * MBMath.Round((float)equipmentElement.GetBaseValue() * 0.5f);
+                num = num + amount * MBMath.Round(equipmentElement.GetBaseValue() * 0.5f);
             }
             return num;
         }
@@ -258,8 +258,8 @@ namespace BMTweakCollection.Patches
                         float expectedLootedItemValue = 30f;
                         if (playerWin)
                         {
-                            float valLevel = (float)Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
-                            expectedLootedItemValue = 0.8f * ((30f * lootFactor) + (float)(valLevel * valLevel));
+                            float valLevel = Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
+                            expectedLootedItemValue = 0.8f * ((30f * lootFactor) + valLevel * valLevel);
                         }
                         else
                         {
@@ -281,8 +281,8 @@ namespace BMTweakCollection.Patches
                         float single = 30f; // ItemHelper.GetExpectedLootedItemValue(shareFromCasualty.Character);
                         if (playerWin)
                         {
-                            float valLevel = (float)Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
-                            single = 0.8f * (30f * lootFactor) + (float)(valLevel * valLevel);
+                            float valLevel = Math.Max(CharacterObject.PlayerCharacter.Level, shareFromCasualty.Character.Level);
+                            single = 0.8f * (30f * lootFactor) + valLevel * valLevel;
                         }
                         else
                         {
@@ -301,7 +301,7 @@ namespace BMTweakCollection.Patches
                                 if (itemModifierGroup != null)
                                 {
                                     equipmentElement = itemRosterElement.EquipmentElement;
-                                    randomModifierWithTarget = itemModifierGroup.GetRandomModifierWithTarget(single / (float)equipmentElement.GetBaseValue(), 1f);
+                                    randomModifierWithTarget = itemModifierGroup.GetRandomModifierWithTarget(single / equipmentElement.GetBaseValue(), 1f);
                                 }
                                 else
                                 {
@@ -318,7 +318,7 @@ namespace BMTweakCollection.Patches
                             if (itemModifierGroup1 != null)
                             {
                                 equipmentElement = itemRosterElement.EquipmentElement;
-                                itemModifier = itemModifierGroup1.GetRandomModifierWithTarget(single / (float)equipmentElement.GetBaseValue(), 1f);
+                                itemModifier = itemModifierGroup1.GetRandomModifierWithTarget(single / equipmentElement.GetBaseValue(), 1f);
                             }
                             else
                             {
@@ -384,8 +384,8 @@ namespace BMTweakCollection.Patches
                         item = equipment[j];
                         if (!item.Item.NotMerchandise)
                         {
-                            float value = (float)equipmentElement.Item.Value + 0.1f;
-                            float single = targetValue / (Math.Max(targetValue, value) * (float)num);
+                            float value = equipmentElement.Item.Value + 0.1f;
+                            float single = targetValue / (Math.Max(targetValue, value) * num);
                             if (MBRandom.RandomFloat < single)
                             {
                                 items.Add(equipmentElement);

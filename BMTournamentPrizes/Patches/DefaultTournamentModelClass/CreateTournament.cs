@@ -30,7 +30,11 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 
         public override void Apply(Game game)
         {
-            if (Applied) return;
+            if (Applied)
+            {
+                return;
+            }
+
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
                   prefix: new HarmonyMethod(PatchMethodInfo)
               );

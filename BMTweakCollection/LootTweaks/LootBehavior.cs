@@ -60,7 +60,10 @@ namespace BMTweakCollection.LootTweaks
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
             if (Mission.Current.CombatType != Mission.MissionCombatType.Combat)
+            {
                 return;
+            }
+
             try
             {
                 if ((affectedAgent.IsMainAgent == false && !affectedAgent.IsMount))
@@ -90,11 +93,11 @@ namespace BMTweakCollection.LootTweaks
                                     }
                                 }
 
-                                float itemValue = (float)equipmentFromSlot.Item.Value + 0.1f;
+                                float itemValue = equipmentFromSlot.Item.Value + 0.1f;
                                 if (itemValue > 1.3f * PlayerMaxValue || itemValue < 0.8f * PlayerMaxValue)
                                 {
                                     equipmentFromSlot = this.GetEquipmentWithModifier(equipmentFromSlot.Item, PlayerMaxValue / itemValue);
-                                    itemValue = (float)equipmentFromSlot.ItemValue;
+                                    itemValue = equipmentFromSlot.ItemValue;
                                 }
                                 if (itemValue > PlayerMaxValue * 1.3f)
                                 {

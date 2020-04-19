@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Google Translation Version -->
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language = "French" />
+    </tags>
+    <strings>
+      <string id = "tourn001" text = "Re-Roll" />
+      <string id = "tourn002" text = "Select Prize" />
+      <string id = "tourn003" text = "Sélectionnez le style de tournoi" />
+      <string id = "tourn004" text = "Tentatives de relance dépassées" />
+      <string id = "tourn005" text = "Sélection du prix du tournoi" />
+      <string id = "tourn006" text = "OK" />
+      <string id = "tourn007" text = "Cancel" />
+      <string id = "tourn008" text = "mêlée de groupe standard" />
+      <string id = "tourn009" text = "PVP / Deathmatch Melee" />
+      <string id = "tourn010" text = "Sélection du type de tournoi" />
+      <string id = "tourn011" text = "Dans quel type de tournoi aimeriez-vous participer aujourd'hui?" />
+      <string id = "tourn012" text = "Vous pouvez choisir un élément dans la liste ci-dessous comme récompense si vous gagnez le tournoi!" />
+    </strings>
+  </base>

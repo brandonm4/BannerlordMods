@@ -38,7 +38,11 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
         public override void Apply(Game game)
         {
-            if (Applied) return;
+            if (Applied)
+            {
+                return;
+            }
+
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
               prefix: new HarmonyMethod(PatchMethodInfo)
               {
@@ -105,7 +109,10 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
                     ErrorLog.Log("TournamentPrizePool:\n");
                     if (currentPool != null)
+                    {
                         ErrorLog.Log(Newtonsoft.Json.JsonConvert.SerializeObject(currentPool));
+                    }
+
                     ErrorLog.Log(ex.ToStringFull());
 
                     if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)

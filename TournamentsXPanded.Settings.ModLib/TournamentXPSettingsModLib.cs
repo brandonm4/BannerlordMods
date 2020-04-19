@@ -42,9 +42,9 @@ namespace TournamentsXPanded.Models
                             break;
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
-                        ErrorLog.Log("Error in assigning ModLib property to TXPSettings: " + pTXP.Name.ToString() + "\n" + ex.ToStringFull());
+                        ErrorLog.Log("Error in assigning ModLib property to TXPSettings: " + pTXP.Name + "\n" + ex.ToStringFull());
                     }
                 }
             }

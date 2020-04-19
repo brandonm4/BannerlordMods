@@ -46,8 +46,10 @@ namespace TournamentsXPanded.Behaviors
             }
             if (prize != null)
             {
-                obj.Prizes = new ItemRoster();
-                obj.Prizes.Add(new ItemRosterElement(prize, 1));
+                obj.Prizes = new ItemRoster
+                {
+                    new ItemRosterElement(prize, 1)
+                };
                 obj.SelectedPrizeStringId = prize.StringId;
             }
             else
@@ -57,8 +59,10 @@ namespace TournamentsXPanded.Behaviors
                     var townPrize = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town).Prize;
                     if (townPrize.StringId != obj.SelectedPrizeStringId)
                     {
-                        obj.Prizes = new ItemRoster();
-                        obj.Prizes.Add(new ItemRosterElement(townPrize, 1));
+                        obj.Prizes = new ItemRoster
+                        {
+                            new ItemRosterElement(townPrize, 1)
+                        };
                         obj.SelectedPrizeStringId = townPrize.StringId;
                         obj.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
                     }
@@ -163,9 +167,14 @@ namespace TournamentsXPanded.Behaviors
                     foreach (ItemRosterElement existingPrize in currentPool.Prizes)
                     {
                         if (!pickeditems.Contains(existingPrize.EquipmentElement.Item.StringId))
+                        {
                             pickeditems.Add(existingPrize.EquipmentElement.Item.StringId);
+                        }
+
                         if (allitems.Contains(existingPrize.EquipmentElement.Item.StringId))
+                        {
                             allitems.Remove(existingPrize.EquipmentElement.Item.StringId);
+                        }
                     }
                 }
             }
@@ -265,7 +274,7 @@ namespace TournamentsXPanded.Behaviors
 
         public static List<string> GetItemStringsRevised(TournamentGame tournamentGame, List<ItemObject.ItemTypeEnum> validTypes)
         {
-            string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+            string[] strArray = new string[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
             List<string> allitems = new List<string>();
             if (TournamentXPSettings.Instance.PrizeListIncludeLegacy)
             {
@@ -335,25 +344,25 @@ namespace TournamentsXPanded.Behaviors
                 maxValue = TournamentPrizePoolBehavior.GetMaxPrizeValue();
             }
 
-            string[] strArray = new String[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+            string[] strArray = new string[] { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
 
             ItemObject obj = Game.Current.ObjectManager.GetObject<ItemObject>(strArray.GetRandomElement<string>());
             ItemObject itemObject = MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) =>
             {
-                if ((float)item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
+                if (item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
                 {
                     if (TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
                     {
                         var validPizeTypes = TournamentPrizePoolBehavior.GetActivePrizeTypes();
 
-                        if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture &&
+                        if (item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture &&
                             validPizeTypes.Contains(item.ItemType)
                         )
                         {
                             return 1f;
                         }
                     }
-                    else if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
+                    else if (item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && item.Culture == settlement.Town.Culture && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
                     {
                         return 1f;
                     }
@@ -361,9 +370,9 @@ namespace TournamentsXPanded.Behaviors
                 return 0f;
             }) ?? MBRandom.ChooseWeighted<ItemObject>(ItemObject.All, (ItemObject item) =>
             {
-                if ((float)item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
+                if (item.Value > minValue * (item.IsMountable ? 0.5f : 1f))
                 {
-                    if ((float)item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
+                    if (item.Value < maxValue * (item.IsMountable ? 0.5f : 1f) && (item.IsCraftedWeapon || item.IsMountable || item.ArmorComponent != null))
                     {
                         return 1f;
                     }
@@ -715,9 +724,14 @@ namespace TournamentsXPanded.Behaviors
                     if (hero.IsFactionLeader)
                     {
                         if (hero.MapFaction.IsKingdomFaction)
+                        {
                             worth += TournamentPrizePoolBehavior.RenownPerHeroProperty[(int)RenownHeroTier.IsMajorFactionLeader];
+                        }
+
                         if (hero.MapFaction.IsMinorFaction)
+                        {
                             worth += TournamentPrizePoolBehavior.RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                        }
                     }
                 }
             }
@@ -735,13 +749,13 @@ namespace TournamentsXPanded.Behaviors
             //Get armor bonus
             threat += character.GetArmArmorSum() * 2 + character.GetBodyArmorSum() * 4 + character.GetLegArmorSum() + character.GetHeadArmorSum() * 2;
             ////Get skills based
-            threat += (float)character.GetSkillValue(DefaultSkills.Bow)
+            threat += character.GetSkillValue(DefaultSkills.Bow)
                 + (float)character.GetSkillValue(DefaultSkills.OneHanded)
-                + (float)character.GetSkillValue(DefaultSkills.TwoHanded)
-                + (float)character.GetSkillValue(DefaultSkills.Throwing)
-                + (float)character.GetSkillValue(DefaultSkills.Polearm)
-                + (float)character.GetSkillValue(DefaultSkills.Riding);
-            threat += (float)character.HitPoints;
+                + character.GetSkillValue(DefaultSkills.TwoHanded)
+                + character.GetSkillValue(DefaultSkills.Throwing)
+                + character.GetSkillValue(DefaultSkills.Polearm)
+                + character.GetSkillValue(DefaultSkills.Riding);
+            threat += character.HitPoints;
 
             return threat;
         }
@@ -749,7 +763,9 @@ namespace TournamentsXPanded.Behaviors
         public static List<ItemObject.ItemTypeEnum> GetActivePrizeTypes()
         {
             if (!TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
+            {
                 return _allValidTypes;
+            }
 
             List<ItemObject.ItemTypeEnum> validTypes = new List<ItemObject.ItemTypeEnum>();
             if (TournamentXPSettings.Instance.EnableItemType_BodyArmor)
@@ -845,12 +861,12 @@ namespace TournamentsXPanded.Behaviors
 
         public static int GetMinPrizeValue(Settlement settlement = null)
         {
-            return MathF.Floor(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel))) * GetProsperityModifier(settlement));
+            return MathF.Floor(((float)TournamentXPSettings.Instance.TownPrizeMin + MathF.Ceiling((Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel))) * GetProsperityModifier(settlement));
         }
 
         public static int GetMaxPrizeValue(Settlement settlement = null)
         {
-            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling(((float)Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * GetProsperityModifier(settlement));
+            return MathF.Ceiling(((float)TournamentXPSettings.Instance.TownPrizeMax + MathF.Ceiling((Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * GetProsperityModifier(settlement));
         }
 
         public static float GetProsperityModifier(Settlement settlement)

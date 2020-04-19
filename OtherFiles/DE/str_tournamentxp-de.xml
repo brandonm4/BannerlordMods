@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Google Translation Version -->
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="Deutsch" />
+  </tags>
+  <strings>
+    <string id="tourn001" text="Preis zurücksetzen" />
+    <string id = "Tourn002" text = "Preis auswählen" />
+    <string id = "Tourn003" text = "Turnierstil auswählen" />
+    <string id = "Tourn004" text = "Wiederholte Versuche erneut ausgeführt" />
+    <string id = "Tourn005" text = "Turnierpreisauswahl" />
+    <string id = "Tourn006" text = "OK" />
+    <string id = "Tourn007" text = "Abbrechen" />
+    <string id = "Tourn008" text = "Standardgruppen-Nahkampf" />
+    <string id = "Tourn009" text = "PVP / Deathmatch Nahkampf" />
+    <string id = "Tourn010" text = "Auswahl des Turniertyps" />
+    <string id = "Tourn011" text = "An welcher Art von Turnier möchten Sie heute teilnehmen?" />
+    <string id = "Tourn012" text = "Sie können einen Gegenstand aus der folgenden Liste als Belohnung auswählen, wenn Sie das Turnier gewinnen!" />
+  </strings>
+</base>

@@ -34,7 +34,9 @@ namespace TournamentsXPanded.Common
         public static void ShowMessage(string msg, Color? color = null)
         {
             if (color == null)
+            {
                 color = Color.White;
+            }
 
             InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }

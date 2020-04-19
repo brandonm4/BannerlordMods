@@ -22,9 +22,13 @@ namespace BMTweakCollection.Models
                 explanation?.Lines.Remove(explanation.Lines.Last());
 
                 if (town.IsCastle)
+                {
                     en.Add(2.0f, new TextObject("Military rations"));
+                }
                 else if (town.IsTown)
+                {
                     en.Add(4.0f, new TextObject("Citizen food drive"));
+                }
 
                 __result = en.ResultNumber;
             }
@@ -49,13 +53,15 @@ namespace BMTweakCollection.Models
                     var sk = party.Scout.GetSkillValue(DefaultSkills.Scouting);
                     if (sk > 0)
                     {
-                        var mod = 1.0f - ((float)sk / 300.0f);
+                        var mod = 1.0f - (sk / 300.0f);
                         if (mod < 0.1f)
+                        {
                             mod = 0.1f;
+                        }
 
                         mod = MBRandom.RandomFloatRanged(mod, 1.0f);
                         var orig = __result;
-                        var deduction = (orig - ((__result * mod))) * -1f; ;
+                        var deduction = (orig - ((__result * mod))) * -1f;
 
                         ExplainedNumber en = new ExplainedNumber(__result, explainer);
                         explainer?.Lines.Remove(explainer.Lines.Last());

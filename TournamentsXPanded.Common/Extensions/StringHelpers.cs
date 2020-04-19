@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 using TournamentsXPanded.Common;
 
 namespace XPanded.Common.Extensions
@@ -8,7 +7,7 @@ namespace XPanded.Common.Extensions
     {
         public static bool ConvertToBool(this string s)
         {
-            if (!String.IsNullOrWhiteSpace(s))
+            if (!string.IsNullOrWhiteSpace(s))
             {
                 s = s.Trim().ToLower();
                 switch (s)
@@ -26,7 +25,7 @@ namespace XPanded.Common.Extensions
 
         public static PrizeListMode ToPrizeListMode(this string s)
         {
-            if (!String.IsNullOrWhiteSpace(s))
+            if (!string.IsNullOrWhiteSpace(s))
             {
                 s = s.Trim().ToLower();
                 switch (s)

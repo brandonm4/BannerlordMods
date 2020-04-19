@@ -39,7 +39,11 @@ namespace BMTweakCollection
             {
                 FileDatabase.Initialise(ModuleFolderName);
                 BMRandomTweaksConfiguration settings = FileDatabase.Get<BMRandomTweaksConfiguration>(BMRandomTweaksConfiguration.InstanceID);
-                if (settings == null) settings = new BMRandomTweaksConfiguration();
+                if (settings == null)
+                {
+                    settings = new BMRandomTweaksConfiguration();
+                }
+
                 SettingsDatabase.RegisterSettings(settings);
             }
             catch (Exception ex)
@@ -181,7 +185,9 @@ namespace BMTweakCollection
         public static void ShowMessage(string msg, Color? color = null)
         {
             if (color == null)
+            {
                 color = Color.White;
+            }
 
             InformationManager.DisplayMessage(new InformationMessage(msg, (Color)color));
         }

@@ -63,9 +63,14 @@ namespace TournamentsXPanded
 
                 var patchApplied = patch.Applied;
                 if (patchApplied)
+                {
                     ActivePatches[patch.GetType()] = patch;
+                }
+
                 if (TournamentXPSettings.Instance.DebugMode)
+                {
                     ShowMessage($"{(patchApplied ? "Applied" : "Skipped")} Patch: {patch.GetType().Name}", (patchApplied ? Colors.Cyan : Colors.Red));
+                }
             }
         }
 
@@ -76,7 +81,9 @@ namespace TournamentsXPanded
             get
             {
                 if (_patches != null)
+                {
                     return _patches;
+                }
 
                 var patchInterfaceType = typeof(IPatch);
                 _patches = new LinkedList<IPatch>();
@@ -84,9 +91,14 @@ namespace TournamentsXPanded
                 foreach (var type in typeof(TournamentsXPandedSubModule).Assembly.GetTypes())
                 {
                     if (type.IsInterface || type.IsAbstract)
+                    {
                         continue;
+                    }
+
                     if (!patchInterfaceType.IsAssignableFrom(type))
+                    {
                         continue;
+                    }
 
                     try
                     {

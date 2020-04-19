@@ -29,7 +29,11 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
 
         public override void Apply(Game game)
         {
-            if (Applied) return;
+            if (Applied)
+            {
+                return;
+            }
+
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
                   postfix: new HarmonyMethod(PatchMethodInfo)
               );

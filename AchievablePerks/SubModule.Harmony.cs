@@ -63,9 +63,14 @@ namespace AchievablePerks
 
                 var patchApplied = patch.Applied;
                 if (patchApplied)
+                {
                     ActivePatches[patch.GetType()] = patch;
+                }
+
                 if (AchievablePerksSettings.Instance.DebugMode)
+                {
                     ShowMessage($"{(patchApplied ? "Applied" : "Skipped")} Patch: {patch.GetType().Name}", (patchApplied ? Colors.Cyan : Colors.Red));
+                }
             }
         }
 
@@ -76,7 +81,9 @@ namespace AchievablePerks
             get
             {
                 if (_patches != null)
+                {
                     return _patches;
+                }
 
                 var patchInterfaceType = typeof(IPatch);
                 _patches = new LinkedList<IPatch>();
@@ -84,9 +91,14 @@ namespace AchievablePerks
                 foreach (var type in typeof(AchievablePerksSubModule).Assembly.GetTypes())
                 {
                     if (type.IsInterface || type.IsAbstract)
+                    {
                         continue;
+                    }
+
                     if (!patchInterfaceType.IsAssignableFrom(type))
+                    {
                         continue;
+                    }
 
                     try
                     {
@@ -94,11 +106,11 @@ namespace AchievablePerks
                         //var patch = (IPatch) FormatterServices.GetUninitializedObject(type);
                         _patches.AddLast(patch);
                     }
-                    catch (TargetInvocationException tie)
+                    catch (TargetInvocationException)
                     {
                         //     Error(tie.InnerException, $"Failed to create instance of patch: {type.FullName}");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Error(ex, $"Failed to create instance of patch: {type.FullName}");
                     }

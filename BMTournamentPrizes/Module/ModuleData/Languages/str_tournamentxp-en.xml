@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string" text="
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
   <tags>
     <tag language="English" />
   </tags>
   <strings>
-    <string id="tourn001" text="Test" />
-	<string id="tourn002" text="Select Prize" />
+    <string id="tourn001" text="Re-roll Prize" />
+    <string id="tourn002" text="Select Prize" />
     <string id="tourn003" text="Select Tournament Style" />
     <string id="tourn004" text="Re-roll Attempts Exceeded" />
     <string id="tourn005" text="Tournament Prize Selection" />

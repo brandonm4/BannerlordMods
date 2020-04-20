@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -27,11 +27,34 @@ namespace TournamentsXPanded
     public partial class TournamentsXPandedSubModule : XPandedSubModuleBase
     {
         private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
+        private bool disabled = false;
 
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
 
+            var version = ModuleInfo.GetModules().Where(x => x.Name == "Native").Select(x => new { x.Name, x.Version }).FirstOrDefault().Version;
+            bool mismatch = false;
+#if VERSION120
+            if (version.Major == 1 && version.Minor < 2)
+            {
+                mismatch = true;
+            }
+#endif
+#if VERSION111
+            if (version.Major == 1 && version.Minor > 1)
+            {
+                mismatch = true;
+            }
+            if (version.Major > 1)
+            {
+            mismatch = true;
+            }
+#endif
+            if (mismatch)
+            {
+                MessageBox.Show("TournamentsXPanded Version Mismatch detected.\nInstall the correct one for your version of the game.\nGame Version: " + version.Major + "." + version.Minor + "." + version.Revision);
+            }
             SettingsHelper.LoadSettings();
 
             //Setup Item Filters if needed
@@ -104,13 +127,20 @@ namespace TournamentsXPanded
                     RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
                     RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
                 }
+
+                //Setup Custom Items.
                 string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
                 if (File.Exists(customfile))
                 {
                     var configtxt = File.ReadAllText(customfile);
                     var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-                    InitCustomItems(customItems);
+                    //InitCustomItems(customItems);
+                    InitItemsList(customItems, out TournamentPrizePoolBehavior._customItems);
                 }
+
+                //Setup Legacy Items
+                List<string> strArray = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+                InitItemsList(strArray, out TournamentPrizePoolBehavior._legacyItems);
 
                 if (TournamentXPSettings.Instance.DebugMode)
                 {
@@ -178,7 +208,7 @@ namespace TournamentsXPanded
                 var settingsjson = JsonConvert.SerializeObject(TournamentXPSettings.Instance, serializerSettings);
                 diag += settingsjson;
                 diag += "\n\n\nCustom Item List";
-                diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTourneyItems.Select(x => x.StringId), serializerSettings);
+                diag += JsonConvert.SerializeObject(TournamentPrizePoolBehavior.CustomTournamentItems.Select(x => x.StringId), serializerSettings);
                 diag += "\n\n\nAll stored prize pools\n";
             }
             catch (Exception ex)
@@ -237,15 +267,13 @@ namespace TournamentsXPanded
                 }
             }
         }
-
-
-
-        private void InitCustomItems(List<string> customItems)
+               
+        private void InitItemsList(List<string> itemStringIds, out List<ItemObject> itemList)
         {
-            List<ItemObject> tourneyItems = new List<ItemObject>();
+             itemList = new List<ItemObject>();
             List<string> problemids = new List<string>();
-            TournamentPrizePoolBehavior.CustomTourneyItems = new List<ItemObject>();
-            foreach (var id in customItems)
+
+            foreach (var id in itemStringIds)
             {
                 ItemObject item;
                 try
@@ -263,7 +291,8 @@ namespace TournamentsXPanded
                 }
                 else
                 {
-                    TournamentPrizePoolBehavior.CustomTourneyItems.Add(item);
+                    // TournamentPrizePoolBehavior.CustomTournamentItems.Add(item);
+                    itemList.Add(item);
                 }
             }
             if (problemids.Count > 0)

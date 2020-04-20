@@ -59,19 +59,33 @@
 
         public bool PrizeListIncludeLegacy { get; set; } = true;
 
-        public int TownPrizeMin { get; set; } = 1600;
+        public int PrizeValueMin { get; set; } = 1600;
 
-        public int TownPrizeMax { get; set; } = 8500;
+        public int PrizeValueMax { get; set; } = 8500;
 
         public int PrizeValueMaxIncreasePerLevel { get; set; } = 500;
 
         public int PrizeValueMinIncreasePerLevel { get; set; } = 10;
-
-        public bool TownPrizeMinMaxAffectsVanilla { get; set; }
-
-        public bool TownPrizeMinMaxAffectsCustom { get; set; }
-
         public bool TownProsperityAffectsPrizeValues { get; set; } = true;
+
+
+        public bool PrizeFilterValueTownItems { get; set; } = true;
+        public bool PrizeFilterValueCustomItems { get; set; } = false;
+        public bool PrizeFilterValueStandardItems { get; set; } = true;
+        public bool PrizeFilterValueLegacyItems { get; set; } = false;
+
+        public bool PrizeFilterCultureTownItems { get; set; } = false;
+        public bool PrizeFilterCultureCustomItems { get; set; } = false;
+        public bool PrizeFilterCultureStandardItems { get; set; } = true;
+        public bool PrizeFilterCultureLegacyItems { get; set; } = false;
+
+
+        public bool PrizeFilterItemTypesTownItems { get; set; } = true;
+        public bool PrizeFilterItemTypesCustomItems { get; set; } = false;
+        public bool PrizeFilterItemTypesStandardItems { get; set; } = true;
+        public bool PrizeFilterItemTypesLegacyItems { get; set; } = false;
+
+
 
         public float TownProsperityLow { get; set; } = .65f;
 
@@ -108,7 +122,8 @@
         public bool EnableItemType_Horse { get; set; } = true;
 
         public bool EnableItemType_HorseHarness { get; set; } = true;
-
+        public bool EnableItemType_Arrow { get; set; } = true;
+        public bool EnableItemType_Bolt { get; set; } = true;
         #region Bonus Winnings
 
         public int BonusTournamentMatchGold { get; set; } = 0;

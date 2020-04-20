@@ -105,159 +105,215 @@ namespace TournamentsXPanded.Models
         #region Prize Selection
 
         [XmlElement]
-        [SettingProperty("Prize Selection", "Should the Select Prize from the Prize Pool be enable. ")]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("1. Prize Selection", "Should the Select Prize from the Prize Pool be enable. This only affects the popups, not the other filter selections.")]
+        [SettingPropertyGroup("3. Prize Selection/3.1 Prize Selection")]
         public bool EnablePrizeSelection { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("3. Prize Selection")]
-        [SettingProperty("Prizes Per Pool", 0, 10)]
+        [SettingPropertyGroup("3. Prize Selection/3.1 Prize Selection")]
+        [SettingProperty("2. Prizes Per Pool", 0, 10)]
         public int NumberOfPrizeOptions { get; set; } = 3;
 
+        #region 3.2 Prize Sources
         [XmlElement]
-        [SettingPropertyGroup("3. Prize Selection")]
-        [SettingProperty("Include Town Inventory")]
+        [SettingPropertyGroup("3. Prize Selection/3.2 Prize Sources")]
+        [SettingProperty("1. Include Town Inventory", "Items in the current towns stock are included for consideration.")]
         public bool PrizeListIncludeTown { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("3. Prize Selection")]
-        [SettingProperty("Include Vanilla")]
+        [SettingPropertyGroup("3. Prize Selection/3.2 Prize Sources")]
+        [SettingProperty("2. Include Standard(Vanilla) Items", "This is all items in the world.  Could include crafted, or other modded items if they were registered to the game item library.")]
         public bool PrizeListIncludeVanilla { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("3. Prize Selection")]
-        [SettingProperty("Include Custom")]
+        [SettingPropertyGroup("3. Prize Selection/3.2 Prize Sources")]
+        [SettingProperty("3. Include Custom List", "Items from the custom prize list - CustomPrizeItems.json - are included for consideration.")]
         public bool PrizeListIncludeCustom { get; set; } = false;
 
         [XmlElement]
-        [SettingPropertyGroup("3. Prize Selection")]
-        [SettingProperty("Include Legacy")]
-        public bool PrizeListIncludeLegacy { get; set; } = true;
+        [SettingPropertyGroup("3. Prize Selection/3.2 Prize Sources")]
+        [SettingProperty("4. Include Legacy", "These are the items from v1.0.5 and lower of Bannerlord.  They include the named items like Early Retirement or The Scalpal.")]
+        public bool PrizeListIncludeLegacy { get; set; } = false;
+        #endregion
+        #region 3.3 Prize Value
+        [XmlElement]
+        [SettingProperty("1. Prize Min Value", 0, 10000, "Any item below this value will not be used.")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
+        public int PrizeValueMin { get; set; } = 1600;
 
         [XmlElement]
-        [SettingProperty("Town Prize Min Value", 0, 10000, "Any item below this value will not be used.")]
-        [SettingPropertyGroup("3. Prize Selection")]
-        public int TownPrizeMin { get; set; } = 1600;
+        [SettingProperty("2. Prize Max Value", 0, 300000, "Any item above this value will not be used.")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
+        public int PrizeValueMax { get; set; } = 8500;
 
         [XmlElement]
-        [SettingProperty("Town Prize Max Value", 0, 300000, "Any item above this value will not be used.")]
-        [SettingPropertyGroup("3. Prize Selection")]
-        public int TownPrizeMax { get; set; } = 8500;
-
-        [XmlElement]
-        [SettingProperty("Prize Value Per Level", 0, 10000)]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("3. Prize Value Per Level", 0, 10000, "Max Item Value is increased by this per character level.")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
         public int PrizeValueMaxIncreasePerLevel { get; set; } = 500;
-
+       
         [XmlElement]
-        [SettingProperty("Prize Value Per Level", 0, 10000)]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("4. Prize Value Per Level", 0, 10000, "Min Item Value is increased by this per character level.")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
         public int PrizeValueMinIncreasePerLevel { get; set; } = 10;
 
         [XmlElement]
-        [SettingProperty("Prize Value Filters Vanilla Items")]
-        [SettingPropertyGroup("3. Prize Selection")]
-        public bool TownPrizeMinMaxAffectsVanilla { get; set; }
+        [SettingProperty("5. Prize Filter: MinMax Value Applies to Town Inventory")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
+        public bool PrizeFilterValueTownItems { get; set; } = true;
 
         [XmlElement]
-        [SettingProperty("Prize Value Filters Custom Items")]
-        [SettingPropertyGroup("3. Prize Selection")]
-        public bool TownPrizeMinMaxAffectsCustom { get; set; }
+        [SettingProperty("6. Prize Filter: MinMax Value Applies to Custom Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
+        public bool PrizeFilterValueCustomItems { get; set; } = false;
 
         [XmlElement]
-        [SettingProperty("Town Prosperity Affects Prize Value")]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("7. Prize Filter: MinMax Value Applies to Standard Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
+        public bool PrizeFilterValueStandardItems { get; set; } = true;
+
+        [XmlElement]
+        [SettingProperty("8. Prize Filter: MinMax Value Applies to Legacy Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
+        public bool PrizeFilterValueLegacyItems { get; set; } = true;
+
+        [XmlElement]
+        [SettingProperty("9. Town Prosperity Affects Prize Value")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
         public bool TownProsperityAffectsPrizeValues { get; set; } = true;
-
         [XmlElement]
-        [SettingProperty("Town Prosperity: Low", 0, 1f, "Setting is a decimal so .65 means 65% of max value")]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("10. Town Prosperity: Low", 0, 1f, "Setting is a decimal so .65 means 65% of max value")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
         public float TownProsperityLow { get; set; } = .65f;
 
         [XmlElement]
-        [SettingProperty("Town Prosperity: Mid", 0, 2f, "Setting is a decimal so 1.0 means 100% of max value")]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("11. Town Prosperity: Mid", 0, 2f, "Setting is a decimal so 1.0 means 100% of max value")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
         public float TownProsperityMid { get; set; } = 1.0f;
 
         [XmlElement]
-        [SettingProperty("Town Prosperity: High", 0, 3f, "Setting is a decimal so 1.3 means 130% of max value")]
-        [SettingPropertyGroup("3. Prize Selection")]
+        [SettingProperty("12. Town Prosperity: High", 0, 3f, "Setting is a decimal so 1.3 means 130% of max value")]
+        [SettingPropertyGroup("3. Prize Selection/3.3 Prize Value")]
         public float TownProsperityHigh { get; set; } = 1.3f;
+        #endregion
+
+
+
+        #region 3.4 Prize Types Filter
+        [XmlElement]
+        [SettingProperty("Enable Prize Type Filter for Town Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        public bool PrizeFilterItemTypesTownItems { get; set; } = true;
+        [XmlElement]
+        [SettingProperty("Enable Prize Type Filter for Custom Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        public bool PrizeFilterItemTypesCustomItems { get; set; } = false;
+        [XmlElement]
+        [SettingProperty("Enable Prize Type Filter for Standard Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        public bool PrizeFilterItemTypesStandardItems { get; set; } = true;
+        [XmlElement]
+        [SettingProperty("Enable Prize Type Filter for Legacy Items")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        public bool PrizeFilterItemTypesLegacyItems { get; set; } = false;
+
 
         [XmlElement]
-        [SettingProperty("Prize Type Filter")]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        public bool EnablePrizeTypeFilterToLists { get; set; } = false;
-
-        [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Bow")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Bows")]
         public bool EnableItemType_Bow { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Crossbow")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Crossbows")]
         public bool EnableItemType_Crossbow { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType OneHanded Weapon")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow OneHanded Weapons")]
         public bool EnableItemType_OneHandedWeapon { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Polearm")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Polearms")]
         public bool EnableItemType_Polearm { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Shield")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Shields")]
         public bool EnableItemType_Shield { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Thrown")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Thrown Weapons")]
         public bool EnableItemType_Thrown { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType TwoHanded Weapon")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow TwoHanded Weapons")]
         public bool EnableItemType_TwoHandedWeapon { get; set; } = true;
-
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType HeadArmor")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Arrows")]
+        public bool EnableItemType_Arrow { get; set; } = true;
+        [XmlElement]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Bolts")]
+        public bool EnableItemType_Bolt { get; set; } = true;
+        [XmlElement]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Head Armor")]
         public bool EnableItemType_HeadArmor { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType HandArmor")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Hand Armor")]
         public bool EnableItemType_HandArmor { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType BodyArmor")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Body Armor")]
         public bool EnableItemType_BodyArmor { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Leg Armor")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Leg Armor")]
         public bool EnableItemType_LegArmor { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Cape/Shoulders")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Cape/Shoulders")]
         public bool EnableItemType_Cape { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Horse")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Horse")]
         public bool EnableItemType_Horse { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("4. Prize Type Filter")]
-        [SettingProperty("Allow ItemType Horse Harness/Saddle")]
+        [SettingPropertyGroup("3. Prize Selection/3.4 Prize Type Filter")]
+        [SettingProperty("Allow Horse Harness/Saddle")]
         public bool EnableItemType_HorseHarness { get; set; } = true;
+        #endregion
+        #region 3.5 Prize Filter on Culture
+        [XmlElement]
+        [SettingProperty("Filter Town Stock by Town Culture", "Only allow items from the current towns culture in the item pool.")]
+        [SettingPropertyGroup("3. Prize Selection/3.5 Prize Type Filter")]
+        public bool PrizeFilterCultureTownItems { get; set; } = false;
+        [XmlElement]
+        [SettingProperty("Filter Custom by Town Culture", "Only allow items from the current towns culture in the item pool.")]
+        [SettingPropertyGroup("3. Prize Selection/3.5 Prize Type Filter")]
+        public bool PrizeFilterCultureCustomItems { get; set; } = false;
+        [XmlElement]
+        [SettingProperty("Filter Standard Items by Town Culture", "Only allow items from the current towns culture in the item pool.")]
+        [SettingPropertyGroup("3. Prize Selection/3.5 Prize Type Filter")]
+        public bool PrizeFilterCultureStandardItems { get; set; } = true;
+        [XmlElement]
+        [SettingProperty("Filter Legacy Items by Town Culture", "Only allow items from the current towns culture in the item pool.")]
+        [SettingPropertyGroup("3. Prize Selection/3.5 Prize Type Filter")]
+        public bool PrizeFilterCultureLegacyItems { get; set; } = false;
+
+        #endregion
+
 
         #region Bonus Winnings
 

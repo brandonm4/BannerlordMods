@@ -2,7 +2,7 @@
 <Module>
   <Name value="Tournaments XPanded"/>
   <Id value="TournamentsXPanded"/>
-  <Version value="e1.5.11"/>
+  <Version value="e1.5.13"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <Official value="false"/>

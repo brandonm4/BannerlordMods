@@ -60,18 +60,7 @@ namespace TournamentsXPanded
             //Setup Item Filters if needed
             if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
             {
-                //Eventually plan to let people define their own
-                restrictors.Add(new TournamentEquipmentRestrictor
-                {
-                    IgnoreMounted = true,
-                    ExcludedItemTypeString = "Polearm",
-                    ReplacementStringId = "sturgia_sword_1_t2",
-                });
-
-                foreach (var d in restrictors)
-                {
-                    d.ItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ExcludedItemTypeString);
-                }
+                CreateEquipmentRules();
             }
 
             //Add localizations
@@ -148,7 +137,7 @@ namespace TournamentsXPanded
                     {
                         CreateDiagnostics();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         ErrorLog.Log("ERROR CREATING DIAGNOSTICS\n" + ex.ToStringFull());
                     }
@@ -248,29 +237,114 @@ namespace TournamentsXPanded
 
         private void RemoveTournamentSpearFootSets(string[] templates)
         {
-            foreach (var r in restrictors)
+            foreach (var r in restrictors.OrderBy(x => x.RuleOrder))
             {
                 foreach (var t in templates)
                 {
-                    foreach (Equipment battleEquipment in MBObjectManager.Instance.GetObject<CharacterObject>(t).BattleEquipments)
+                    var template = MBObjectManager.Instance.GetObject<CharacterObject>(t);
+                    if (!string.IsNullOrWhiteSpace(r.TargetCultureId))
                     {
-                        if (r.IgnoreMounted && battleEquipment.Horse.Item != null)
+                        if (template.Culture.StringId != r.TargetCultureId)
                         {
-                            break;
+                            continue;
                         }
-                        if (battleEquipment.GetEquipmentFromSlot(EquipmentIndex.Weapon0).Item.ItemType == r.ItemType)
+                    }
+                    try
+                    {
+                        foreach (Equipment battleEquipment in template.BattleEquipments)
                         {
-                            var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(r.ReplacementStringId));
-                            battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Weapon0, itemRoster.EquipmentElement);
+                            if (r.TargetIgnoreMounted && battleEquipment.Horse.Item != null)
+                            {
+                                continue;
+                            }
+                            if (battleEquipment.GetEquipmentFromSlot(EquipmentIndex.Weapon0).Item.ItemType == r.TargetItemType)
+                            {
+                                if (r.ReplacementAddHorse)
+                                {
+                                    var horseid = ItemObject.All.Where(x => x.Culture == template.Culture && x.ItemType == ItemObject.ItemTypeEnum.Horse).GetRandomElement().StringId;
+                                    var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(horseid));
+                                    battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Horse, itemRoster.EquipmentElement);
+                                }
+
+                                if (r.ReplacementItemType != ItemObject.ItemTypeEnum.Invalid)
+                                {
+                                    var repitem = ItemObject.All.Where(x => x.Culture == template.Culture && x.ItemType == r.ReplacementItemType).GetRandomElement();
+                                    var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(repitem.StringId));
+                                    battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Weapon0, itemRoster.EquipmentElement);
+                                }
+                                else
+                                    if (!string.IsNullOrWhiteSpace(r.ReplacementItemStringId))
+                                {
+                                    var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(r.ReplacementItemStringId));
+                                    battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Weapon0, itemRoster.EquipmentElement);
+                                }
+
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("TournamentsXPanded\nError Applying Rule Equipement Filter\n" + ex.ToStringFull());
+                        ErrorLog.Log("Error Applying Rule Equipement Filter\n" + ex.ToStringFull());
                     }
                 }
             }
+
         }
-               
+        private void CreateEquipmentRules()
+        {
+            try
+            {
+                var rulespath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "equipmentrules.json");
+                if (File.Exists(rulespath))
+                {
+                    var rulestext = File.ReadAllText(rulespath);
+                    restrictors = JsonConvert.DeserializeObject<List<TournamentEquipmentRestrictor>>(rulestext);
+                }
+                else
+                {
+                    restrictors.Add(new TournamentEquipmentRestrictor
+                    {
+                        TargetIgnoreMounted = true,
+                        TargetCultureId = "khuzait",
+                        TargetItemTypeString = "Polearm",
+                        ReplacementAddHorse = true,
+                        RuleOrder = 1,
+                    });
+                    //Eventually plan to let people define their own
+                    restrictors.Add(new TournamentEquipmentRestrictor
+                    {
+                        TargetIgnoreMounted = true,
+                        TargetItemTypeString = "Polearm",
+                        ReplacementItemTypeString = "OneHandedWeapon",
+                        //ReplacementStringId = "sturgia_sword_1_t2",
+                        RuleOrder = 5,
+                    });
+
+                    File.WriteAllText(rulespath,
+                    JsonConvert.SerializeObject(restrictors, new JsonSerializerSettings
+                    {
+                        Formatting = Formatting.Indented
+                    }));
+                }
+
+                foreach (var d in restrictors)
+                {
+                    if (!string.IsNullOrWhiteSpace(d.TargetItemTypeString))
+                        d.TargetItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.TargetItemTypeString);
+                    if (!string.IsNullOrWhiteSpace(d.ReplacementItemTypeString))
+                        d.ReplacementItemType = (ItemObject.ItemTypeEnum)Enum.Parse(typeof(ItemObject.ItemTypeEnum), d.ReplacementItemTypeString);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("TournamentsXPanded\nError Processing Rule Equipement Filter\n" + ex.ToStringFull());
+                ErrorLog.Log("Error Processing Rule Equipement Filter\n" + ex.ToStringFull());
+            }
+        }
         private void InitItemsList(List<string> itemStringIds, out List<ItemObject> itemList)
         {
-             itemList = new List<ItemObject>();
+            itemList = new List<ItemObject>();
             List<string> problemids = new List<string>();
 
             foreach (var id in itemStringIds)

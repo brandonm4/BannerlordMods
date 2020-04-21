@@ -5,7 +5,7 @@ using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
@@ -94,8 +94,9 @@ namespace TournamentsXPanded.Behaviors
                     //var ee = GetEquipmentWithModifier(pickedPrize, TournamentPrizePoolBehavior.GetProsperityModifier(tournamentGame.Town.Settlement));
                     if (MBRandom.RandomFloatRanged(100f) < 50f)
                     {
-                        var ee = GetEquipmentWithModifier(pickedPrize, 1.3f);
+                        var ee = GetEquipmentWithModifier(pickedPrize, 1.3f);                        
                         itemModifier = ee.ItemModifier;
+                        
                     }
                         
                 }
@@ -203,7 +204,9 @@ namespace TournamentsXPanded.Behaviors
             
 			if (allitems.Count == 0)
             {
-				//Alert - fix it somehow
+                //Alert - fix it somehow
+                MessageBox.Show("TournamentXPanded Error:\nYour filters are too strict, no items are found to populate the tournaments with. Check your settings to allow for a wider choice.  Generally, this can only occur if you've set the lists to only allow for custom items, and those items are not loaded correctly.\nYou can enable debug mode to view additional diagnostics, to help determine if you items are loading or not.");
+                ErrorLog.Log("Error populating Tournament Prizes\n");
             }
 
             return allitems;

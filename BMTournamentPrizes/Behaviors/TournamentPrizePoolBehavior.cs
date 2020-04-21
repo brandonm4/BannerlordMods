@@ -500,10 +500,10 @@ namespace TournamentsXPanded.Behaviors
 
         public static List<ItemObject.ItemTypeEnum> GetActivePrizeTypes()
         {
-            if (!TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
-            {
-                return _allValidTypes;
-            }
+            //if (!TournamentXPSettings.Instance.EnablePrizeTypeFilterToLists)
+            //{
+            //    return _allValidTypes;
+            //}
 
             List<ItemObject.ItemTypeEnum> validTypes = new List<ItemObject.ItemTypeEnum>();
             if (TournamentXPSettings.Instance.EnableItemType_BodyArmor)
@@ -601,6 +601,11 @@ namespace TournamentsXPanded.Behaviors
                 }
 
                 itemModifierWithTarget = itemModifierGroup1.GetRandomModifierWithTarget(prosperityVariance, 1f);                 
+            }
+            //Toss out the bad ones - they suck as prizes
+            if (itemModifierWithTarget.PriceMultiplier < 1)
+            {
+                itemModifierWithTarget = null;
             }
             return new EquipmentElement(item, itemModifierWithTarget);
         }

@@ -141,6 +141,7 @@
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
     <Compile Include="Behaviors\TournamentXPandedTournamentBehavior.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
+    <Compile Include="Patches\DefaultTournamentModelClass\GetRenownReward.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
     <Compile Include="Patches\TournamentVM\RefreshValues.cs" />
     <Compile Include="Patches\PlayerTownVisitCampaignBehaviorClass\town_arena_on_init.cs" />

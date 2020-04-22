@@ -318,120 +318,140 @@ namespace TournamentsXPanded.Models
         #region Bonus Winnings
 
         [XmlElement]
-        [SettingPropertyGroup("5. Bonus Winnings")]
-        [SettingProperty("Bonus Gold Per Round", 0, 1000)]
-        public int BonusTournamentMatchGold { get; set; } = 0;
-
-        [XmlElement]
-        [SettingPropertyGroup("5. Bonus Winnings")]
-        [SettingProperty("Payout Bonus Gold On Match Win", 0, 20000)]
-        public bool BonusTournamentMatchGoldImmediate { get; set; } = false;
-
-        [XmlElement]
-        [SettingPropertyGroup("5. Bonus Winnings")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.1 Overall Tournament Winnings")]
         [SettingProperty("Bonus Gold for Tournament Win", 0, 20000)]
         public int BonusTournamentWinGold { get; set; } = 0;
-
         [XmlElement]
-        [SettingPropertyGroup("5. Bonus Winnings")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.1 Overall Tournament Winnings")]
         [SettingProperty("Bonus Renown for Tournament Win", 0, 100)]
         public int BonusTournamentWinRenown { get; set; } = 0;
 
         [XmlElement]
-        [SettingPropertyGroup("5. Bonus Winnings")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.1 Overall Tournament Winnings")]
         [SettingProperty("Bonus Influence for Tournament Win", 0f, 50f)]
         public float BonusTournamentWinInfluence { get; set; } = 0;
 
+
+
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.2 Per Match Winnings")]
+        [SettingProperty("Bonus Gold Per Round", 0, 1000)]
+        public int BonusTournamentMatchGold { get; set; } = 0;
+
+        [XmlElement]
+        [SettingPropertyGroup("4. Bonus Winnings/4.2 Per Match Winnings")]
+        [SettingProperty("Payout Bonus Gold On Match Win", 0, 20000, "If on, you get paid immediately upon end of match.  If off, you get paid upon winning the tournament.")]
+        public bool BonusTournamentMatchGoldImmediate { get; set; } = false;
+        
+        [XmlElement]
+        [SettingPropertyGroup("4. Bonus Winnings/4.2 Per Match Winnings")]
+        [SettingProperty("Bonus Renown for Most Kills", 0f, 5f)]
+        public float BonusRenownMostKills { get; set; } = 0f;
+        [XmlElement]
+        [SettingPropertyGroup("4. Bonus Winnings/4.2 Per Match Winnings")]
+        [SettingProperty("Bonus Renown for Most Damage Inflicted", 0f, 5f)]
+        public float BonusRenownMostDamage { get; set; } = 0f;
+        [XmlElement]
+        [SettingPropertyGroup("4. Bonus Winnings/4.2 Per Match Winnings")]
+        [SettingProperty("Bonus Renown for First Kill", 0f, 5f)]
+        public float BonusRenownFirstKill { get; set; } = 0f;
+        [XmlElement]
+        [SettingPropertyGroup("4. Bonus Winnings/4.2 Per Match Winnings")]
+        [SettingProperty("Bonus Renown for Least Damage Taken", 0f, 5f)]
+        public float BonusRenownLeastDamage { get; set; } = 0f;
+
+        
+        
+        [XmlElement]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown for Opponent Difficulty")]
         public bool EnableRenownPerTroopTier { get; set; } = false;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 1", 0f, 50f)]
         public float RenownTroopTier1 { get; set; } = .15f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 2", 0f, 50f)]
         public float RenownTroopTier2 { get; set; } = .25f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 3", 0f, 50f)]
         public float RenownTroopTier3 { get; set; } = .35f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 4", 0f, 50f)]
         public float RenownTroopTier4 { get; set; } = .45f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 5", 0f, 50f)]
         public float RenownTroopTier5 { get; set; } = .55f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 6", 0f, 50f)]
         public float RenownTroopTier6 { get; set; } = .65f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Tier 7", 0f, 50f)]
         public float RenownTroopTier7 { get; set; } = .75f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Hero Base", 0f, 50f)]
         public float RenownPerHeroPropertyHeroBase { get; set; } = 1f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown IsNoble", 0f, 50f)]
         public float RenownPerHeroPropertyIsNoble { get; set; } = 3f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown IsBotable", 0f, 50f)]
         public float RenownPerHeroPropertyIsNotable { get; set; } = 1f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown IsCommander", 0f, 50f)]
         public float RenownPerHeroPropertyIsCommander { get; set; } = 1f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Minor Faction Hero", 0f, 50f)]
         public float RenownPerHeroPropertyIsMinorFactionHero { get; set; } = 2f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Minor Faction Leader", 0f, 50f)]
         public float RenownPerHeroPropertyIsMinorFactionLeader { get; set; } = 5f;
 
         [XmlElement]
-        [SettingPropertyGroup("6. Bonus Renown Configuration")]
+        [SettingPropertyGroup("4. Bonus Winnings/4.3 Bonus Renown for Opponent Difficulty Per Round")]
         [SettingProperty("Bonus Renown Major Faction Leader", 0f, 50f)]
         public float RenownPerHeroPropertyIsMajorFactionLeader { get; set; } = 10f;
 
         #endregion Bonus Winnings
 
         [XmlElement]
-        [SettingPropertyGroup("7. Other")]
+        [SettingPropertyGroup("5. Other")]
         [SettingProperty("Enable Tournament Type Selection")]
         public bool EnableTournamentTypeSelection { get; set; } = true;
 
         [XmlElement]
-        [SettingPropertyGroup("7. Other")]
+        [SettingPropertyGroup("5. Other")]
         [SettingProperty("Enable Random Tournament Type at Spawn", "If enabled this setting will randomize the tournament type between Melee Group, and solo free-for-all.")]
         public bool EnableTournamentRandomSelection { get; set; } = true;
 
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
-        [SettingProperty("Enable ItemModifiers For Prizes", "Warning: May cause item loss, bug in core game. Seems OK in BL-1.2.0Beta")]
+        [SettingProperty("Enable ItemModifiers For Prizes", "Warning: May cause item loss, bug in core game. Seems OK in BL-1.2.0Beta, Disabled in BL-1.1.1/1.1.2")]
         public bool EnableItemModifiersForPrizes { get; set; } = false;
 
         [XmlElement]
@@ -466,22 +486,7 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("CompanionsWinPrizes(Not Active)")]
         public bool CompanionsWinPrizes { get; set; } = false;
-        [XmlElement]
-        [SettingPropertyGroup("99. Not Used")]
-        [SettingProperty("BonusRenownMostKills", 0f, 5f)]
-        public float BonusRenownMostKills { get; set; } = 0f;
-        [XmlElement]
-        [SettingPropertyGroup("99. Not Used")]
-        [SettingProperty("BonusRenownMostDamage", 0f, 5f)]
-        public float BonusRenownMostDamage { get; set; } = 0f;
-        [XmlElement]
-        [SettingPropertyGroup("99. Not Used")]
-        [SettingProperty("BonusRenownFirstKill", 0f, 5f)]
-        public float BonusRenownFirstKill { get; set; } = 0f;
-        [XmlElement]
-        [SettingPropertyGroup("99. Not Used")]
-        [SettingProperty("BonusRenownLeastDamage", 0f, 5f)]
-        public float BonusRenownLeastDamage { get; set; } = 0f;
+        
 
         #endregion UnImplemented
     }

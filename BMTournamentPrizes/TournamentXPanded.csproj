@@ -143,6 +143,9 @@
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\GetRenownReward.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />
+    <Compile Include="Patches\TournamentFightMissionControllerClass\GetTeamWeaponEquipmentList.cs" />
+    <Compile Include="Patches\TournamentFightMissionControllerClass\OnMatchEnded.cs" />
+    <Compile Include="Patches\TournamentFightMissionControllerClass\StartMatch.cs" />
     <Compile Include="Patches\TournamentVM\RefreshValues.cs" />
     <Compile Include="Patches\PlayerTownVisitCampaignBehaviorClass\town_arena_on_init.cs" />
     <Compile Include="Patches\TournamentBehaviorClass\CalculateBet.cs" />

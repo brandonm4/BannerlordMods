@@ -91,9 +91,7 @@
 
         public float TownProsperityMid { get; set; } = 1.0f;
 
-        public float TownProsperityHigh { get; set; } = 1.3f;
-
-        public bool EnablePrizeTypeFilterToLists { get; set; } = false;
+        public float TownProsperityHigh { get; set; } = 1.3f;        
 
         public bool EnableItemType_Bow { get; set; } = true;
 
@@ -199,5 +197,7 @@
         public bool CompanionsWinPrizes { get; set; } = false;
 
         #endregion UnImplemented
+
+        
     }
 }

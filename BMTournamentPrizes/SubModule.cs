@@ -26,7 +26,7 @@ namespace TournamentsXPanded
 {
     public partial class TournamentsXPandedSubModule : XPandedSubModuleBase
     {
-        private List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
+        internal static List<TournamentEquipmentRestrictor> restrictors = new List<TournamentEquipmentRestrictor>();
         private bool disabled = false;
 
         protected override void OnSubModuleLoad()
@@ -103,20 +103,7 @@ namespace TournamentsXPanded
         {
             if (game.GameType is Campaign)
             {
-                ApplyPatches(game);
-                if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
-                {
-                    string[] _weaponTemplatesIdTeamSizeOne = new string[] { "tournament_template_aserai_one_participant_set_v1", "tournament_template_battania_one_participant_set_v1", "tournament_template_battania_one_participant_set_v2", "tournament_template_empire_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v1", "tournament_template_khuzait_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v1", "tournament_template_vlandia_one_participant_set_v2", "tournament_template_vlandia_one_participant_set_v3", "tournament_template_sturgia_one_participant_set_v1", "tournament_template_sturgia_one_participant_set_v2" };
-
-                    string[] _weaponTemplatesIdTeamSizeTwo = new string[] { "tournament_template_aserai_two_participant_set_v1", "tournament_template_aserai_two_participant_set_v2", "tournament_template_aserai_two_participant_set_v3", "tournament_template_battania_two_participant_set_v1", "tournament_template_battania_two_participant_set_v2", "tournament_template_battania_two_participant_set_v3", "tournament_template_battania_two_participant_set_v4", "tournament_template_battania_two_participant_set_v5", "tournament_template_empire_two_participant_set_v1", "tournament_template_empire_two_participant_set_v2", "tournament_template_empire_two_participant_set_v3", "tournament_template_khuzait_two_participant_set_v1", "tournament_template_khuzait_two_participant_set_v2", "tournament_template_khuzait_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v1", "tournament_template_vlandia_two_participant_set_v2", "tournament_template_vlandia_two_participant_set_v3", "tournament_template_vlandia_two_participant_set_v4", "tournament_template_sturgia_two_participant_set_v1", "tournament_template_sturgia_two_participant_set_v2", "tournament_template_sturgia_two_participant_set_v3" };
-
-                    string[] _weaponTemplatesIdTeamSizeFour = new string[] { "tournament_template_aserai_four_participant_set_v1", "tournament_template_aserai_four_participant_set_v2", "tournament_template_aserai_four_participant_set_v3", "tournament_template_aserai_four_participant_set_v4", "tournament_template_battania_four_participant_set_v1", "tournament_template_battania_four_participant_set_v2", "tournament_template_battania_four_participant_set_v3", "tournament_template_empire_four_participant_set_v1", "tournament_template_empire_four_participant_set_v2", "tournament_template_empire_four_participant_set_v3", "tournament_template_khuzait_four_participant_set_v1", "tournament_template_khuzait_four_participant_set_v2", "tournament_template_khuzait_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v1", "tournament_template_vlandia_four_participant_set_v2", "tournament_template_vlandia_four_participant_set_v3", "tournament_template_vlandia_four_participant_set_v4", "tournament_template_sturgia_four_participant_set_v1", "tournament_template_sturgia_four_participant_set_v2", "tournament_template_sturgia_four_participant_set_v3" };
-
-                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeOne);
-                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeTwo);
-                    RemoveTournamentSpearFootSets(_weaponTemplatesIdTeamSizeFour);
-                }
-
+                ApplyPatches(game);                
                 //Setup Custom Items.
                 string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
                 if (File.Exists(customfile))

@@ -50,6 +50,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OtherFiles\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -88,12 +95,17 @@
     <Compile Include="Diagnostics\ErrorLog.cs" />
     <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="Extensions\ItemObjectExtensions.cs" />
+    <Compile Include="Extensions\StaticPropertyContractResolver.cs" />
     <Compile Include="Extensions\StringHelpers.cs" />
+    <Compile Include="Patches\HarmonyHelpers.cs" />
     <Compile Include="Patches\IPatch.cs" />
     <Compile Include="Patches\PatchBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XPandedSubModule.cs" />
+    <Compile Include="XPandedSubModule.Harmony.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

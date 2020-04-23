@@ -60,7 +60,8 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                 float renown = 0;
                 if (TournamentXPandedTournamentBehavior.firstKiller == pc)
                 {
-                    message += "You got the first kill: " + TournamentXPSettings.Instance.BonusRenownFirstKill.ToString() + " renown.\n";
+                    message += "QUICK ACTION! You got the first kill: " + TournamentXPSettings.Instance.BonusRenownFirstKill.ToString() + " renown.\n";
+                    InformationManager.AddQuickInformation(new TextObject(message));
                     renown += TournamentXPSettings.Instance.BonusRenownFirstKill;
                 }
                 var numberofkills = TournamentXPandedTournamentBehavior.MostKills();
@@ -69,31 +70,36 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                     var bonus = TournamentXPSettings.Instance.BonusRenownMostKills / numberofkills.Count;
                     if (bonus > 0)
                     {
+                        message = "";
                         if (numberofkills.Count == 1)
                         {
-                            message += "You got the most kills: " + bonus.ToString() + " renown.\n";
+                            message += "AGGRESSIVE! You got the most kills: " + bonus.ToString() + " renown.\n";
                         }
                         else
                         {
-                            message += "AGGRESSIVE! You tied for the most kills: " + bonus.ToString() + " renown.\n";
+                            message += "You tied for the most kills: " + bonus.ToString() + " renown.\n";
                         }
+                        InformationManager.AddQuickInformation(new TextObject(message));
                         renown += bonus;
                     }
                 }
                 var mostdamage = TournamentXPandedTournamentBehavior.MostDamage();
                 if (mostdamage.Contains(pc))
                 {
+                   
                     var bonusmd = TournamentXPSettings.Instance.BonusRenownMostDamage / mostdamage.Count;
                     if (bonusmd > 0)
                     {
+                        message = "";
                         if (mostdamage.Count == 1)
                         {
                             message += "SAVAGE! You inflicted the most damage: " + bonusmd.ToString() + " renown.\n";
                         }
                         else
                         {
-                            message += "You tied for the most damage: " + bonusmd.ToString() + " renown.\n";
+                            message += "You tied for inflicting the most damage: " + bonusmd.ToString() + " renown.\n";
                         }
+                        InformationManager.AddQuickInformation(new TextObject(message));
                         renown += bonusmd;
                     }
                 }
@@ -103,21 +109,24 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                     var bonusld = TournamentXPSettings.Instance.BonusRenownLeastDamage / leastDamage.Count;
                     if (bonusld > 0)
                     {
+                        message = "";
                         if (leastDamage.Count == 1)
                         {
                             message += "DEFENSIVE! You took the least damage: " + bonusld.ToString() + " renown.\n";
                         }
                         else
                         {
-                            message += "You tied for the least damage: " + bonusld.ToString() + " renown.\n";
+                            message += "You tied for the least damage taken: " + bonusld.ToString() + " renown.\n";
                         }
+                        InformationManager.AddQuickInformation(new TextObject(message));
                         renown += bonusld;
                     }
                 }
                 if (renown > 0)
                 {
-                    InformationManager.AddQuickInformation(new TextObject(message));
-                    GainRenownAction.Apply(Hero.MainHero, renown, false);
+                    
+                    //GainRenownAction.Apply(Hero.MainHero, renown, false);
+                    TournamentPrizePoolBehavior.TournamentReward.BonusRenown += renown;
                 }
 
             }

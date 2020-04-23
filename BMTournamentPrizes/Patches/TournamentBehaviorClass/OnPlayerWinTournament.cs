@@ -80,7 +80,14 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
             {
                 if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
                 {
-                    Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
+                    try
+                    {
+                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorLog.Log("Error assigning prize\n" + ex.ToStringFull());
+                    }
                     TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                 }
             }
@@ -97,11 +104,25 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
                         //Beta1.2
 #if VERSION120
+                        try
+                        {
                         Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);
+                          }
+                        catch(Exception ex)
+                        {
+                            ErrorLog.Log("Error assigning prize\n" + ex.ToStringFull());
+                        }
 #endif
                         //Release1.1.1
 #if VERSION111
-                        Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+                        try
+                        {
+                            Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First(), 1, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorLog.Log("Error assigning prize\n" + ex.ToStringFull());
+                        }
 #endif
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
@@ -120,7 +141,14 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
                     if (!TournamentPrizePoolBehavior.TournamentReward.PrizeGiven)
                     {
+                        try
+                        { 
                         Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(__instance.TournamentGame.Prize, 1, true);
+                        }
+                        catch (Exception ex2)
+                        {
+                            ErrorLog.Log("Error assigning prize\n" + ex2.ToStringFull());
+                        }
                         TournamentPrizePoolBehavior.TournamentReward.PrizeGiven = true;
                     }
                 }

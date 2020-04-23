@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using TaleWorlds.Library;
 
 namespace XPanded.Common.Diagnostics
 {
@@ -13,7 +15,8 @@ namespace XPanded.Common.Diagnostics
             {
                 using (var sw = new StreamWriter(LogPath, true))
                 {
-                    sw.WriteLine(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss") + "\n" + text);
+                    string version = ModuleInfo.GetModules().Where(x => x.Name == "Tournaments XPanded").FirstOrDefault().Version.ToString();
+                    sw.WriteLine(string.Concat(version, " " , DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss") , "\n" , text));
                 }
             }
         }

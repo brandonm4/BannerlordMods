@@ -1,139 +1,163 @@
 ﻿using BMTweakCollection.Models;
 
 using HarmonyLib;
-
+using System.Reflection;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
+using TaleWorlds.Core;
+using TournamentsXPanded.Common.Patches;
 
 namespace BMTweakCollection.Patches
 {
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetEnergyCostForRefining")]
-    public class DefaultSmithingModelPatch1
+    public class GetEnergyCostForRefining : PatchBase<GetEnergyCostForRefining>
     {
-        public DefaultSmithingModelPatch1()
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultSmithingModel).GetMethod("GetEnergyCostForRefining", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        private static readonly MethodInfo PatchMethodInfo = typeof(GetEnergyCostForRefining).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
         {
+            return true;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              prefix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
         }
 
+        public override void Reset()
+        {
+        }
         private static bool Prefix(ref int __result)
         {
-            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
-            {
-                __result = 1;
-                return false; // make sure you only skip if really necessary
-            }
+            __result = 1;
+            return false; // make sure you only skip if really necessary
+        }
+    }
+    public class GetEnergyCostForSmithing : PatchBase<GetEnergyCostForSmithing>
+    {
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultSmithingModel).GetMethod("GetEnergyCostForSmithing", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        private static readonly MethodInfo PatchMethodInfo = typeof(GetEnergyCostForSmithing).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
+        {
             return true;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              prefix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+
+        public override void Reset()
+        {
+        }
+        private static bool Prefix(ref int __result)
+        {
+            __result = 1;
+            return false; // make sure you only skip if really necessary
+        }
+    }
+    public class GetEnergyCostForSmelting : PatchBase<GetEnergyCostForSmelting>
+    {
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultSmithingModel).GetMethod("GetEnergyCostForSmelting", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(GetEnergyCostForSmelting).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
+        {
+            return true;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              prefix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+
+        public override void Reset()
+        {
+        }
+        private static bool Prefix(ref int __result)
+        {
+            __result = 1;
+            return false; // make sure you only skip if really necessary
         }
     }
 
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetEnergyCostForSmithing")]
-    public class DefaultSmithingModelPatch2
+    public class ResearchPointsNeedForNewPart : PatchBase<ResearchPointsNeedForNewPart>
     {
-        public DefaultSmithingModelPatch2()
-        {
-        }
+        public override bool Applied { get; protected set; }
 
-        private static bool Prefix(ref int __result)
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultSmithingModel).GetMethod("ResearchPointsNeedForNewPart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(ResearchPointsNeedForNewPart).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
+        public override bool IsApplicable(Game game)
         {
-            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
-            {
-                __result = 1;
-                return false; // make sure you only skip if really necessary
-            }
             return true;
         }
-    }
-
-    [HarmonyPatch(typeof(DefaultSmithingModel), "GetEnergyCostForSmelting")]
-    public class DefaultSmithingModelPatch3
-    {
-        public DefaultSmithingModelPatch3()
+        public override void Apply(Game game)
         {
-        }
-
-        private static bool Prefix(ref int __result)
-        {
-            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
+            if (Applied)
             {
-                __result = 1;
-                return false; // make sure you only skip if really necessary
+                return;
             }
-            return true;
-        }
-    }
 
-    [HarmonyPatch(typeof(DefaultSmithingModel), "ResearchPointsNeedForNewPart")]
-    public class DefaultSmithingModelPatch4
-    {
-        public DefaultSmithingModelPatch4()
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              prefix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+        public override void Reset()
         {
         }
 
         private static bool Prefix(ref int __result, int count)
         {
-            if (BMRandomTweaksConfiguration.Instance.CustomSmithingModelEnabled)
-            {
-                __result = (count * count + 12) / BMRandomTweaksConfiguration.Instance.CustomSmithingXPDivisor;
-                return false;
-            }
-            return true;
+            __result = (count * count + 12) / BMRandomTweaksConfiguration.Instance.CustomSmithingXPDivisor;
+            return false; // make sure you only skip if really necessary
         }
     }
-
-    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmithing")]
-    //public class DefaultSmithingModelPatch5
-    //{
-    //    public static void Postfix(ref int __result)
-    //    {
-    //        __result = __result * 3;
-    //    }
-    //}
-    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForSmelting")]
-    //public class DefaultSmithingModelPatch6
-    //{
-    //    public static void Postfix(ref int __result)
-    //    {
-    //        __result = __result * 5;
-    //    }
-    //}
-    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetSkillXpForRefining")]
-    //public class DefaultSmithingModelPatch7
-    //{
-    //    public static void Postfix(ref int __result)
-    //    {
-    //        __result = __result * 5;
-    //    }
-    //}
-    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmeltingItem")]
-    //public class DefaultSmithingModelPatch8
-    //{
-    //    public static void Postfix(ref int __result)
-    //    {
-    //        __result = __result * 5;
-    //    }
-    //}
-    //[HarmonyPatch(typeof(DefaultSmithingModel), "GetPartResearchGainForSmithingItem")]
-    //public class DefaultSmithingModelPatch9
-    //{
-    //    public static void Postfix(ref int __result)
-    //    {
-    //        __result = __result * 5;
-    //    }
-    //}
 }
-
-/*
- public override int GetSkillXpForRefining(ref Crafting.RefiningFormula refineFormula)
-        {
-            return MathF.Round(0.3f * (float)(this.GetCraftingMaterialItem(refineFormula.Output).Value * refineFormula.OutputCount));
-        }
-
-        public override int GetSkillXpForSmelting(ItemObject item)
-        {
-            return MathF.Round(0.02f * (float)item.Value);
-        }
-
-        public override int GetSkillXpForSmithing(ItemObject item)
-        {
-            return MathF.Round(0.1f * (float)item.Value);
-        }
-
- */

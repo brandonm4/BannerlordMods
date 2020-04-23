@@ -4,8 +4,8 @@ namespace TournamentsXPanded.Common.Patches
 {
     public abstract class PatchBase<TPatch> : IPatch where TPatch : IPatch
     {
-        public static TPatch ActivePatch
-      => (TPatch)XPandedSubModuleBase.ActivePatches[typeof(TPatch)];
+      //  public static TPatch ActivePatch
+      //=> (TPatch)XPandedSubModuleBase.ActivePatches[typeof(TPatch)];
 
         public abstract bool IsApplicable(Game game);
 

@@ -103,7 +103,7 @@ namespace TournamentsXPanded
         {
             if (game.GameType is Campaign)
             {
-                ApplyPatches(game);                
+                ApplyPatches(game, typeof(TournamentsXPandedSubModule));                
                 //Setup Custom Items.
                 string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
                 if (File.Exists(customfile))
@@ -169,7 +169,14 @@ namespace TournamentsXPanded
         #region Local Methods
         protected void CreateDiagnostics()
         {
-            var diag = "Tournaments XPanded Settings infomation\n";
+            string version = ModuleInfo.GetModules().Where(x => x.Name == "Tournaments XPanded").FirstOrDefault().Version.ToString();
+            string versionNative = ModuleInfo.GetModules().Where(x => x.Name == "Native").FirstOrDefault().Version.ToString();
+            //sw.WriteLine(string.Concat(version, " ", DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"), "\n", text));
+
+            var diag = "Tournaments XPanded Settings infomation";
+            diag += "\n" + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss");
+            diag += "\nBannerlord Version" + versionNative;
+            diag += "\nTournamentsXPanded Version" + version;
             string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpdiagnostics.log");
             if (!Directory.Exists(Path.GetDirectoryName(configPath)))
             {
@@ -213,7 +220,7 @@ namespace TournamentsXPanded
         protected void DoDebugPopup()
         {
             var patches = "Patch Status\n";
-            foreach (var p in Patches)
+            foreach (var p in base.GetPatches(typeof(TournamentsXPandedSubModule)))
             {
                 patches += p.ToString() + ": " + p.Applied.ToString() + "\n";
             }
@@ -375,39 +382,41 @@ namespace TournamentsXPanded
 
         #region ModSettings
 
-        public static Dictionary<string, string> GetModSettingValue()
-        {
-            Dictionary<string, string> settings = new Dictionary<string, string>();
-            PropertyInfo[] properties = typeof(TournamentXPSettings).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                settings.Add(property.Name, property.GetValue(TournamentXPSettings.Instance).ToString());
-            }
-            return settings;
-        }
+        //public static Dictionary<string, string> GetModSettingValue()
+        //{
+        //    Dictionary<string, string> settings = new Dictionary<string, string>();
+        //    PropertyInfo[] properties = typeof(TournamentXPSettings).GetProperties();
+        //    foreach (PropertyInfo property in properties)
+        //    {
+        //        settings.Add(property.Name, property.GetValue(TournamentXPSettings.Instance).ToString());
+        //    }
+        //    return settings;
+        //}
 
-        public static void SaveModSettingValue(Dictionary<string, string> newSettings)
-        {
-            // write to save settings to anywhere you want
-            //this method will be called when the player clicks on Done button in the settings screen
-            PropertyInfo[] properties = typeof(TournamentXPSettings).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                if (newSettings.ContainsKey(property.Name))
-                {
-                    property.SetValue(TournamentXPSettings.Instance, newSettings[property.Name]);
-                }
-            }
-        }
+        //public static void SaveModSettingValue(Dictionary<string, string> newSettings)
+        //{
+        //    // write to save settings to anywhere you want
+        //    //this method will be called when the player clicks on Done button in the settings screen
+        //    PropertyInfo[] properties = typeof(TournamentXPSettings).GetProperties();
+        //    foreach (PropertyInfo property in properties)
+        //    {
+        //        if (newSettings.ContainsKey(property.Name))
+        //        {
+        //            property.SetValue(TournamentXPSettings.Instance, newSettings[property.Name]);
+        //        }
+        //    }
+        //}
 
         #endregion ModSettings
 
         internal const int OBJ_PRIZEPOOL = 4106000;
         internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;
         internal const int OBJ_TOURNAMENT_REWARD = 4106002;
+        internal const int OBJ_TOURNAMENT_TYPE_MELEE3 = 4106003;
 
         internal const int SAVEDEF_PRIZEPOOL = 4105000;
         internal const int SAVEDEF_TOURNAMENT_TYPE_MELEE2 = 4105001;
         internal const int SAVEDEF_TOURNAMENT_REWARD = 4105002;
+        internal const int SAVEDEF_TOURNAMENT_TYPE_MELEE3 = 4105003;
     }
 }

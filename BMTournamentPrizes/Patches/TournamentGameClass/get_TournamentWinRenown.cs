@@ -20,7 +20,13 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
 
         public override bool IsApplicable(Game game)
         {
-            return TournamentXPSettings.Instance.BonusTournamentWinRenown > 0 || TournamentXPSettings.Instance.EnableRenownPerTroopTier;
+            return (TournamentXPSettings.Instance.BonusTournamentWinRenown > 0
+                || TournamentXPSettings.Instance.EnableRenownPerTroopTier
+                || TournamentXPSettings.Instance.BonusRenownMostKills > 0
+                || TournamentXPSettings.Instance.BonusRenownMostDamage > 0
+                || TournamentXPSettings.Instance.BonusRenownLeastDamage > 0
+                || TournamentXPSettings.Instance.BonusRenownFirstKill > 0
+                );
         }
 
         public override void Reset()

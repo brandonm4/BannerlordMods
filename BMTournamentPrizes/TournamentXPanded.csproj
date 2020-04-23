@@ -138,8 +138,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\BattleRoyalTournamentBehavior.cs" />
     <Compile Include="Behaviors\TournamentPrizePoolBehavior.cs" />
     <Compile Include="Behaviors\TournamentXPandedTournamentBehavior.cs" />
+    <Compile Include="Models\BattleRoyalTournamentGame.cs" />
     <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\GetRenownReward.cs" />
     <Compile Include="Patches\DefaultTournamentModelClass\CreateTournament.cs" />

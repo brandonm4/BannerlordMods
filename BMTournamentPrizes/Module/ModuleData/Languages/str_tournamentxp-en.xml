@@ -16,5 +16,6 @@
     <string id="tourn010" text="Tournament Type Selection" />
     <string id="tourn011" text="What kind of Tournament would you like to compete in today?" />
     <string id="tourn012" text="You can choose an item from the list below as your reward if you win the tournament!" />
+    <string id="tourn013" text="Battle Royal Melee Tournament" />
   </strings>
 </base>

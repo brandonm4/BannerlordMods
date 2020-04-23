@@ -1,19 +1,50 @@
 ﻿using HarmonyLib;
 
 using System.Linq;
-
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TournamentsXPanded.Common.Patches;
 
-namespace BMTweakCollection.Models
+namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
 {
-    [HarmonyPatch(typeof(DefaultSettlementFoodModel), "CalculateTownFoodStocksChange")]
-    public class DefaultSettlementFoodModelPatch1
+
+    public class CalculateTownFoodStocksChange : PatchBase<CalculateTownFoodStocksChange>
     {
-        public static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultSettlementFoodModel).GetMethod("CalculateTownFoodStocksChange", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        private static readonly MethodInfo PatchMethodInfo = typeof(CalculateTownFoodStocksChange).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
+        {
+            return true;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              postfix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+
+        public override void Reset()
+        {
+        }
+        static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
         {
             if (!(town.Settlement.SiegeEvent != null && town.IsUnderSiege &&
                 town.Settlement.SiegeEvent.BesiegerCamp.SiegeParties.Any<PartyBase>((PartyBase party) => party.MobileParty == Hero.MainHero.PartyBelongedTo)))
@@ -33,17 +64,41 @@ namespace BMTweakCollection.Models
                 __result = en.ResultNumber;
             }
         }
+    }
 
-        private static bool Prepare()
+    public class CalculateDailyFoodConsumptionf : PatchBase<CalculateDailyFoodConsumptionf>
+    {
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(DefaultMobilePartyFoodConsumptionModel).GetMethod("CalculateDailyFoodConsumptionf", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        private static readonly MethodInfo PatchMethodInfo = typeof(CalculateDailyFoodConsumptionf).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
         {
             return true;
         }
-    }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
 
-    [HarmonyPatch(typeof(DefaultMobilePartyFoodConsumptionModel), "CalculateDailyFoodConsumptionf")]
-    public class FoodConsumptionBehaviorPatch1
-    {
-        public static void Postfix(ref float __result, MobileParty party, StatExplainer explainer)
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              postfix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+
+        public override void Reset()
+        {
+        }
+        static void Postfix(ref float __result, MobileParty party, StatExplainer explainer)
         {
             //For now only do hero
             if (party.LeaderHero == Hero.MainHero)
@@ -74,10 +129,6 @@ namespace BMTweakCollection.Models
                 }
             }
         }
-
-        private static bool Prepare()
-        {
-            return true;
-        }
     }
+
 }

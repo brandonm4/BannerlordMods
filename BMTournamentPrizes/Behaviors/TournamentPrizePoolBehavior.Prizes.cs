@@ -34,6 +34,12 @@ namespace TournamentsXPanded.Behaviors
             }
             var allitems = GetItemStringsRevised(tournamentGame, TournamentPrizePoolBehavior.GetActivePrizeTypes());
 
+            if (allitems.Count == 0)
+            {
+                MessageBox.Show("TournamentsXPanded Error:\nAlert, your prize generation filters have resulted in no valid prizes.  Consider widening your prize value range and if you are using a custom list make sure it's loaded correctly.");
+                return null;
+            }
+
             //Add any existing items if we are filling in missing ones from an already generated pool
             var pickeditems = new List<string>();
             if (keepTownPrize && !string.IsNullOrWhiteSpace((tournamentGame.Prize.StringId)))

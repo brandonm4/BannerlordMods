@@ -2,15 +2,48 @@
 using StoryMode.Behaviors;
 using StoryMode.StoryModePhases;
 using System.Linq;
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents;
+using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TournamentsXPanded.Common.Patches;
 
 namespace BMTweakCollection.Patches
 {
-    [HarmonyPatch(typeof(FirstPhaseCampaignBehavior), "WeeklyTick")]
-    public static class FirstPhaseCampaignBehaviorTimeLimitPatch
+
+    public class WeeklyTick : PatchBase<WeeklyTick>
     {
-        public static bool Prefix(FirstPhaseCampaignBehavior __instance)
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(FirstPhaseCampaignBehavior).GetMethod("WeeklyTick", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(WeeklyTick).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
+        {
+            return true;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              prefix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+
+        public override void Reset()
+        {
+        }
+        static bool Prefix(FirstPhaseCampaignBehavior __instance)
         {
             if (FirstPhase.Instance != null && SecondPhase.Instance == null && FirstPhase.Instance.FirstPhaseStartTime.ElapsedYearsUntilNow > 99999f)
             {
@@ -27,9 +60,6 @@ namespace BMTweakCollection.Patches
             }
             return false;
         }
-        private static bool Prepare()
-        {
-            return true;
-        }
+
     }
 }

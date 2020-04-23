@@ -1,16 +1,42 @@
 using HarmonyLib;
 
 using System;
-
+using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TournamentsXPanded.Common.Patches;
 
 namespace BMTweakCollection.Patches
-{
-    [HarmonyPatch(typeof(PartyScreenLogic), "RemoveItemFromItemRoster")]
-    internal class PatchPartyScreenLogic
+{    
+    internal class RemoveItemFromItemRoster : PatchBase<RemoveItemFromItemRoster>
     {
-        public PatchPartyScreenLogic()
+        public override bool Applied { get; protected set; }
+
+        private static readonly MethodInfo TargetMethodInfo = typeof(PartyScreenLogic).GetMethod("RemoveItemFromItemRoster", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(RemoveItemFromItemRoster).GetMethod(nameof(Prefix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
+        {
+            return false;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+              prefix: new HarmonyMethod(PatchMethodInfo)
+              {
+                  priority = Priority.First,
+                  //before = new[] { "that.other.harmony.user" }
+              }
+              );
+
+            Applied = true;
+        }
+
+        public override void Reset()
         {
         }
 

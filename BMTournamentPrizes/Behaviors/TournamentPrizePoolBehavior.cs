@@ -350,6 +350,7 @@ namespace TournamentsXPanded.Behaviors
             List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
             tournamentTypeElements.Add(new InquiryElement("melee", new TextObject("{=tourn008}Standard Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
             tournamentTypeElements.Add(new InquiryElement("melee2", new TextObject("{=tourn009}Individual Only Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+            //tournamentTypeElements.Add(new InquiryElement("melee3", new TextObject("{=tourn013}Battle Royal Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
 #if DEBUG
             //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
             //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
@@ -389,8 +390,14 @@ namespace TournamentsXPanded.Behaviors
 
                     case "melee2":
                         tournamentGame = new Fight2TournamentGame(town);
+                        TournamentPrizePoolBehavior.TournamentReward = new TournamentReward(tournamentGame);
                         break;
 
+                    //case "melee3":
+                    //    tournamentGame = new BattleRoyalTournamentGame(town);                       
+                    //    TournamentPrizePoolBehavior.TournamentReward = new TournamentReward(tournamentGame);
+                    //    break;
+                        
                     case "archery":
                         tournamentGame = new ArcheryTournamentGame(town);
                         break;

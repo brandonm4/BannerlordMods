@@ -13,7 +13,7 @@ namespace TournamentsXPanded.Models
     {
         private const string descriptionMixed = "The tournament will be 1v1 and free for all melee group fights.";
         private const string description1v1 = "The tournament will be bracket of 1v1 rounds.";
-        private const string descriptionFFA = "The tournament will be a set of group free for all bouts.";
+        private const string descriptionFFA = "The tournament will be a series of free for all matches.";
 
         public string Description { get; set; } = descriptionMixed;
 
@@ -58,13 +58,18 @@ namespace TournamentsXPanded.Models
                     _maxTeamNumberPerMatch = 2;
                     Description = description1v1;
                     break;
+                case FightMode.BattleRoyal:
+                    _maxTeamNumberPerMatch = 32;
+                    Description = descriptionFFA;
+                    break;
             }
         }
 
         public enum FightMode
         {
             Mixed,
-            One_One
+            One_One,
+            BattleRoyal,
         }
     }
 

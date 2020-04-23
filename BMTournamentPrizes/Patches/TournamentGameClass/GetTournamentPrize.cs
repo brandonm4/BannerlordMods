@@ -56,10 +56,13 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
 
         private static void Postfix(TournamentGame __instance, ref ItemObject __result)
         {
+            ItemObject prize;
             //__result currently has stock item.
             try
             {
-                __result = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
+                prize = TournamentPrizePoolBehavior.GenerateTournamentPrize(__instance, null, false);
+                if (prize != null)
+                    __result = prize;
             }
             catch (Exception ex)
             {

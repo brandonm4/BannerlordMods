@@ -12,6 +12,8 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 using TournamentsXPanded;
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace BMTweakCollection.LootTweaks
 {

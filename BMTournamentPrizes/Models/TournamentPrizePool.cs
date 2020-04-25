@@ -82,10 +82,11 @@ namespace TournamentsXPanded.Models
             base.ConstructContainerDefinition(typeof(Dictionary<MBGUID, TournamentPrizePool>));
             base.ConstructContainerDefinition(typeof(Dictionary<string, TournamentPrizePool>));
         }
-
-        //protected override void DefineGenericClassDefinitions()
-        //{
-        //   // base.ConstructGenericClassDefinition(typeof(MBObjectManager.Instance.ObjectTypeRecord<TournamentPrizePool>));
-        //}
+#if VERSION120
+        protected override void DefineGenericClassDefinitions()
+        {
+            base.ConstructGenericClassDefinition(typeof(MBObjectManager.ObjectTypeRecord<TournamentPrizePool>));
+        }
+#endif
     }
 }

@@ -98,6 +98,7 @@
     <Compile Include="Diagnostics\ErrorLog.cs" />
     <Compile Include="Extensions\ExceptionExtensionMethods.cs" />
     <Compile Include="Extensions\ItemObjectExtensions.cs" />
+    <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Extensions\StaticPropertyContractResolver.cs" />
     <Compile Include="Extensions\StringHelpers.cs" />
     <Compile Include="Patches\HarmonyHelpers.cs" />

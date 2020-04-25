@@ -95,30 +95,30 @@ namespace TournamentsXPanded.Behaviors
 
         public override void SyncData(IDataStore dataStore)
         {
-            //if (dataStore.IsSaving && TournamentXPSettings.Instance.EnableCleanSave)
-            //{
-            //    List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
-            //    MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
-            //    foreach (var pp in prizePools)
-            //    {
-            //        MBObjectManager.Instance.UnregisterObject(pp);             
-            //    }
+            if (dataStore.IsSaving && TournamentXPSettings.Instance.EnableCleanSave)
+            {
+                List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
+                MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
+                foreach (var pp in prizePools)
+                {
+                    MBObjectManager.Instance.UnregisterObject(pp);
+                }
 
-            //    TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
-            //    foreach (var s in Campaign.Current.Settlements)
-            //    {
-            //        if (s.HasTournament)
-            //        {
-            //            TournamentGame tg = tournamentManager.GetTournamentGame(s.Town);
-            //            if (tg is Fight2TournamentGame)
-            //            {
-            //                ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tg);                            
-            //            }
-            //        }
-            //    }
-            //    InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded saved in clean state.", Colors.Red));
+                TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
+                foreach (var s in Campaign.Current.Settlements)
+                {
+                    if (s.HasTournament)
+                    {
+                        TournamentGame tg = tournamentManager.GetTournamentGame(s.Town);
+                        if (tg is Fight2TournamentGame)
+                        {
+                            ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tg);
+                        }
+                    }
+                }
+                InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded saved in clean state.", Colors.Red));
 
-            //}
+            }
         }
 
         private void OnAfterNewGameCreated(CampaignGameStarter starter)

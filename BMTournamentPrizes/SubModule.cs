@@ -44,13 +44,13 @@ namespace TournamentsXPanded
             }
 #endif
 #if VERSION120
-            if (version.Major == 1 && version.Minor < 2)
+            if (version.Major == 1 && version.Minor != 2)
             {
                 mismatch = true;
             }
 #endif
 #if VERSION111
-            if (version.Major == 1 && version.Minor > 1)
+            if (version.Major == 1 && version.Minor != 1)
             {
                 mismatch = true;
             }

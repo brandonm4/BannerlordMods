@@ -94,9 +94,5 @@ namespace TournamentsXPanded.Models
             base.ConstructContainerDefinition(typeof(Dictionary<string, Fight2TournamentGame>));
         }
 
-        //protected override void DefineGenericClassDefinitions()
-        //{
-        //  base.ConstructGenericClassDefinition(typeof(Fight2TournamentGame));
-        //}
     }
 }

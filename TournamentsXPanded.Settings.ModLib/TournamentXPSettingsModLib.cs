@@ -458,6 +458,10 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Town Prosperity Affects ItemModifiers", "If ItemModifiers are on, this setting will make them lean towards better if high prosperity or worse if it's low prosperity.")]
         public bool TownProsperityAffectsItemModifiers { get; set; } = false;
+        [XmlElement]
+        [SettingPropertyGroup("98. Experimental")]
+        [SettingProperty("Enable Clean Save", "Removes all Prize Pools from memory.  Resets all tournaments back to standard melee. Save outside of town, use save fixer for e1.2.0+")]
+        public bool EnableCleanSave { get; set; } = false;
 
         #endregion Prize Selection
 

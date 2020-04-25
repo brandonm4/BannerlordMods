@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ModLib">
-      <HintPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
+      <HintPath>..\..\BannerlordVersions\support\ModLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

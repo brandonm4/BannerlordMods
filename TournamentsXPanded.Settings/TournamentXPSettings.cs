@@ -200,7 +200,7 @@
 
         public bool CompanionsWinPrizes { get; set; } = false;
 
-   //     public bool EnableCleanSave { get; set; } = true;
+      public bool EnableCleanSave { get; set; } = false;
         #endregion UnImplemented
 
         

@@ -60,9 +60,7 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
             var list4 = (string[])Traverse.Create(__instance).Field("_weaponTemplatesIdTeamSizeFour").GetValue();
             var list2 = (string[])Traverse.Create(__instance).Field("_weaponTemplatesIdTeamSizeTwo").GetValue();
             var list1 = (string[])Traverse.Create(__instance).Field("_weaponTemplatesIdTeamSizeOne").GetValue();
-            //var list2 = (string[])typeof(TournamentArcheryMissionController).GetField("_weaponTemplatesIdTeamSizeTwo", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
-            //var list1 = (string[])typeof(TournamentArcheryMissionController).GetField("_weaponTemplatesIdTeamSizeOne", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
-
+          
             if (teamSize == 4)
             {
                 //list = __instance._weaponTemplatesIdTeamSizeFour.ToList<string>();

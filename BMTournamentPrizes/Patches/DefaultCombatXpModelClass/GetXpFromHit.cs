@@ -43,7 +43,7 @@ namespace TournamentsXPanded.Patches.DefaultCombatXpModelClass
                 xpAmount = MathF.Round((float)xpAmount * TournamentXPSettings.Instance.TournamentXPAdjustment);
             }
 #endif
-#if VERSION120
+#if VERSION120 || VERSION130
             float single;
             int num = attackedTroop.MaxHitPoints();
             float power = 0.4f * ((attackedTroop.GetPower() + 0.5f) * (Math.Min(damage, num) + (isFatal ? num : 0)));

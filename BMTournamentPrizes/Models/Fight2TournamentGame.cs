@@ -4,6 +4,9 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+#if VERSION130
+using TaleWorlds.ObjectSystem;
+#endif
 using TaleWorlds.SaveSystem;
 
 namespace TournamentsXPanded.Models

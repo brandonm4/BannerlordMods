@@ -93,7 +93,7 @@ namespace TournamentsXPanded.Behaviors
 
                 ItemModifier itemModifier = null;
                 var pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(id);
-#if VERSION120
+#if VERSION120 || VERSION130
                 if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
                 {
 
@@ -118,6 +118,7 @@ namespace TournamentsXPanded.Behaviors
                 SetTournamentSelectedPrize(tournamentGame, selected.EquipmentElement.Item);
             }
             return currentPool.SelectPrizeItemRosterElement.EquipmentElement.Item;
+
         }
         public static List<string> GetItemStringsRevised(TournamentGame tournamentGame, List<ItemObject.ItemTypeEnum> validTypes)
         {

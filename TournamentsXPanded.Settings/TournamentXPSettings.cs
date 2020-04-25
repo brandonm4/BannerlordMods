@@ -190,12 +190,17 @@
         public bool EnableTournamentRandomSelection { get; set; } = true;
         public bool DebugMode { get; set; } = false;
 
+        public float TournamentChanceMelee { get; set; } = 50f;
+        public float TournamentChanceMelee2 { get; set; } = 50f;
+        public float TournamentChanceJoust { get; set; } = 75f;
+
         #region UnImplemented
 
         public int TournamentBonusMoneyBaseNamedCharLevel { get; set; } = 0;
 
         public bool CompanionsWinPrizes { get; set; } = false;
 
+   //     public bool EnableCleanSave { get; set; } = true;
         #endregion UnImplemented
 
         

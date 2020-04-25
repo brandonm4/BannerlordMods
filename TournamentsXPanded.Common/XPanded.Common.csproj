@@ -89,6 +89,9 @@
       <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TaleWorlds.ObjectSystem">
+      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.ObjectSystem.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\Class1.cs" />

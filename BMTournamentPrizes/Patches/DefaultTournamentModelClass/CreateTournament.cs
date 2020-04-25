@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +8,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
-
+using TaleWorlds.Engine;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
@@ -57,9 +57,13 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
         {
             float gameBasicMeleeChance = 65f;
             float rdm = MBRandom.RandomFloatRanged(1f, 100f);
+
+           
+
             if (rdm < gameBasicMeleeChance)
             {
                 __result = new FightTournamentGame(town);
+                return false;
             }
             else
             {
@@ -70,9 +74,10 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
                 //    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
                 //}
                 __result = newgame;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }

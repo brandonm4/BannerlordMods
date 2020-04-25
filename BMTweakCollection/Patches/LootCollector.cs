@@ -14,56 +14,50 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+#if VERSION130
+using TaleWorlds.ObjectSystem;
+#endif
+using TournamentsXPanded.Common.Patches;
 
 namespace BMTweakCollection.Patches
 {
     //public static class LootCollectorInfo
-    //{
-    //public static Type ClassType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-    //}
 
-    // [HarmonyPatch(Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))]
-
-    // [HarmonyPatch(LootCollectorInfo.ClassType, "GetXpFromHit")]
-    public class LootCollectorPatch
+    public class LootCollectorPatch : PatchBase<LootCollectorPatch>
     {
-        // make sure DoPatching() is called at start either by
-        // the mod loader or by your injector
-        internal static Type LootCollectorType;
+        public override bool Applied { get; protected set; }
+        internal static Type LootCollectorType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
 
-        public static void DoPatching()
+        private static readonly MethodInfo TargetMethodInfo = LootCollectorType.GetMethod("GiveShareOfLootToParty", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        private static readonly MethodInfo PatchMethodInfo = typeof(LootCollectorPatch).GetMethod(nameof(GiveShareOfLootToPartyPre), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        public override bool IsApplicable(Game game)
         {
-            LootCollectorType = Type.GetType("TaleWorlds.CampaignSystem.LootCollector, TaleWorlds.CampaignSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            return false;
+        }
+        public override void Apply(Game game)
+        {
+            if (Applied)
+            {
+                return;
+            }
+            
             var mOriginal = AccessTools.Method(LootCollectorType, "GiveShareOfLootToParty");
             var prefix = typeof(LootCollectorPatch).GetMethod("GiveShareOfLootToPartyPre");
 
-            MethodInfo TargetMethodInfo = LootCollectorType.GetMethod("GiveShareOfLootToParty", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            MethodInfo PatchMethodInfo = typeof(LootCollectorPatch).GetMethod(nameof(GiveShareOfLootToPartyPre), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
+                    prefix: new HarmonyMethod(PatchMethodInfo)
+                    {
+                        priority = Priority.First,
+                        //before = new[] { "that.other.harmony.user" }
+                    });
 
-            try
-            {
-                //  var _harmony = new Harmony("com.darkspyre.bannerlord.tweakcol2");
-                BMTweakCollectionSubModule.Harmony.Patch(TargetMethodInfo,
-                      prefix: new HarmonyMethod(PatchMethodInfo));
-            }
-            catch (Exception exception1)
-            {
-                string message;
-                Exception exception = exception1;
-                string str = exception.Message;
-                Exception innerException = exception.InnerException;
-                if (innerException != null)
-                {
-                    message = innerException.Message;
-                }
-                else
-                {
-                    message = null;
-                }
-                MessageBox.Show(string.Concat("Tournament XP Error patching:\n", str, " \n\n", message));
-            }
+            Applied = true;
         }
 
+        public override void Reset()
+        {
+        }
+   
         internal static bool GiveShareOfLootToPartyPre(ref object __instance, PartyBase partyToReceiveLoot, PartyBase winnerParty, float lootAmount)
         {
             //var ___LootedMembers= Traverse.Create<LootCollectorType>(__instance).Field("LootedMembers").GetValue()

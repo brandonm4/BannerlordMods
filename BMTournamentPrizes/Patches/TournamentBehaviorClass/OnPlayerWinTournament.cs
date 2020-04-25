@@ -103,7 +103,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                         prizeStringId = __instance.TournamentGame.Prize.StringId;
 
                         //Beta1.2
-#if VERSION120
+#if VERSION120 || VERSION130
                         try
                         {
                         Hero.MainHero.PartyBelongedTo.ItemRoster.AddToCounts(currentPool.Prizes.Where(x => x.EquipmentElement.Item.StringId == prizeStringId).First().EquipmentElement, 1, true);

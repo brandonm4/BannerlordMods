@@ -12,7 +12,9 @@ using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-
+#if VERSION130
+using TaleWorlds.ObjectSystem;
+#endif
 using TournamentsXPanded.Common;
 using TournamentsXPanded.Models;
 
@@ -82,7 +84,7 @@ namespace TournamentsXPanded.Behaviors
             currentPool.RemainingRerolls = TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament;
         }
 
-        #region Events
+#region Events
 
         public override void RegisterEvents()
         {
@@ -93,6 +95,30 @@ namespace TournamentsXPanded.Behaviors
 
         public override void SyncData(IDataStore dataStore)
         {
+            //if (dataStore.IsSaving && TournamentXPSettings.Instance.EnableCleanSave)
+            //{
+            //    List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
+            //    MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
+            //    foreach (var pp in prizePools)
+            //    {
+            //        MBObjectManager.Instance.UnregisterObject(pp);             
+            //    }
+
+            //    TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
+            //    foreach (var s in Campaign.Current.Settlements)
+            //    {
+            //        if (s.HasTournament)
+            //        {
+            //            TournamentGame tg = tournamentManager.GetTournamentGame(s.Town);
+            //            if (tg is Fight2TournamentGame)
+            //            {
+            //                ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tg);                            
+            //            }
+            //        }
+            //    }
+            //    InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded saved in clean state.", Colors.Red));
+
+            //}
         }
 
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
@@ -136,9 +162,9 @@ namespace TournamentsXPanded.Behaviors
             //}
         }
 
-        #endregion Events
+#endregion Events
 
-        #region Prizes
+#region Prizes
 
                      
         public static void SetTournamentSelectedPrize(TournamentGame tournamentGame, ItemObject prize)
@@ -350,12 +376,14 @@ namespace TournamentsXPanded.Behaviors
             List<InquiryElement> tournamentTypeElements = new List<InquiryElement>();
             tournamentTypeElements.Add(new InquiryElement("melee", new TextObject("{=tourn008}Standard Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
             tournamentTypeElements.Add(new InquiryElement("melee2", new TextObject("{=tourn009}Individual Only Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
+
+
             //tournamentTypeElements.Add(new InquiryElement("melee3", new TextObject("{=tourn013}Battle Royal Melee Tournament").ToString(), new ImageIdentifier("battania_noble_sword_2_t5", ImageIdentifierType.Item)));
 #if DEBUG
             //tournamentTypeElements.Add(new InquiryElement("archery", "Archery Tournament", new ImageIdentifier("training_longbow", ImageIdentifierType.Item)));
             //tournamentTypeElements.Add(new InquiryElement("joust", "Jousting Tournament", new ImageIdentifier("khuzait_lance_3_t5", ImageIdentifierType.Item)));
             //tournamentTypeElements.Add(new InquiryElement("race", "Horse Racing Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
-            tournamentTypeElements.Add(new InquiryElement("race", "External Application Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
+     //       tournamentTypeElements.Add(new InquiryElement("race", "External Application Tournament", new ImageIdentifier("desert_war_horse", ImageIdentifierType.Item)));
 #endif
             InformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
                     new TextObject("{=tourn010}Tournament Type Selection").ToString(), new TextObject("{=tourn011}What kind of Tournament would you like to compete in today?").ToString(), tournamentTypeElements, true, true, new TextObject("{=tourn006}OK").ToString(), new TextObject("{=tourn007}Cancel").ToString(),
@@ -580,7 +608,7 @@ namespace TournamentsXPanded.Behaviors
             return validTypes;
         }
 
-#if VERSION120
+#if VERSION120 || VERSION130
         public static EquipmentElement GetEquipmentWithModifier(ItemObject item, float prosperityFactor)
         {
             ItemModifierGroup itemModifierGroup;

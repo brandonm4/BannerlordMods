@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BMTweakCollection\bin\Win64_Shipping_Client\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;VERSION130</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -118,6 +118,9 @@
       <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TaleWorlds.ObjectSystem">
+      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.ObjectSystem.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\SmithingStanimaRecovery.cs" />
@@ -132,7 +135,7 @@
     <Compile Include="Patches\DefaultSmithingModel.cs" />
     <Compile Include="Patches\DefaultTroopCountLimitModel.cs" />
     <Compile Include="Patches\FirstPhaseCampaignBehavior.cs" />
-    <Compile Include="LootTweaks\LootCollector.cs" />
+    <Compile Include="Patches\LootCollector.cs" />
     <Compile Include="Patches\CraftingCampaignBehavior.cs" />
     <Compile Include="Patches\PatchPartyScreenLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

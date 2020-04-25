@@ -12,7 +12,9 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-
+#if VERSION130
+using TaleWorlds.ObjectSystem;
+#endif
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common;
 using TournamentsXPanded.Models;
@@ -35,6 +37,12 @@ namespace TournamentsXPanded
 
             var version = ModuleInfo.GetModules().Where(x => x.Name == "Native").Select(x => new { x.Name, x.Version }).FirstOrDefault().Version;
             bool mismatch = false;
+#if VERSION130
+            if (version.Major == 1 && version.Minor < 3)
+            {
+                mismatch = true;
+            }
+#endif
 #if VERSION120
             if (version.Major == 1 && version.Minor < 2)
             {
@@ -91,7 +99,12 @@ namespace TournamentsXPanded
             {
                 CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
                 //gameStarterObject.AddModel(new TournamentPrizeExpansion());
+#if VERSION130
+                MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", TournamentsXPandedSubModule.SAVEDEF_PRIZEPOOL, true);
+#endif
+#if VERSION120
                 MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);
+#endif
                 if (campaignGameStarter != null)
                 {
                     campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
@@ -166,7 +179,7 @@ namespace TournamentsXPanded
             }
         }
 
-        #region Local Methods
+#region Local Methods
         protected void CreateDiagnostics()
         {
             string version = ModuleInfo.GetModules().Where(x => x.Name == "Tournaments XPanded").FirstOrDefault().Version.ToString();
@@ -377,10 +390,10 @@ namespace TournamentsXPanded
                 //    true, false, "Ok", "No", null, null, ""), false);
             }
         }
-        #endregion
+#endregion
         /* Mod Settings Interfaces */
 
-        #region ModSettings
+#region ModSettings
 
         //public static Dictionary<string, string> GetModSettingValue()
         //{
@@ -407,7 +420,7 @@ namespace TournamentsXPanded
         //    }
         //}
 
-        #endregion ModSettings
+#endregion ModSettings
 
         internal const int OBJ_PRIZEPOOL = 4106000;
         internal const int OBJ_TOURNAMENT_TYPE_MELEE2 = 4106001;

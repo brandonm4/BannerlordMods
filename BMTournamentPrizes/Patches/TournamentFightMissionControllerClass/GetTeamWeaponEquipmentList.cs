@@ -7,7 +7,9 @@ using System.Reflection;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-
+#if VERSION130
+using TaleWorlds.ObjectSystem;
+#endif
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;

@@ -3,6 +3,9 @@ using System.Linq;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+#if VERSION130
+using TaleWorlds.ObjectSystem;
+#endif
 using TaleWorlds.SaveSystem;
 
 namespace TournamentsXPanded.Models
@@ -38,7 +41,8 @@ namespace TournamentsXPanded.Models
         {
             get
             {
-                return Prizes.Where(x => x.EquipmentElement.Item.StringId == SelectedPrizeStringId).FirstOrDefault();
+                var prize =  Prizes.Where(x => x.EquipmentElement.Item.StringId == SelectedPrizeStringId).FirstOrDefault();
+                return prize;
             }
         }
 
@@ -79,9 +83,9 @@ namespace TournamentsXPanded.Models
             base.ConstructContainerDefinition(typeof(Dictionary<string, TournamentPrizePool>));
         }
 
-        protected override void DefineGenericClassDefinitions()
-        {
-            base.ConstructGenericClassDefinition(typeof(MBObjectManager.ObjectTypeRecord<TournamentPrizePool>));
-        }
+        //protected override void DefineGenericClassDefinitions()
+        //{
+        //   // base.ConstructGenericClassDefinition(typeof(MBObjectManager.Instance.ObjectTypeRecord<TournamentPrizePool>));
+        //}
     }
 }

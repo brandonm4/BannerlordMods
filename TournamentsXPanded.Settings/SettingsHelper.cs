@@ -26,7 +26,8 @@ namespace TournamentsXPanded.Settings
                 var overridefile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "override.txt");
                 bool overrideSettings = false;
                 bool forceDebug = false;
-                bool forceMenu = false;
+                
+                
                 if (File.Exists(overridefile))
                 {
                     string overridetext = File.ReadAllText(overridefile);
@@ -37,6 +38,10 @@ namespace TournamentsXPanded.Settings
                     if (overridetext.IndexOf("force debug on", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         forceDebug = true;
+                    }
+                    if (overridetext.IndexOf("force disabled on", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {                        
+                        return false;
                     }
                 }
                 else
@@ -76,12 +81,19 @@ namespace TournamentsXPanded.Settings
                     //    ErrorLog.Log("Error Loading ModLib Assembly\n" + ex.ToStringFull());
                     //}
 
-                    if (modlibassembly != null)
+                    try
                     {
-                        var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentsXPanded.Settings.ModLib.dll");
-                        modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
-                        modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
-                        settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib");
+                        if (modlibassembly != null)
+                        {
+                            var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentsXPanded.Settings.ModLib.dll");
+                            modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
+                            modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
+                            settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib");
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        ErrorLog.Log("Error Loading SettingsModLib Assembly\n" + ex.ToStringFull());
                     }
 
                     if (settingsHelperModLibType != null)
@@ -91,6 +103,9 @@ namespace TournamentsXPanded.Settings
                             TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug });
                             if (osettings != null)
                             {
+#if DEBUG
+                                osettings.DebugMode = true;
+#endif
                                 TournamentXPSettings.SetSettings(osettings);
                                 modLibLoaded = true;
                             }
@@ -126,7 +141,9 @@ namespace TournamentsXPanded.Settings
                     {
                         settings.DebugMode = true;
                     }
-
+#if DEBUG
+                    settings.DebugMode = true;
+#endif
                     TournamentXPSettings.SetSettings(settings);
                 }
             }

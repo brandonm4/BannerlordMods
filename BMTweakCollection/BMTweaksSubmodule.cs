@@ -1,4 +1,5 @@
-﻿using BMTweakCollection.LootTweaks;
+﻿using BMTweakCollection.Behaviors;
+using BMTweakCollection.LootTweaks;
 using BMTweakCollection.Models;
 using BMTweakCollection.Patches;
 using ModLib;
@@ -22,6 +23,7 @@ namespace BMTweakCollection
 {
     public partial class BMTweakCollectionSubModule : XPandedSubModuleBase
     {
+        public static bool disabled = false;
         public static new string ModuleFolderName { get; } = "BMTweakCollection";
 
         protected override void OnSubModuleLoad()
@@ -59,6 +61,22 @@ namespace BMTweakCollection
         {
             if (mission.CombatType == Mission.MissionCombatType.Combat)
                 mission.AddMissionBehaviour(new LootBehavior());
-        }              
+        }
+
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
+            if (!disabled)
+            {
+                if (game.GameType is Campaign)
+                {
+                    CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
+                    
+                    if (campaignGameStarter != null)
+                    {
+                        campaignGameStarter.AddBehavior(new FixedCompanionSkillsBehavior());
+                    }
+                }
+            }
+        }
     }
 }

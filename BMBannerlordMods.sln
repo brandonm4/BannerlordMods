@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tweaks Collection", "Tweaks
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentsXPanded.Settings.ModLib", "TournamentsXPanded.Settings.ModLib\TournamentsXPanded.Settings.ModLib.csproj", "{F85C2304-1C13-4C7F-BE92-A272435DF84D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TournamentsXPanded2", "TournamentsXPanded2", "{3523DB8D-8C1F-44AB-9707-01D27949F4E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentsXPanded2", "TournamentsXPanded2\TournamentsXPanded2.csproj", "{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,7 +48,6 @@ Global
 		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Debug|x64.ActiveCfg = Debug|x64
-		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Debug|x64.Build.0 = Debug|x64
 		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB43EB8E-1C85-4CEE-87FC-BE56D644B30A}.Release|x64.ActiveCfg = Release|x64
@@ -85,6 +88,14 @@ Global
 		{F85C2304-1C13-4C7F-BE92-A272435DF84D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F85C2304-1C13-4C7F-BE92-A272435DF84D}.Release|x64.ActiveCfg = Release|x64
 		{F85C2304-1C13-4C7F-BE92-A272435DF84D}.Release|x64.Build.0 = Release|x64
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Debug|x64.ActiveCfg = Debug|x64
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Debug|x64.Build.0 = Debug|x64
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Release|x64.ActiveCfg = Release|x64
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +108,7 @@ Global
 		{66AD0016-BC49-4990-9F31-8AE1CEBF3806} = {D1CEC877-3206-4D03-8629-29ED3BCB464D}
 		{51475218-7961-4582-9A52-75C561CB13CF} = {D2C23A5D-DA44-48D5-98C7-C4B35E546BA4}
 		{F85C2304-1C13-4C7F-BE92-A272435DF84D} = {D1CEC877-3206-4D03-8629-29ED3BCB464D}
+		{6FED4613-3D7E-4D4D-B3FC-433D946D31D9} = {3523DB8D-8C1F-44AB-9707-01D27949F4E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5926C1A4-2DF6-4F00-BFA0-9DC86F966980}

@@ -60,7 +60,7 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                 float renown = 0;
                 if (TournamentXPSettings.Instance.BonusRenownFirstKill > 0 && TournamentXPandedTournamentBehavior.firstKiller == pc )
                 {
-                    message += "QUICK ACTION! You got the first kill: " + TournamentXPSettings.Instance.BonusRenownFirstKill.ToString() + " renown.\n";
+                    message += "{=tourn018}QUICK ACTION! You got the first kill: " + TournamentXPSettings.Instance.BonusRenownFirstKill.ToString() + " renown.\n";
                     InformationManager.AddQuickInformation(new TextObject(message));
                     renown += TournamentXPSettings.Instance.BonusRenownFirstKill;
                 }
@@ -76,11 +76,11 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                             message = "";
                             if (numberofkills.Count == 1)
                             {
-                                message += "AGGRESSIVE! You got the most kills: " + bonus.ToString() + " renown.\n";
+                                message += "{=tourn019}AGGRESSIVE! You got the most kills: " + bonus.ToString() + " renown.\n";
                             }
                             else
                             {
-                                message += "You tied for the most kills: " + bonus.ToString() + " renown.\n";
+                                message += "{=tourn020}You tied for the most kills: " + bonus.ToString() + " renown.\n";
                             }
                             InformationManager.AddQuickInformation(new TextObject(message));
                             renown += bonus;
@@ -99,11 +99,11 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                             message = "";
                             if (mostdamage.Count == 1)
                             {
-                                message += "SAVAGE! You inflicted the most damage: " + bonusmd.ToString() + " renown.\n";
+                                message += "{=tourn021}SAVAGE! You inflicted the most damage: " + bonusmd.ToString() + " renown.\n";
                             }
                             else
                             {
-                                message += "You tied for inflicting the most damage: " + bonusmd.ToString() + " renown.\n";
+                                message += "{=tourn022}You tied for inflicting the most damage: " + bonusmd.ToString() + " renown.\n";
                             }
                             InformationManager.AddQuickInformation(new TextObject(message));
                             renown += bonusmd;
@@ -121,11 +121,11 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                             message = "";
                             if (leastDamage.Count == 1)
                             {
-                                message += "DEFENSIVE! You took the least damage: " + bonusld.ToString() + " renown.\n";
+                                message += "{=tourn023}DEFENSIVE! You took the least damage: " + bonusld.ToString() + " renown.\n";
                             }
                             else
                             {
-                                message += "You tied for the least damage taken: " + bonusld.ToString() + " renown.\n";
+                                message += "{=tourn024}You tied for the least damage taken: " + bonusld.ToString() + " renown.\n";
                             }
                             InformationManager.AddQuickInformation(new TextObject(message));
                             renown += bonusld;

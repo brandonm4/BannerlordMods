@@ -14,10 +14,11 @@ namespace TournamentsXPanded.Models
     [SaveableClass(TournamentsXPandedSubModule.OBJ_TOURNAMENT_TYPE_MELEE2)]
     public class Fight2TournamentGame : FightTournamentGame
     {
-        private const string descriptionMixed = "The tournament will be 1v1 and free for all melee group fights.";
-        private const string description1v1 = "The tournament will be bracket of 1v1 rounds.";
-        private const string descriptionFFA = "The tournament will be a series of free for all matches.";
-
+        private const string descriptionStd = "{=MWGATOoz}The tournament will be a melee group fight.";
+        private const string descriptionMixed = "{=tourn014}The tournament will be 1v1 and free for all melee group fights.";
+        private const string description1v1 = "{=tourn015}The tournament will be bracket of 1v1 rounds.";
+        private const string descriptionFFA = "{=tourn016}The tournament will be a series of free for all matches.";
+        private const string descriptionLGA = "{=tourn017}The tournament will be a series of all remaining participants in group fights.";
         public string Description { get; set; } = descriptionMixed;
 
         public Fight2TournamentGame(Town town) : base(town)
@@ -27,7 +28,7 @@ namespace TournamentsXPanded.Models
 
         public override TextObject GetMenuText()
         {
-            return new TextObject(string.Concat("{=MWGATOoz}", Description));
+            return new TextObject(Description);
         }
 
         public override int MaxTeamSize

@@ -62,6 +62,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TaleWorlds.CampaignSystem">
+      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.CampaignSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="TaleWorlds.Core">
+      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.Core.dll</HintPath>
+    </Reference>
     <Reference Include="TaleWorlds.DotNet">
       <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.DotNet.dll</HintPath>
       <Private>False</Private>

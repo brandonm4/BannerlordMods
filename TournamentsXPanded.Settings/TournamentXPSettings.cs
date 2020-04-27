@@ -1,4 +1,10 @@
-﻿namespace TournamentsXPanded.Models
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+using TournamentsXPanded.Common;
+
+namespace TournamentsXPanded.Models
 {
     public class TournamentXPSettings
     {
@@ -91,7 +97,7 @@
 
         public float TownProsperityMid { get; set; } = 1.0f;
 
-        public float TownProsperityHigh { get; set; } = 1.3f;        
+        public float TownProsperityHigh { get; set; } = 1.3f;
 
         public bool EnableItemType_Bow { get; set; } = true;
 
@@ -200,9 +206,139 @@
 
         public bool CompanionsWinPrizes { get; set; } = false;
 
-      public bool EnableCleanSave { get; set; } = false;
+        public bool EnableCleanSave { get; set; } = false;
         #endregion UnImplemented
 
-        
+
+        public List<ItemObject.ItemTypeEnum> GetActivePrizeTypes()
+        {
+            List<ItemObject.ItemTypeEnum> validTypes = new List<ItemObject.ItemTypeEnum>();
+            if (TournamentXPSettings.Instance.EnableItemType_BodyArmor)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.BodyArmor);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Bow)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Bow);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Cape)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Cape);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Crossbow)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Crossbow);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_HandArmor)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.HandArmor);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_HeadArmor)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.HeadArmor);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Horse)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Horse);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_HorseHarness)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.HorseHarness);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_LegArmor)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.LegArmor);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_OneHandedWeapon)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.OneHandedWeapon);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Polearm)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Polearm);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Shield)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Shield);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Thrown)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Thrown);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_TwoHandedWeapon)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.TwoHandedWeapon);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Arrow)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Arrows);
+            }
+            if (TournamentXPSettings.Instance.EnableItemType_Bolt)
+            {
+                validTypes.Add(ItemObject.ItemTypeEnum.Bolts);
+            }
+            return validTypes;
+        }
+        public float GetRenownValue(CharacterObject character)
+        {
+            var worth = 0f;
+            if (character.IsHero)
+            {
+                worth += RenownPerHeroProperty[(int)RenownHeroTier.HeroBase];
+                var hero = character.HeroObject;
+                if (hero != null)
+                {
+                    if (hero.IsNoble)
+                    {
+                        worth += RenownPerHeroProperty[(int)RenownHeroTier.IsNoble];
+                    }
+                    if (hero.IsNotable)
+                    {
+                        worth += RenownPerHeroProperty[(int)RenownHeroTier.IsNotable];
+                    }
+                    if (hero.IsCommander)
+                    {
+                        worth += RenownPerHeroProperty[(int)RenownHeroTier.IsCommander];
+                    }
+                    if (hero.IsMinorFactionHero)
+                    {
+                        worth += RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                    }
+                    if (hero.IsFactionLeader)
+                    {
+                        if (hero.MapFaction.IsKingdomFaction)
+                        {
+                            worth += RenownPerHeroProperty[(int)RenownHeroTier.IsMajorFactionLeader];
+                        }
+
+                        if (hero.MapFaction.IsMinorFaction)
+                        {
+                            worth += RenownPerHeroProperty[(int)RenownHeroTier.IsMinorFactionHero];
+                        }
+                    }
+                }
+            }
+            else
+            {
+                worth += RenownPerTroopTier[character.Tier];
+            }
+            return worth;
+        }
+
+        public float[] RenownPerTroopTier
+        {
+            get
+            {
+                return new[] { 0f, TournamentXPSettings.Instance.RenownTroopTier1, TournamentXPSettings.Instance.RenownTroopTier2, TournamentXPSettings.Instance.RenownTroopTier3, TournamentXPSettings.Instance.RenownTroopTier4, TournamentXPSettings.Instance.RenownTroopTier5, TournamentXPSettings.Instance.RenownTroopTier6, TournamentXPSettings.Instance.RenownTroopTier7 };
+            }
+        }
+
+        public float[] RenownPerHeroProperty
+        {
+            get
+            {
+                return new[] { TournamentXPSettings.Instance.RenownPerHeroPropertyHeroBase, TournamentXPSettings.Instance.RenownPerHeroPropertyIsNoble, TournamentXPSettings.Instance.RenownPerHeroPropertyIsNotable, TournamentXPSettings.Instance.RenownPerHeroPropertyIsCommander, TournamentXPSettings.Instance.RenownPerHeroPropertyIsMinorFactionHero, TournamentXPSettings.Instance.RenownPerHeroPropertyIsMinorFactionLeader, TournamentXPSettings.Instance.RenownPerHeroPropertyIsMajorFactionLeader };
+            }
+        }
     }
 }

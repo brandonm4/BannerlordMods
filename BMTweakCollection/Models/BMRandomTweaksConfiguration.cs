@@ -57,5 +57,11 @@ namespace BMTweakCollection.Models
         [XmlElement]
         [SettingProperty("LootSkillXpGain", 0, 100)]
         public float LootSkillXpGain { get; set; } = 10f;
+
+        public bool AutoLearnSmeltedParts { get; set; } = true;
+        public int MaxCraftingStamina { get; set; } = 400;
+        public bool CraftingStaminaTweakEnabled { get; set; } = true;
+        public int CraftingStaminaGainAmount { get; set; } = 10;
+        public float CraftingStaminaGainOutsideSettlementMultiplier { get; set; } = 1.0f;
     }
 }

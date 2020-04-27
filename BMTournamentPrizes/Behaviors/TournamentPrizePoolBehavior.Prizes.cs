@@ -90,25 +90,50 @@ namespace TournamentsXPanded.Behaviors
             foreach (var id in pickeditems)
             {
 
-
                 ItemModifier itemModifier = null;
-                var pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(id);
-#if VERSION120 || VERSION130
-                if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes)
-                {
-
-                    //var ee = GetEquipmentWithModifier(pickedPrize, TournamentPrizePoolBehavior.GetProsperityModifier(tournamentGame.Town.Settlement));
-                    if (MBRandom.RandomFloatRanged(100f) < 50f)
-                    {
-                        var ee = GetEquipmentWithModifier(pickedPrize, 1.3f);                        
-                        itemModifier = ee.ItemModifier;
-                        
-                    }
-                        
+                ItemObject pickedPrize = null;
+                try
+                {                    
+                    pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(id);
                 }
+                catch(Exception ex)
+                {
+                    ErrorLog.Log("Error getting object StringId: " + id + "\n" + ex.ToStringFull());
+                }
+
+                if (pickedPrize != null)
+                {
+#if VERSION120 || VERSION130
+                    if (TournamentXPSettings.Instance.EnableItemModifiersForPrizes && pickedPrize.ItemType != ItemObject.ItemTypeEnum.Thrown && pickedPrize.ItemType != ItemObject.ItemTypeEnum.Arrows)
+                    {
+                        try
+                        {
+                            if (MBRandom.RandomFloatRanged(100f) < 50f)
+                            {
+                                var ee = GetEquipmentWithModifier(pickedPrize, TournamentPrizePoolBehavior.GetProsperityModifier(tournamentGame.Town.Settlement));
+                                itemModifier = ee.ItemModifier;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorLog.Log("Error in GetEquipmentWithModifier\nItem:" + pickedPrize.StringId + "\n" + ex.ToStringFull());
+                        }
+
+                    }
 #endif
-                currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
-                // currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, null)); //Turn off random item mods for now;
+                    try
+                    {
+                        currentPool.Prizes.Add(new ItemRosterElement(pickedPrize, 1, itemModifier));
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorLog.Log("Error adding equipment to prizepool.\n" + ex.ToStringFull());
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Invalid Item detected.  Please remove: " + id + " from your list of custom items. Ignoring this item and continuing.");
+                }
             }
 
             if (!keepTownPrize)

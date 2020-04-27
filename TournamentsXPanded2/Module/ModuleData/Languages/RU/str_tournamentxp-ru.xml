@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="Русский" />
+  </tags>
+  <strings>
+    <string id="tourn001" text="Переиграть призы" />
+    <string id="tourn002" text="Выберите приз" />
+    <string id="tourn003" text="Выберите Стиль Турнира" />
+    <string id="tourn004" text="Превышено количество попыток переигрывания" />
+    <string id="tourn005" text="Выбор Приза Турнира" />
+    <string id="tourn006" text="ОК" />
+    <string id="tourn007" text="Отмена" />
+    <string id="tourn008" text="Стандартная группа ближнего боя" />
+    <string id="tourn009" text="Смертельный бой в ближнем бою" />
+    <string id="tourn010" text="Выберите Тип Турнира" />
+    <string id="tourn011" text="В каком Турнире вы хотели бы участвовать сегодня?" />
+    <string id="tourn012" text="Вы можете выбрать предмет из списка ниже в качестве награды, если выиграете Турнир!" />
+    <string id="tourn013" text="Королевская Битва-рукопашный турнир" />
+    <string id="tourn014" text="Турнир 1 на 1 и бесплатно для всех групповых поединков ближнего боя."/>
+    <string id="tourn015" text="Турнир будет состоять из раундов 1 на 1."/>
+    <string id="tourn016" text="Турнир будет серией бесплатных матчей."/>
+    <string id="tourn017" text="В турнире будут участвовать все оставшиеся участники групповых боев."/>
+    <string id="tourn018" text="БЫСТРОЕ ДЕЙСТВИЕ! Вы получили первое убийство: "/>
+    <string id="tourn019" text="АГРЕССИВНОСТЬ! У вас больше всего убийств: "/>
+    <string id="tourn020" text="Вы участвовали в большинстве убийств: "/>
+    <string id="tourn021" text="Дикарь! Вы нанесли самый большой урон: "/>
+    <string id="tourn022" text="Вы привязаны к нанесению наибольшего урона: "/>
+    <string id="tourn023" text="ЗАЩИТА! Вы получили наименьший урон: "/>
+    <string id="tourn024" text="Вы привязаны к наименьшему полученному урону: "/>
+  </strings>
+</base>

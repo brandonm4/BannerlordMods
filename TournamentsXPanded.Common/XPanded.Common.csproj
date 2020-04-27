@@ -89,9 +89,6 @@
       <HintPath>E:\Users\Brandon\OneDrive - Mathis Consulting, LLC\Development\BannerLord\BannerlordVersions\target\TaleWorlds.MountAndBlade.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TaleWorlds.ObjectSystem">
-      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.ObjectSystem.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\Class1.cs" />
@@ -106,7 +103,9 @@
     <Compile Include="Patches\PatchBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XPandedSubModule.cs" />
-    <Compile Include="XPandedSubModule.Harmony.cs" />
+    <Compile Include="XPandedSubModule.Harmony.cs">
+      <DependentUpon>XPandedSubModule.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -90,7 +90,7 @@ namespace TournamentsXPanded.Behaviors
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
-            CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(this.OnCleanSave));
+          //  CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(this.OnCleanSave));
         }
 
         public override void SyncData(IDataStore dataStore)

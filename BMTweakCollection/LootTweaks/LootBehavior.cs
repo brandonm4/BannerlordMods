@@ -65,7 +65,10 @@ namespace BMTweakCollection.LootTweaks
             {
                 return;
             }
-
+            if (affectedAgent == null)
+            {
+                return;
+            }
             try
             {
                 if ((affectedAgent.IsMainAgent == false && !affectedAgent.IsMount))
@@ -129,6 +132,17 @@ namespace BMTweakCollection.LootTweaks
         {
             this.BattleObserver = observer;
         }
+
+        //public override void OnItemPickup(Agent agent, SpawnedItemEntity item)
+        //{
+        //    if (agent.Character == CharacterObject.PlayerCharacter)
+        //    {
+        //        //if (item.WeaponCopy.PrimaryItem != null && item.WeaponCopy.PrimaryItem.ItemCategory == ItemCategory.)
+        //        //{
+
+        //        //}
+        //    }
+        //}
 
         public EquipmentElement GetEquipmentWithModifier(ItemObject item, float targetValueFactor)
         {

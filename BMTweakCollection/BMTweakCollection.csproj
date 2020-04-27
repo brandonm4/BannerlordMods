@@ -123,6 +123,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\FixedCompanionSkillsBehavior.cs" />
     <Compile Include="Behaviors\SmithingStanimaRecovery.cs" />
     <Compile Include="Behaviors\MatchedSizeBanditCampaignBehavior.cs" />
     <Compile Include="BMTweaksSubmodule.cs" />

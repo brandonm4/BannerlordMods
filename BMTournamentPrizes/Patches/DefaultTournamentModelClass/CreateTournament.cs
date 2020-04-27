@@ -11,6 +11,8 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
+using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 {
@@ -25,7 +27,8 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
 
         public override bool IsApplicable(Game game)
         {
-            return TournamentXPSettings.Instance.EnableTournamentRandomSelection;
+            //return TournamentXPSettings.Instance.EnableTournamentRandomSelection;
+            return false;
         }
 
         public override void Apply(Game game)
@@ -58,25 +61,30 @@ namespace TournamentsXPanded.Patches.DefaultTournamentModelClass
             float gameBasicMeleeChance = 65f;
             float rdm = MBRandom.RandomFloatRanged(1f, 100f);
 
-           
 
-            if (rdm < gameBasicMeleeChance)
+            try
             {
-                __result = new FightTournamentGame(town);
-                return false;
+                if (rdm < gameBasicMeleeChance)
+                {
+                    __result = new FightTournamentGame(town);
+                    return false;
+                }
+                else
+                {
+                    var newgame = new Fight2TournamentGame(town);
+                    //rdm = MBRandom.RandomFloatRanged(1f, 100f);
+                    //if (rdm < 50f)
+                    //{
+                    //    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
+                    //}
+                    __result = newgame;
+                    return false;
+                }
             }
-            else
+            catch(Exception ex)
             {
-                var newgame = new Fight2TournamentGame(town);
-                //rdm = MBRandom.RandomFloatRanged(1f, 100f);
-                //if (rdm < 50f)
-                //{
-                //    newgame.SetFightMode(Fight2TournamentGame.FightMode.One_One);
-                //}
-                __result = newgame;
-                return false;
+                ErrorLog.Log("Error Creating Tournament\n" + ex.ToStringFull());
             }
-
             return true;
         }
     }

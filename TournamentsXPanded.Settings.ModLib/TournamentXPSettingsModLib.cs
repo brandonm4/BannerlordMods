@@ -444,10 +444,7 @@ namespace TournamentsXPanded.Models
         [SettingProperty("Enable Tournament Type Selection")]
         public bool EnableTournamentTypeSelection { get; set; } = true;
 
-        [XmlElement]
-        [SettingPropertyGroup("5. Other")]
-        [SettingProperty("Enable Random Tournament Type at Spawn", "If enabled this setting will randomize the tournament type between Melee Group, and solo free-for-all.")]
-        public bool EnableTournamentRandomSelection { get; set; } = true;
+        
 
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
@@ -490,7 +487,12 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("CompanionsWinPrizes(Not Active)")]
         public bool CompanionsWinPrizes { get; set; } = false;
-        
+
+        [XmlElement]
+        [SettingPropertyGroup("99. Not Used")]
+        [SettingProperty("Enable Random Tournament Type at Spawn", "Disabled until fixed. Will be ignored if turned on.")]
+        public bool EnableTournamentRandomSelection { get; set; } = false;
+
 
         #endregion UnImplemented
     }

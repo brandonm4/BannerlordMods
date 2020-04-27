@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HarmonyLib;
+using Newtonsoft.Json;
 using SandBox;
 using SandBox.TournamentMissions.Missions;
 using System;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -62,105 +64,186 @@ namespace TournamentsXPanded
             if (mismatch)
             {
                 MessageBox.Show("TournamentsXPanded Version Mismatch detected.\nInstall the correct one for your version of the game.\nGame Version: " + version.Major + "." + version.Minor + "." + version.Revision);
+                disabled = true;
             }
-            SettingsHelper.LoadSettings();
-
-            //Setup Item Filters if needed
-            if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
+            if (SettingsHelper.LoadSettings())
             {
-                CreateEquipmentRules();
-            }
+                //Setup Item Filters if needed
+                if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
+                {
+                    CreateEquipmentRules();
+                }
 
-            //Add localizations
-            LocalizedTextManager.LoadLocalizationXmls();
+                //Add localizations
+                LocalizedTextManager.LoadLocalizationXmls();
 
 #if DEBUG
             TournamentXPSettings.Instance.DebugMode = true;
 #endif
+            }
+            else
+            {
+                disabled = true;
+                MessageBox.Show("TournamentXP had a critical failure during initialization.  Check your error logs.\nDisabling TournamentXP.");
+            }
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             string version = typeof(TournamentsXPandedSubModule).Assembly.GetName().Version.ToString();
-
-            if (!TournamentXPSettings.Instance.DebugMode)
-            {
-                ShowMessage("Tournaments XPanded v" + version + " Loaded", Colors.Cyan);
+            if (!disabled)
+            {                
+                if (!TournamentXPSettings.Instance.DebugMode)
+                {
+                    ShowMessage("Tournaments XPanded v" + version + " Loaded", Colors.Cyan);
+                }
+                else
+                {
+                    ShowMessage("Tournaments XPanded v" + version + " Loaded {DEBUG MODE}", Colors.Red);
+                }
             }
             else
             {
-                ShowMessage("Tournaments XPanded v" + version + " Loaded {DEBUG MODE}", Colors.Red);
+                ShowMessage("Tournaments XPanded v" + version + " Disabled", Colors.Red);
             }
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            if (game.GameType is Campaign)
+            if (!disabled)
             {
-                CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
-                //gameStarterObject.AddModel(new TournamentPrizeExpansion());
+                if (game.GameType is Campaign)
+                {
+                    CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
+                    //gameStarterObject.AddModel(new TournamentPrizeExpansion());
 #if VERSION130
                 MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", TournamentsXPandedSubModule.SAVEDEF_PRIZEPOOL, true);
 #endif
 #if VERSION120
-                MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);
+                    MBObjectManager.Instance.RegisterType<TournamentPrizePool>("TournamentPrizePool", "TournamentPrizePools", true);
 #endif
-                if (campaignGameStarter != null)
-                {
-                    campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
+                    if (campaignGameStarter != null)
+                    {
+                        campaignGameStarter.AddBehavior(new TournamentPrizePoolBehavior());
+                    }
                 }
             }
+           
         }
 
         public override void OnGameInitializationFinished(Game game)
         {
-            if (game.GameType is Campaign)
+            if (!disabled)
             {
-                ApplyPatches(game, typeof(TournamentsXPandedSubModule));                
-                //Setup Custom Items.
-                string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
-                if (File.Exists(customfile))
+                if (game.GameType is Campaign)
                 {
-                    var configtxt = File.ReadAllText(customfile);
-                    var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
-                    //InitCustomItems(customItems);
-                    InitItemsList(customItems, out TournamentPrizePoolBehavior._customItems);
-                }
-
-                //Setup Legacy Items
-                List<string> strArray = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
-                InitItemsList(strArray, out TournamentPrizePoolBehavior._legacyItems);
-
-                if (TournamentXPSettings.Instance.DebugMode)
-                {
-                    try
+                    ApplyPatches(game, typeof(TournamentsXPandedSubModule));
+                    //Setup Custom Items.
+                    string customfile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "CustomPrizeItems.json");
+                    if (File.Exists(customfile))
                     {
-                        CreateDiagnostics();
+                        var configtxt = File.ReadAllText(customfile);
+                        var customItems = JsonConvert.DeserializeObject<List<string>>(configtxt);
+                        //InitCustomItems(customItems);
+                        InitItemsList(customItems, out TournamentPrizePoolBehavior._customItems);
                     }
-                    catch (Exception ex)
-                    {
-                        ErrorLog.Log("ERROR CREATING DIAGNOSTICS\n" + ex.ToStringFull());
-                    }
-                }
 
-                //Try to repair
-                foreach (var settlement in Settlement.All)
-                {
-                    if (settlement.HasTournament)
+                    //Setup Legacy Items
+                    List<string> strArray = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
+                    InitItemsList(strArray, out TournamentPrizePoolBehavior._legacyItems);
+
+                    if (TournamentXPSettings.Instance.DebugMode)
                     {
-                        var tournament = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town) as Fight2TournamentGame;
                         try
                         {
-                            if (tournament != null)
-                            {
-                                tournament.SetFightMode(Fight2TournamentGame.FightMode.Mixed);
-                            }
+                            CreateDiagnostics();
                         }
                         catch (Exception ex)
                         {
-                            ErrorLog.Log("Error repairing tournament: " + settlement.Town.StringId);
-                            ErrorLog.Log(ex.ToStringFull());
+                            ErrorLog.Log("ERROR CREATING DIAGNOSTICS\n" + ex.ToStringFull());
                         }
+                    }
+                    
+                    TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
+                    foreach (var s in Campaign.Current.Settlements)
+                    {
+                        try
+                        {
+                            if (s.HasTournament)
+                            {
+                                TournamentGame tg = tournamentManager.GetTournamentGame(s.Town);
+                                if (tg is Fight2TournamentGame)
+                                {
+                                    ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tg);
+                                    tg = null;
+                                    tg = new FightTournamentGame(s.Town);
+                                    tournamentManager.AddTournament(tg);
+                                    InformationManager.DisplayMessage(new InformationMessage("Repaired Tournament in: " + s.Town.Name.ToString(), Colors.Red));
+                                }
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            ErrorLog.Log("Error resetting Tournament\n" + ex.ToStringFull());
+                        }
+                    }
+
+                    //Try to repair
+                    /*
+                    foreach (var settlement in Settlement.All)
+                    {
+                        if (settlement.HasTournament)
+                        {
+                            var tournament = Campaign.Current.TournamentManager.GetTournamentGame(settlement.Town) as Fight2TournamentGame;
+                            try
+                            {
+                                if (tournament != null)
+                                {
+                                    tournament.SetFightMode(Fight2TournamentGame.FightMode.Mixed);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ErrorLog.Log("Error repairing tournament: " + settlement.Town.StringId);
+                                ErrorLog.Log(ex.ToStringFull());
+                            }
+                        }
+                    }
+                    */
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Tournament XPanded disabled. Would you like to reset all Tournaments to stock?", "TournamentsXPanded Disabled", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        List<TournamentPrizePool> prizePools = new List<TournamentPrizePool>();
+                        MBObjectManager.Instance.GetAllInstancesOfObjectType<TournamentPrizePool>(ref prizePools);
+                        foreach (var pp in prizePools)
+                        {
+                            MBObjectManager.Instance.UnregisterObject(pp);
+                        }
+                        InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded prize pools de-registered.", Colors.Red));
+
+                        TournamentManager tournamentManager = Campaign.Current.TournamentManager as TournamentManager;
+                        foreach (var s in Campaign.Current.Settlements)
+                        {
+                            if (s.HasTournament)
+                            {
+                                TournamentGame tg = tournamentManager.GetTournamentGame(s.Town);
+                                if (tg is Fight2TournamentGame)
+                                {
+                                    ((List<TournamentGame>)Traverse.Create(tournamentManager).Field("_activeTournaments").GetValue()).Remove(tg);
+                                }
+                            }
+                        }
+                        InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded tournaments reset.", Colors.Red));
+                        InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded can now be saved in clean state.", Colors.Red));
+                    }
+                    catch
+                    {
+                       // InformationManager.DisplayMessage(new InformationMessage("TournamentXPanded can now be saved in clean state.", Colors.Red));
                     }
                 }
             }
@@ -168,22 +251,32 @@ namespace TournamentsXPanded
 
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
-            if (!mission.HasMissionBehaviour<TournamentXPandedTournamentBehavior>() &&
-             (mission.HasMissionBehaviour<TournamentArcheryMissionController>()
-             || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
-             || mission.HasMissionBehaviour<TownHorseRaceMissionController>()
-             || mission.HasMissionBehaviour<TournamentFightMissionController>()
-             ))
+            if (!disabled)
             {
-                mission.AddMissionBehaviour(new TournamentXPandedTournamentBehavior());
+                if (!mission.HasMissionBehaviour<TournamentXPandedTournamentBehavior>() &&
+                 (mission.HasMissionBehaviour<TournamentArcheryMissionController>()
+                 || mission.HasMissionBehaviour<TournamentJoustingMissionController>()
+                 || mission.HasMissionBehaviour<TownHorseRaceMissionController>()
+                 || mission.HasMissionBehaviour<TournamentFightMissionController>()
+                 ))
+                {
+                    mission.AddMissionBehaviour(new TournamentXPandedTournamentBehavior());
+                }
             }
         }
 
 #region Local Methods
         protected void CreateDiagnostics()
         {
-            string version = ModuleInfo.GetModules().Where(x => x.Name == "Tournaments XPanded").FirstOrDefault().Version.ToString();
-            string versionNative = ModuleInfo.GetModules().Where(x => x.Name == "Native").FirstOrDefault().Version.ToString();
+            string version = "Unknown";
+            string versionNative = "Unknown";
+
+            try
+            {
+                version = ModuleInfo.GetModules().Where(x => x.Name == "Tournaments XPanded").FirstOrDefault().Version.ToString();
+                versionNative = ModuleInfo.GetModules().Where(x => x.Name == "Native").FirstOrDefault().Version.ToString();
+            }
+            catch { }
             //sw.WriteLine(string.Concat(version, " ", DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss"), "\n", text));
 
             var diag = "Tournaments XPanded Settings infomation";
@@ -199,6 +292,19 @@ namespace TournamentsXPanded
             {
                 Formatting = Formatting.Indented
             };
+
+            try
+            {
+                diag += "\nModules Loaded\n";
+                foreach(var x in ModuleInfo.GetModules().Select(x => x.Name))
+                {
+                    diag += x + "\n";
+                }
+                diag += "\n\n";
+            }
+            catch
+            { }
+
             try
             {
                 var settingsjson = JsonConvert.SerializeObject(TournamentXPSettings.Instance, serializerSettings);

@@ -1,11 +1,10 @@
-﻿using ModLib;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using TournamentsXPanded.Models;
 
 using XPanded.Common.Diagnostics;
+using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Settings
 {
@@ -20,23 +19,6 @@ namespace TournamentsXPanded.Settings
             }
             catch (Exception ex)
             {
-                //Modlib failed to initialize - try loading it from MBOptionScreen instead
-
-                var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "Bannerlord.MBOptionScreen", "bin", "Win64_Shipping_Client", "ModLib.dll");
-                modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
-                if (File.Exists(modlibsettingsdll))
-                {
-                    try
-                    {
-                        Assembly assembly = Assembly.LoadFile(modlibsettingsdll);
-                        var settings = GetSettingsFromModLib(forceDebug);
-                        return settings;
-                    }
-                    catch(Exception ex2)
-                    {
-                        ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex2.ToStringFull());
-                    }
-                }
                 ErrorLog.Log("TournamentsXPanded failed to initialize settings data.\n\n" + ex.ToStringFull());
             }
             return null;
@@ -44,17 +26,17 @@ namespace TournamentsXPanded.Settings
 
         internal static TournamentXPSettings GetSettingsFromModLib(bool forceDebug = false)
         {
-            FileDatabase.Initialise(SettingsHelper.ModuleFolderName);
-            TournamentXPSettingsModLib settings = FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
+            TXP.ModLib.FileDatabase.Initialise(SettingsHelper.ModuleFolderName);
+            TournamentXPSettingsModLib settings = TXP.ModLib.FileDatabase.Get<TournamentXPSettingsModLib>(TournamentXPSettingsModLib.InstanceID);
             if (settings == null)
             {
                 settings = new TournamentXPSettingsModLib();
             }
-            SettingsDatabase.RegisterSettings(settings);
+            TXP.ModLib.SettingsDatabase.RegisterSettings(settings);
             if (forceDebug)
             {
                 settings.DebugMode = true;
-            }            
+            }
             return settings.GetSettings();
         }
     }

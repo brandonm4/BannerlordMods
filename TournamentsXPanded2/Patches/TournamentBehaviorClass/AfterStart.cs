@@ -22,7 +22,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
 
         public override bool IsApplicable(Game game)
         {
-            return true;
+            return TournamentXPSettings.Instance.BonusTournamentWinGold > 0;
         }
 
         public override void Reset()
@@ -39,7 +39,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
               prefix: new HarmonyMethod(PatchMethodInfo)
               {
-                  priority = Priority.Low,
+                  priority = Priority.First,
               }
               );
 
@@ -47,16 +47,8 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
         }
 
         private static bool Prefix(TournamentBehavior __instance)
-        {
-            foreach(var t in TournamentsXPandedBehavior.Tournaments)
-            {
-                t.Active = false;
-            }
-            var tournamentInfo = TournamentsXPandedBehavior.GetTournamentInfo(__instance.TournamentGame.Town);
-            tournamentInfo.Rewards = new TournamentReward();
-            tournamentInfo.Active = true;
+        {         
             typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentXPSettings.Instance.BonusTournamentWinGold);
-
             return true;
         }
     }

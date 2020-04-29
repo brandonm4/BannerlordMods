@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+    <string id="txpg0001" text="1. Tournament Configuration" />
+    <string id="txpg0002" text="2. Re-Roll" />
+    <string id="txpg0003" text="3.1 Prize Selection" />
+    <string id="txpg0004" text="3.2 Prize Sources" />
+    <string id="txpg0005" text="3.3 Prize Value" />
+    <string id="txpg0006" text="3.4 Prize Type Filter" />
+    <string id="txpg0007" text="3.5 Prize Type Filter" />
+    <string id="txpg0008" text="4.1 Overall Tournament Winnings" />
+    <string id="txpg0009" text="4.2 Per Match Winnings" />
+    <string id="txpg0010" text="4.3 Bonus Renown for Opponent Difficulty Per Round" />
+    <string id="txpg0011" text="98. Experimental" />
+    <string id="txpg0012" text="99. Not Used" />
+    <string id="txpg0013" text="99. Diagnostics" />
+    <string id="txpd0014" text="Enable Tournament XP" />
+    <string id="txpd0015" text="TournamentXPAdjustment" />
+    <string id="txpd0016" text="Enable Arena XP" />
+    <string id="txpd0017" text="ArenaXPAdjustment" />
+    <string id="txpd0018" text="Equipment Filter (Remove Spears)" />
+    <string id="txpd0019" text="Re-rolls per Tournament" />
+    <string id="txpd0020" text="1. Prize Selection" />
+    <string id="txpd0021" text="2. Prizes Per Pool" />
+    <string id="txpd0022" text="1. Include Town Inventory" />
+    <string id="txpd0023" text="2. Include Standard(Vanilla) Items" />
+    <string id="txpd0024" text="3. Include Custom List" />
+    <string id="txpd0025" text="4. Include Legacy" />
+    <string id="txpd0026" text="1. Prize Min Value" />
+    <string id="txpd0027" text="2. Prize Max Value" />
+    <string id="txpd0028" text="3. Prize Value Per Level" />
+    <string id="txpd0029" text="4. Prize Value Per Level" />
+    <string id="txpd0030" text="5. Prize Filter: MinMax Value Applies to Town Inventory" />
+    <string id="txpd0031" text="6. Prize Filter: MinMax Value Applies to Custom Items" />
+    <string id="txpd0032" text="7. Prize Filter: MinMax Value Applies to Standard Items" />
+    <string id="txpd0033" text="8. Prize Filter: MinMax Value Applies to Legacy Items" />
+    <string id="txpd0034" text="9. Town Prosperity Affects Prize Value" />
+    <string id="txpd0035" text="10. Town Prosperity: Low" />
+    <string id="txpd0036" text="11. Town Prosperity: Mid" />
+    <string id="txpd0037" text="12. Town Prosperity: High" />
+    <string id="txpd0038" text="Enable Prize Type Filter for Town Items" />
+    <string id="txpd0039" text="Enable Prize Type Filter for Custom Items" />
+    <string id="txpd0040" text="Enable Prize Type Filter for Standard Items" />
+    <string id="txpd0041" text="Enable Prize Type Filter for Legacy Items" />
+    <string id="txpd0042" text="Allow Bows" />
+    <string id="txpd0043" text="Allow Crossbows" />
+    <string id="txpd0044" text="Allow OneHanded Weapons" />
+    <string id="txpd0045" text="Allow Polearms" />
+    <string id="txpd0046" text="Allow Shields" />
+    <string id="txpd0047" text="Allow Thrown Weapons" />
+    <string id="txpd0048" text="Allow TwoHanded Weapons" />
+    <string id="txpd0049" text="Allow Arrows" />
+    <string id="txpd0050" text="Allow Bolts" />
+    <string id="txpd0051" text="Allow Head Armor" />
+    <string id="txpd0052" text="Allow Hand Armor" />
+    <string id="txpd0053" text="Allow Body Armor" />
+    <string id="txpd0054" text="Allow Leg Armor" />
+    <string id="txpd0055" text="Allow Cape/Shoulders" />
+    <string id="txpd0056" text="Allow Horse" />
+    <string id="txpd0057" text="Allow Horse Harness/Saddle" />
+    <string id="txpd0058" text="Filter Town Stock by Town Culture" />
+    <string id="txpd0059" text="Filter Custom by Town Culture" />
+    <string id="txpd0060" text="Filter Standard Items by Town Culture" />
+    <string id="txpd0061" text="Filter Legacy Items by Town Culture" />
+    <string id="txpd0062" text="Bonus Gold for Tournament Win" />
+    <string id="txpd0063" text="Bonus Renown for Tournament Win" />
+    <string id="txpd0064" text="Bonus Influence for Tournament Win" />
+    <string id="txpd0065" text="Bonus Gold Per Round" />
+    <string id="txpd0066" text="Payout Bonus Gold On Match Win" />
+    <string id="txpd0067" text="Bonus Renown for Most Kills" />
+    <string id="txpd0068" text="Bonus Renown for Most Damage Inflicted" />
+    <string id="txpd0069" text="Bonus Renown for First Kill" />
+    <string id="txpd0070" text="Bonus Renown for Least Damage Taken" />
+    <string id="txpd0071" text="Bonus Renown for Opponent Difficulty" />
+    <string id="txpd0072" text="Bonus Renown Tier 1" />
+    <string id="txpd0073" text="Bonus Renown Tier 2" />
+    <string id="txpd0074" text="Bonus Renown Tier 3" />
+    <string id="txpd0075" text="Bonus Renown Tier 4" />
+    <string id="txpd0076" text="Bonus Renown Tier 5" />
+    <string id="txpd0077" text="Bonus Renown Tier 6" />
+    <string id="txpd0078" text="Bonus Renown Tier 7" />
+    <string id="txpd0079" text="Bonus Renown Hero Base" />
+    <string id="txpd0080" text="Bonus Renown IsNoble" />
+    <string id="txpd0081" text="Bonus Renown IsBotable" />
+    <string id="txpd0082" text="Bonus Renown IsCommander" />
+    <string id="txpd0083" text="Bonus Renown Minor Faction Hero" />
+    <string id="txpd0084" text="Bonus Renown Minor Faction Leader" />
+    <string id="txpd0085" text="Bonus Renown Major Faction Leader" />
+    <string id="txpd0086" text="Enable ItemModifiers For Prizes" />
+    <string id="txpd0087" text="Town Prosperity Affects ItemModifiers" />
+    <string id="txpd0088" text="Prevent Player Crafted Items in Lists" />
+    <string id="txpd0089" text="OppenentDifficultyAffectsOdds" />
+    <string id="txpd0090" text="Max Odds" />
+    <string id="txpd0091" text="TournamentBonusMoneyBaseNamedCharLevel" />
+    <string id="txpd0092" text="CompanionsWinPrizes(Not Active)" />
+    <string id="txpd0093" text="Enable Random Tournament Type at Spawn" />
+    <string id="txpd0094" text="Enable Tournament Type Selection" />
+    <string id="txpd0095" text="Enable Debug" />
+    <string id="txph0096" text="Removes spears from tournament footmen" />
+    <string id="txph0097" text="Maximum number of times you can re-roll the prize pool per tournament.  Set to 0 to disable." />
+    <string id="txph0098" text="Should the Select Prize from the Prize Pool be enable. This only affects the popups, not the other filter selections." />
+    <string id="txph0099" text="Items in the current towns stock are included for consideration." />
+    <string id="txph0100" text="This is all items in the world.  Could include crafted, or other modded items if they were registered to the game item library." />
+    <string id="txph0101" text="Items from the custom prize list - CustomPrizeItems.json - are included for consideration." />
+    <string id="txph0102" text="These are the items from v1.0.5 and lower of Bannerlord.  They include the named items like Early Retirement or The Scalpal." />
+    <string id="txph0103" text="Any item below this value will not be used." />
+    <string id="txph0104" text="Any item above this value will not be used." />
+    <string id="txph0105" text="Max Item Value is increased by this per character level." />
+    <string id="txph0106" text="Min Item Value is increased by this per character level." />
+    <string id="txph0107" text="Setting is a decimal so .65 means 65% of max value" />
+    <string id="txph0108" text="Setting is a decimal so 1.0 means 100% of max value" />
+    <string id="txph0109" text="Setting is a decimal so 1.3 means 130% of max value" />
+    <string id="txph0110" text="Only allow items from the current towns culture in the item pool." />
+    <string id="txph0111" text="Only allow items from the current towns culture in the item pool." />
+    <string id="txph0112" text="Only allow items from the current towns culture in the item pool." />
+    <string id="txph0113" text="Only allow items from the current towns culture in the item pool." />
+    <string id="txph0114" text="If on, you get paid immediately upon end of match.  If off, you get paid upon winning the tournament." />
+    <string id="txph0115" text="Warning: May cause item loss, bug in core game. Seems OK in BL-1.2.0Beta, Disabled in BL-1.1.1/1.1.2" />
+    <string id="txph0116" text="If ItemModifiers are on, this setting will make them lean towards better if high prosperity or worse if it's low prosperity." />
+    <string id="txph0117" text="If enabled, player crafted items will be excluded from the prize lists." />
+    <string id="txph0118" text="Not working in 1.5-beta" />
+    <string id="txph0119" text="Maximum Odds for Tournament Bets" />
+    <string id="txph0120" text="Disabled until fixed. Will be ignored if turned on." />
+  </strings>
+</base>

@@ -42,6 +42,30 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXPanded\bin\Win64_Shipping_Client\</OutputPath>
+    <DefineConstants>TRACE;VERSION130</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All|AnyCPU'">
+    <OutputPath>bin\All\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All|x64'">
+    <OutputPath>bin\x64\All\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IncludingTweaks|AnyCPU'">
+    <OutputPath>bin\IncludingTweaks\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IncludingTweaks|x64'">
+    <OutputPath>bin\x64\IncludingTweaks\</OutputPath>
     <DefineConstants>TRACE;VERSION120</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

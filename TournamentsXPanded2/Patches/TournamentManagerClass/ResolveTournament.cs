@@ -45,7 +45,7 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
         private static void Postfix(TournamentGame tournament)
         {
             var info = TournamentsXPandedBehavior.GetTournamentInfo(tournament.Town);
-            info = new TournamentXPandedModel() { SettlementStringId = tournament.Town.Settlement.StringId };
+            info.ReRollsUsed = 0;       
         }
 
      

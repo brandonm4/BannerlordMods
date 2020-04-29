@@ -26,7 +26,13 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
 
         public override bool IsApplicable(Game game)
         {
-            return true;
+            //if (TournamentXPSettings.Instance.BonusRenownFirstKill > 0
+            //            || TournamentXPSettings.Instance.BonusRenownLeastDamage > 0
+            //            || TournamentXPSettings.Instance.BonusRenownMostDamage > 0
+            //            || TournamentXPSettings.Instance.BonusRenownMostKills > 0)
+            //    return true;
+
+            return false;
         }
 
         public override void Reset()

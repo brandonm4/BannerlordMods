@@ -22,7 +22,8 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
 
         public override bool IsApplicable(Game game)
         {
-            return (TournamentXPSettings.Instance.EnablePrizeSelection || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0);
+            //return (TournamentXPSettings.Instance.EnablePrizeSelection || TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0);
+            return false;
         }
 
         public override void Reset()
@@ -46,20 +47,16 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
 
         private static void Prefix(TournamentGame game)
         {
-            //TournamentsXPandedMain.TournamentPrizeExpansionModel.ClearTournamentPrizes(game.Town.Settlement.StringId);
-            //if (game.Prize == null)
-            //{
-            //    ErrorLog.Log("BMTournamentPrize: AddTournament Detected a missing prize.  Correcting with vanilla item.");
-            //    //Do a final check to make sure nothing is missing
-            //    var prize = TournamentPrizePoolBehavior.GetTournamentPrizeVanilla(game.Town.Settlement);
-            //    TournamentPrizePoolBehavior.SetTournamentSelectedPrize(game, prize);
-            //}
+            
         }
 
         private static void Postfix(TournamentGame game)
         {
-           
-
+            if (game.Town != null)
+            {
+                var info = TournamentsXPandedBehavior.GetTournamentInfo(game.Town);
+                info.ReRollsUsed = 0;
+            }
         }
     }
 }

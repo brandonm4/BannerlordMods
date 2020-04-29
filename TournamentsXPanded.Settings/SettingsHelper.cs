@@ -5,12 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using TaleWorlds.Engine;
-
 using TournamentsXPanded.Models;
-
-using XPanded.Common.Diagnostics;
-using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Settings
 {
@@ -18,16 +13,16 @@ namespace TournamentsXPanded.Settings
     {
         public static string ModuleFolderName { get; } = "TournamentsXPanded";
 
-        public static bool LoadSettings()
+        public static bool LoadSettings(string configPath)
         {
             //Load Settings
             try
             {
-                var overridefile = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "override.txt");
+                var overridefile = System.IO.Path.Combine(configPath, "override.txt");
                 bool overrideSettings = false;
                 bool forceDebug = false;
-                
-                
+
+
                 if (File.Exists(overridefile))
                 {
                     string overridetext = File.ReadAllText(overridefile);
@@ -40,7 +35,7 @@ namespace TournamentsXPanded.Settings
                         forceDebug = true;
                     }
                     if (overridetext.IndexOf("force disabled on", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {                        
+                    {
                         return false;
                     }
                 }
@@ -48,94 +43,82 @@ namespace TournamentsXPanded.Settings
                 {
                     File.WriteAllText(overridefile, "");
                 }
-                var modnames = Utilities.GetModulesNames().ToList();
+                //                var modnames = Utilities.GetModulesNames().ToList();
                 bool modLibLoaded = false;
-                if (
-                    (modnames.Contains("ModLib")
-                  //  || modnames.Contains("Bannerlord.MBOptionScreen")
-                    ) && !overrideSettings)
+                //                if (
+                //                    (modnames.Contains("ModLib")
+                //                  //  || modnames.Contains("Bannerlord.MBOptionScreen")
+                //                    ) && !overrideSettings)
+                //                {
+
+                Type settingsHelperModLibType = null;
+                //                    Assembly modlibassembly = null;
+                Assembly modlibSettingsAssembly = null;
+
+                //                    try
+                //                    {
+                //                        modlibassembly = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "ModLib").FirstOrDefault();
+
+                //                    }
+                //                    catch { }
+
+                //                    //try
+                //                    //{
+                //                    //    if (!AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetName().Name).ToList().Contains("ModLib"))
+                //                    //    {
+                //                    //        var modlibdllpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "Bannerlord.MBOptionScreen", "bin", "Win64_Shipping_Client", "ModLib.dll");
+                //                    //        modlibdllpath = System.IO.Path.GetFullPath(modlibdllpath);
+                //                    //        if (File.Exists(modlibdllpath))
+                //                    //            modlibassembly = Assembly.LoadFile(modlibdllpath);
+                //                    //    }
+                //                    //}
+                //                    //catch (Exception ex)
+                //                    //{
+                //                    //    ErrorLog.Log("Error Loading ModLib Assembly\n" + ex.ToStringFull());
+                //                    //}
+
+                /* My Own ModLib */
+                /*
+                try
                 {
-
-                    Type settingsHelperModLibType = null;
-                    Assembly modlibassembly = null;
-                    Assembly modlibSettingsAssembly = null;
-
-                    try
+                    //     if (modlibassembly != null)
                     {
-                        modlibassembly = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "ModLib").FirstOrDefault();
-                    }
-                    catch { }
-
-                    //try
-                    //{
-                    //    if (!AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetName().Name).ToList().Contains("ModLib"))
-                    //    {
-                    //        var modlibdllpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "Bannerlord.MBOptionScreen", "bin", "Win64_Shipping_Client", "ModLib.dll");
-                    //        modlibdllpath = System.IO.Path.GetFullPath(modlibdllpath);
-                    //        if (File.Exists(modlibdllpath))
-                    //            modlibassembly = Assembly.LoadFile(modlibdllpath);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    ErrorLog.Log("Error Loading ModLib Assembly\n" + ex.ToStringFull());
-                    //}
-
-                    try
-                    {
-                        if (modlibassembly != null)
-                        {
-                            var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentsXPanded.Settings.ModLib.dll");
-                            modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
-                            modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
-                            settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib");
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        ErrorLog.Log("Error Loading SettingsModLib Assembly\n" + ex.ToStringFull());
-                    }
-
-                    if (settingsHelperModLibType != null)
-                    {
-                        try
-                        {
-                            TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug });
-                            if (osettings != null)
-                            {
-#if DEBUG
-                                osettings.DebugMode = true;
-#endif
-                                TournamentXPSettings.SetSettings(osettings);
-                                modLibLoaded = true;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorLog.Log("Error getting ModLib settings\n" + ex.ToStringFull());
-                        }
+                        var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentsXPanded.Settings.ModLib.dll");
+                        modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
+                        modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
+                        settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib");
                     }
                 }
+                catch (Exception ex)
+                {
+                    ErrorLog.Log("Error Loading SettingsModLib Assembly\n" + ex.ToStringFull());
+                }
+                */
+
+//                if (settingsHelperModLibType != null)
+//                {
+//                    try
+//                    {
+//                        TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug });
+//                        if (osettings != null)
+//                        {
+//#if DEBUG
+//                            osettings.DebugMode = true;
+//#endif
+//                            TournamentXPSettings.SetSettings(osettings);
+//                            modLibLoaded = true;
+//                        }
+//                    }
+//                    catch (Exception ex)
+//                    {
+//                        ErrorLog.Log("Error getting ModLib settings\n" + ex.ToStringFull());
+//                    }
+//                }
+
                 if (!modLibLoaded)
                 {
-                    JsonSerializerSettings serializerSettings = new JsonSerializerSettings
-                    {
-                        Formatting = Formatting.Indented
-                    };
-                    TournamentXPSettings settings = new TournamentXPSettings();
-                    string configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json");
-                    if (File.Exists(configPath))
-                    {
-                        var settingsjson = File.ReadAllText(configPath);
-                        settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
-                        //write new file to get latest updates
-                        File.WriteAllText(configPath, settingsjson);
-                    }
-                    else
-                    {
-                        var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
-                        File.WriteAllText(configPath, settingsjson);
-                    }
+                    string configFilePath = System.IO.Path.Combine(configPath, "tournamentxpsettings.json");
+                    TournamentXPSettings settings = GetFromFile(configFilePath);
 
                     if (forceDebug)
                     {
@@ -149,10 +132,50 @@ namespace TournamentsXPanded.Settings
             }
             catch (Exception ex)
             {
-                ErrorLog.Log("Error Loading Settings\n" + ex.ToStringFull());
+               // ErrorLog.Log("Error Loading Settings\n" + ex.ToStringFull());
                 return false;
             }
             return true;
+        }
+
+        public static TournamentXPSettings GetFromFile(string path)
+        {
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+            TournamentXPSettings settings = new TournamentXPSettings();            
+            if (File.Exists(System.IO.Path.GetFullPath(path)))
+            {
+                var settingsjson = File.ReadAllText(path);
+                settings = JsonConvert.DeserializeObject<TournamentXPSettings>(settingsjson);
+                //write new file to get latest updates
+                File.WriteAllText(path, settingsjson);
+            }
+            else
+            {
+                var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
+                File.WriteAllText(path, settingsjson);
+            }
+            return settings;
+        }
+        public static void WriteSettings(string path, TournamentXPSettings settings)
+        {
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+            var settingsjson = JsonConvert.SerializeObject(settings, serializerSettings);
+            File.WriteAllText(path, settingsjson);
         }
     }
 }

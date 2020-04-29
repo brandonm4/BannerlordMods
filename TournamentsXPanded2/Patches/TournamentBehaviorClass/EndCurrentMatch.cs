@@ -13,6 +13,7 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
+using TournamentsXPanded.Extensions;
 using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentBehaviorClass
@@ -44,7 +45,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
               prefix: new HarmonyMethod(PatchMethodInfo)
               {
-                  priority = Priority.Low,
+                  priority = Priority.First,
               }
               );
             Applied = true;

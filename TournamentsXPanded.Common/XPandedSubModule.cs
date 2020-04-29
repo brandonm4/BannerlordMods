@@ -18,11 +18,6 @@ namespace TournamentsXPanded.Common
 
         protected override void OnSubModuleLoad()
         {
-            //Setup Logging
-            if (File.Exists(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs")))
-            {
-                File.Delete(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs"));
-            }
             string logpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "Logs", "logfile.txt");
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(logpath)))
             {

@@ -14,6 +14,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
 using TournamentsXPanded.Common;
+using TournamentsXPanded.Extensions;
 using TournamentsXPanded.Models;
 
 using XPanded.Common.Diagnostics;
@@ -59,7 +60,7 @@ namespace TournamentsXPanded.Behaviors
                 {
                     foreach (PrizeItem existingPrize in tournamentInfo.PrizePool)
                     {
-                        if (!pickeditems.Contains(existingPrize))
+                        if (pickeditems.Where( x=> x.ItemStringId == existingPrize.ItemStringId).Count() == 0)
                         {
                             pickeditems.Add(existingPrize);
                         }
@@ -164,6 +165,7 @@ namespace TournamentsXPanded.Behaviors
         {
             int prizeMin = MathF.Floor(GetMinPrizeValue() * .7f);
             int prizeMax = MathF.Ceiling(GetMaxPrizeValue() * 1.5f);
+            //var numberArray = "1234567890".ToCharArray();
 
             List<string> allitems = new List<string>();
 
@@ -228,7 +230,14 @@ namespace TournamentsXPanded.Behaviors
                 {
                     townItems = townItems.Where(x => validTypes.Contains(x.ItemType));
                 }
+                if (TournamentXPSettings.Instance.PrizeFilterPreventPlayerCraftedItems)
+                {
+                    //  townItems = townItems.Where(x => !numberArray.Contains(x.StringId[0]));
+                    int v;
+                    townItems = townItems.Where(x => int.TryParse(x.StringId, out v) == false);
+                }
 
+                //townItems = townItems.Where( x=> x.iscr)
                 allitems = allitems.Concat(townItems.Select(x => x.StringId)).ToList();
             }
             if (TournamentXPSettings.Instance.PrizeListIncludeVanilla)
@@ -245,7 +254,13 @@ namespace TournamentsXPanded.Behaviors
                 if (TournamentXPSettings.Instance.PrizeFilterItemTypesStandardItems)
                 {
                     vanillaItems = vanillaItems.Where(x => validTypes.Contains(x.ItemType));
-                }									
+                }
+                if (TournamentXPSettings.Instance.PrizeFilterPreventPlayerCraftedItems)
+                {
+                    //vanillaItems = vanillaItems.Where(x => !numberArray.Contains(x.StringId[0]));
+                    int v;
+                    vanillaItems = vanillaItems.Where(x => int.TryParse(x.StringId, out v) == false);
+                }
                 allitems = allitems.Concat(vanillaItems.Select( x=> x.StringId)).ToList();
             }
             

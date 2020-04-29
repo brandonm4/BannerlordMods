@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TournamentsXPanded.Extensions;
 using TournamentsXPanded.Models;
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;

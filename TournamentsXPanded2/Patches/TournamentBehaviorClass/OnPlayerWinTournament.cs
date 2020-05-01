@@ -136,7 +136,10 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
                     }
                 }
             }
+
+            tournamentInfo.ReRollsUsed = 0;
             Campaign.Current.TournamentManager.OnPlayerWinTournament(__instance.TournamentGame.GetType());
+            
             return false;
         }
     }

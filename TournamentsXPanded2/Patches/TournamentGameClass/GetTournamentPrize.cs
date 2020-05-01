@@ -60,7 +60,8 @@ namespace TournamentsXPanded.Patches.TournamentGameClass
             //__result currently has stock item.
             try
             {
-                prize = TournamentsXPandedBehavior.GenerateTournamentPrize(__instance, null, false);
+                var info = TournamentsXPandedBehavior.GetTournamentInfo(__instance.Town);
+                prize = TournamentsXPandedBehavior.GenerateTournamentPrize(__instance, info, false);
                 if (prize != null)
                     __result = prize;
             }

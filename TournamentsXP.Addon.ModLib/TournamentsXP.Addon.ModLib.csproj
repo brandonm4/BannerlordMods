@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6FED4613-3D7E-4D4D-B3FC-433D946D31D9}</ProjectGuid>
+    <ProjectGuid>{64322424-C3BE-428E-8F6E-8B4A2574265D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TournamentsXPanded</RootNamespace>
-    <AssemblyName>TournamentsXPanded</AssemblyName>
+    <RootNamespace>TournamentsXP.Addon.ModLib</RootNamespace>
+    <AssemblyName>TournamentsXP.Addon.ModLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -32,60 +32,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXPanded\bin\Win64_Shipping_Client\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;VERSION130</DefineConstants>
+    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXP.Addon.ModLib\bin\Win64_Shipping_Client\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXPanded\bin\Win64_Shipping_Client\</OutputPath>
-    <DefineConstants>TRACE;VERSION130</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All|AnyCPU'">
-    <OutputPath>bin\All\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All|x64'">
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXPanded\bin\Win64_Shipping_Client\</OutputPath>
-    <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants>VERSION120</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IncludingTweaks|AnyCPU'">
-    <OutputPath>bin\IncludingTweaks\</OutputPath>
+    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXP.Addon.ModLib\bin\Win64_Shipping_Client\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IncludingTweaks|x64'">
-    <OutputPath>G:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\TournamentsXPanded\bin\Win64_Shipping_Client\</OutputPath>
-    <DefineConstants>TRACE;VERSION120</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'RELEASEV121|AnyCPU'">
-    <OutputPath>bin\RELEASEV121\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'RELEASEV121|x64'">
-    <OutputPath>bin\x64\RELEASEV121\</OutputPath>
-    <DefineConstants>TRACE;VERSION120</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -93,47 +49,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.10, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.0.0.10\lib\net472\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SandBox">
-      <HintPath>..\..\BannerlordVersions\target\SandBox.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SandBox.GauntletUI">
-      <HintPath>..\..\BannerlordVersions\target\SandBox.GauntletUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SandBox.View">
-      <HintPath>..\..\BannerlordVersions\target\SandBox.View.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SandBox.ViewModelCollection">
-      <HintPath>..\..\BannerlordVersions\target\SandBox.ViewModelCollection.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="StoryMode">
-      <HintPath>..\..\BannerlordVersions\target\StoryMode.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="StoryMode.GauntletUI">
-      <HintPath>..\..\BannerlordVersions\target\StoryMode.GauntletUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="StoryMode.View">
-      <HintPath>..\..\BannerlordVersions\target\StoryMode.View.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="StoryMode.ViewModelCollection">
-      <HintPath>..\..\BannerlordVersions\target\StoryMode.ViewModelCollection.dll</HintPath>
+    <Reference Include="ModLib">
+      <HintPath>..\..\BannerlordVersions\support\ModLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -237,6 +158,10 @@
       <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.AutoGenerated.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TaleWorlds.MountAndBlade.CustomBattle">
+      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.CustomBattle.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="TaleWorlds.MountAndBlade.Diamond">
       <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.Diamond.dll</HintPath>
       <Private>False</Private>
@@ -251,10 +176,6 @@
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade.Helpers">
       <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.Helpers.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TaleWorlds.MountAndBlade.Launcher">
-      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.Launcher.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade.View">
@@ -319,62 +240,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\TournamentsXPandedBehavior.cs" />
-    <Compile Include="Behaviors\TournamentsXPandedBehavior.Prizes.cs">
-      <DependentUpon>TournamentsXPandedBehavior.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Behaviors\TournamentXPandedMatchBehavior.cs" />
-    <Compile Include="Extensions\Settings.cs" />
-    <Compile Include="Models\ItemEquipmentFilter.cs" />
-    <Compile Include="Models\TournamentPrizeItem.cs" />
-    <Compile Include="Models\TournamentReward.cs" />
-    <Compile Include="Models\TournamentXPandedModel.cs" />
-    <Compile Include="Patches\DefaultCombatXpModelClass\GetXpFromHit.cs" />
-    <Compile Include="Patches\PlayerTownVisitCampaignBehaviorClass\town_arena_on_init.cs" />
-    <Compile Include="Patches\TournamentBehaviorClass\AfterStart.cs" />
-    <Compile Include="Patches\TournamentBehaviorClass\CalculateBet.cs" />
-    <Compile Include="Patches\TournamentBehaviorClass\EndCurrentMatch.cs" />
-    <Compile Include="Patches\TournamentBehaviorClass\OnPlayerWinTournament.cs" />
-    <Compile Include="Patches\TournamentCampaignBehaviorClass\ConsiderStartOrEndTournament.cs" />
-    <Compile Include="Patches\TournamentFightMissionControllerClass\GetTeamWeaponEquipmentList.cs" />
-    <Compile Include="Patches\TournamentFightMissionControllerClass\OnMatchResultsReady.cs" />
-    <Compile Include="Patches\TournamentGameClass\GetTournamentPrize.cs" />
-    <Compile Include="Patches\TournamentGameClass\get_TournamentWinRenown.cs" />
-    <Compile Include="Patches\TournamentManagerClass\AddTournament.cs" />
-    <Compile Include="Patches\TournamentManagerClass\ResolveTournament.cs" />
-    <Compile Include="Patches\TournamentVM\RefreshValues.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssemblyInfo.tt</DependentUpon>
-    </Compile>
+    <Compile Include="SettingsHelperModLib.cs" />
     <Compile Include="SubModule.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Module\ModuleData\Languages\CN\str_tournamentxp-CNs.xml" />
-    <Content Include="Module\ModuleData\Languages\RU\str_tournamentxp-ru.xml" />
-    <Content Include="Module\ModuleData\Languages\settings-en.xml" />
-    <Content Include="Module\ModuleData\Languages\str_tournamentxp-en.xml" />
-    <Content Include="Module\SubModule.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SubModule.xml</LastGenOutput>
-    </Content>
-    <Content Include="Module\SubModule.xml">
-      <DependentUpon>SubModule.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Content>
-    <Content Include="Properties\AssemblyInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
-    </Content>
-    <Content Include="version.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TournamentsXPSettingsModLib.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TournamentsXPanded.Common\XPanded.Common.csproj">
@@ -386,13 +255,5 @@
       <Name>TournamentsXPanded.Settings</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Patches\DefaultTournamentModelClass\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v16.0\TextTemplating\Microsoft.TextTemplating.targets" />
-  <PropertyGroup>
-    <TransformOnBuild>true</TransformOnBuild>
-    <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-  </PropertyGroup>
 </Project>

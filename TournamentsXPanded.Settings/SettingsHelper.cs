@@ -13,6 +13,9 @@ namespace TournamentsXPanded.Settings
     {
         public static string ModuleFolderName { get; } = "TournamentsXPanded";
 
+
+       
+
         public static bool LoadSettings(string configPath)
         {
             //Load Settings
@@ -95,25 +98,25 @@ namespace TournamentsXPanded.Settings
                 }
                 */
 
-//                if (settingsHelperModLibType != null)
-//                {
-//                    try
-//                    {
-//                        TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug });
-//                        if (osettings != null)
-//                        {
-//#if DEBUG
-//                            osettings.DebugMode = true;
-//#endif
-//                            TournamentXPSettings.SetSettings(osettings);
-//                            modLibLoaded = true;
-//                        }
-//                    }
-//                    catch (Exception ex)
-//                    {
-//                        ErrorLog.Log("Error getting ModLib settings\n" + ex.ToStringFull());
-//                    }
-//                }
+                //                if (settingsHelperModLibType != null)
+                //                {
+                //                    try
+                //                    {
+                //                        TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug });
+                //                        if (osettings != null)
+                //                        {
+                //#if DEBUG
+                //                            osettings.DebugMode = true;
+                //#endif
+                //                            TournamentXPSettings.SetSettings(osettings);
+                //                            modLibLoaded = true;
+                //                        }
+                //                    }
+                //                    catch (Exception ex)
+                //                    {
+                //                        ErrorLog.Log("Error getting ModLib settings\n" + ex.ToStringFull());
+                //                    }
+                //                }
 
                 if (!modLibLoaded)
                 {
@@ -132,7 +135,7 @@ namespace TournamentsXPanded.Settings
             }
             catch (Exception ex)
             {
-               // ErrorLog.Log("Error Loading Settings\n" + ex.ToStringFull());
+                // ErrorLog.Log("Error Loading Settings\n" + ex.ToStringFull());
                 return false;
             }
             return true;
@@ -149,7 +152,7 @@ namespace TournamentsXPanded.Settings
             {
                 Formatting = Formatting.Indented
             };
-            TournamentXPSettings settings = new TournamentXPSettings();            
+            TournamentXPSettings settings = new TournamentXPSettings();
             if (File.Exists(System.IO.Path.GetFullPath(path)))
             {
                 var settingsjson = File.ReadAllText(path);

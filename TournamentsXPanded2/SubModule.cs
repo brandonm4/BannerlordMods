@@ -24,6 +24,8 @@ using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using TaleWorlds.Engine;
+using System.Reflection;
 
 namespace TournamentsXPanded
 {
@@ -34,6 +36,7 @@ namespace TournamentsXPanded
         private System.ComponentModel.BackgroundWorker menuChecker1;
         private string _id;
         private bool inMenu;
+        private bool addMenu = false;
 
         protected override void OnSubModuleLoad()
         {
@@ -77,8 +80,36 @@ namespace TournamentsXPanded
                     _id = Guid.NewGuid().ToString();
                     menuChecker1 = new System.ComponentModel.BackgroundWorker();
                     var configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName);
+                    bool haveSettings = false;
 
-                    if (SettingsHelper.LoadSettings(configPath))
+                    try
+                    {
+                        var modnames = Utilities.GetModulesNames().ToList();
+                        if (modnames.Contains("TournamentsXP.Addon.ModLib"))
+                        {
+                            //   haveSettings = SettingsHelper.TryLoadFromModLib();
+                            var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "TournamentsXP.Addon.ModLib", "bin", "Win64_Shipping_Client", "TournamentsXP.Addon.ModLib.dll");
+                            modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
+                            var modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
+                            var settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXP.Addon.ModLib.SettingsHelperModLib");
+                            TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { });
+                            if (osettings != null)
+                            {
+                                TournamentXPSettings.SetSettings(osettings);
+                                haveSettings = true;
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    if (!haveSettings)
+                    {
+                        haveSettings = SettingsHelper.LoadSettings(configPath);
+                        addMenu = true;
+                    }
+                    if (haveSettings)
                     {
                         if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
                         {
@@ -113,10 +144,12 @@ namespace TournamentsXPanded
                     ShowMessage("Tournaments XPanded v" + version + " Loaded {DEBUG MODE}", Colors.Red);
                 }
 
-                inMenu = true;
-
-                menuChecker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.menuChecker1_DoWork);
-                menuChecker1.RunWorkerAsync();
+                if (addMenu)
+                {
+                    inMenu = true;
+                    menuChecker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.menuChecker1_DoWork);
+                    menuChecker1.RunWorkerAsync();
+                }
             }
             else
             {
@@ -318,11 +351,11 @@ namespace TournamentsXPanded
             {
                 try
                 {
-                    var menu = Module.CurrentModule.GetInitialStateOptions().Where(x => x.Id == _id).FirstOrDefault();
+                    var menu = TaleWorlds.MountAndBlade.Module.CurrentModule.GetInitialStateOptions().Where(x => x.Id == _id).FirstOrDefault();
                     if (menu == null)
                     {
                         //Stay the fuck away from my menu, k thx bye
-                        Module.CurrentModule.AddInitialStateOption(new InitialStateOption(_id,
+                        TaleWorlds.MountAndBlade.Module.CurrentModule.AddInitialStateOption(new InitialStateOption(_id,
         new TextObject("TournamentXP Options", null),
         9990,
         () =>

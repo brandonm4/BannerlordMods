@@ -18,11 +18,7 @@ using XPanded.Common.Extensions;
 namespace TournamentsXPanded.Behaviors
 {
 
-    class SaveData
-    {
-        public List<TournamentXPandedModel> Tournaments { get; set; }
-    }
-   
+
     public partial class TournamentsXPandedBehavior : CampaignBehaviorBase
     {
         internal const string saveId = "57AA1526EC9A43768612F4EF71D0F901";
@@ -45,7 +41,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return t;
         }
-        
+
 
         #region Events
         public override void RegisterEvents()
@@ -85,7 +81,7 @@ namespace TournamentsXPanded.Behaviors
             if (dataStore.IsSaving)
             {
                 data = new SaveData() { Tournaments = TournamentsXPandedBehavior.Tournaments };
-                saveDataAsJson = JsonConvert.SerializeObject(data);                
+                saveDataAsJson = JsonConvert.SerializeObject(data);
             }
 
             dataStore.SyncData(saveId, ref saveDataAsJson);
@@ -95,7 +91,7 @@ namespace TournamentsXPanded.Behaviors
                 data = JsonConvert.DeserializeObject<SaveData>(saveDataAsJson);
                 TournamentsXPandedBehavior.Tournaments = data.Tournaments;
             }
-            
+
         }
         #endregion
 
@@ -281,4 +277,10 @@ namespace TournamentsXPanded.Behaviors
         }
         #endregion
     }
+
+    class SaveData
+    {
+        public List<TournamentXPandedModel> Tournaments { get; set; }
+    }
+
 }

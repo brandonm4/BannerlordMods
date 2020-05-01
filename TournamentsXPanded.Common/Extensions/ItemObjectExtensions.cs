@@ -42,16 +42,7 @@ namespace XPanded.Common.Extensions
                     desc += "Thrust Damage: {THRUST_DAMAGE}\n";
                     keyValues.Add("THRUST_DAMAGE", item.WeaponComponent.PrimaryWeapon.ThrustDamage.ToString() + item.PrimaryWeapon.ThrustDamageType.ToString().Substring(0, 1));
                 }
-                if (item.PrimaryWeapon.MissileSpeed > 0)
-                {
-                    desc += "Missile Speed: {Missile_SPEED}\n";
-                    keyValues.Add("Missile_SPEED", item.WeaponComponent.PrimaryWeapon.MissileSpeed.ToString());
-                }
-                if (item.PrimaryWeapon.MissileSpeed > 0)
-                {
-                    desc += "Missile Damage: {Missile_DAMAGE}\n";
-                    keyValues.Add("Missile_DAMAGE", item.WeaponComponent.PrimaryWeapon.MissileDamage.ToString());
-                }
+                
                 if (item.PrimaryWeapon.WeaponLength > 0)
                 {
                     desc += "Length: {LENGTH}\n";
@@ -60,6 +51,19 @@ namespace XPanded.Common.Extensions
                 if (IsWeaponCouchable(item))
                 {
                     desc += "Couchable";
+                }
+            }
+            if (item.ItemType == ItemObject.ItemTypeEnum.Bow || item.ItemType == ItemObject.ItemTypeEnum.Crossbow)
+            {
+                if (item.PrimaryWeapon.MissileSpeed > 0)
+                {
+                    desc += "Missile Speed: {Missile_SPEED}\n";
+                    keyValues.Add("Missile_SPEED", item.WeaponComponent.PrimaryWeapon.MissileSpeed.ToString());
+                }
+                if (item.PrimaryWeapon.MissileDamage > 0)
+                {
+                    desc += "Missile Damage: {Missile_DAMAGE}\n";
+                    keyValues.Add("Missile_DAMAGE", item.WeaponComponent.PrimaryWeapon.MissileDamage.ToString());
                 }
             }
             if (item.ArmorComponent != null)
@@ -92,6 +96,8 @@ namespace XPanded.Common.Extensions
                 keyValues.Add("MANEUVER", item.HorseComponent.Maneuver.ToString());
                 keyValues.Add("HEALTH", item.HorseComponent.HitPoints.ToString());
             }
+            desc += "Value: {VALUE}\n";
+            keyValues.Add("VALUE", item.Value.ToString());
 
             TextObject toolTip = new TextObject(desc);
             foreach (var k in keyValues.Keys)
@@ -169,6 +175,19 @@ namespace XPanded.Common.Extensions
                     keyValues.Add("LENGTH", equipmentElement.Item.WeaponComponent.PrimaryWeapon.WeaponLength.ToString());
                 }
             }
+            if (equipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Bow || equipmentElement.Item.ItemType == ItemObject.ItemTypeEnum.Crossbow)
+            {
+                if (equipmentElement.Item.PrimaryWeapon.MissileSpeed > 0)
+                {
+                    desc += "Missile Speed: {Missile_SPEED}\n";
+                    keyValues.Add("Missile_SPEED", equipmentElement.Item.WeaponComponent.PrimaryWeapon.MissileSpeed.ToString());
+                }
+                if (equipmentElement.Item.PrimaryWeapon.MissileDamage > 0)
+                {
+                    desc += "Missile Damage: {Missile_DAMAGE}\n";
+                    keyValues.Add("Missile_DAMAGE", equipmentElement.Item.WeaponComponent.PrimaryWeapon.MissileDamage.ToString());
+                }
+            }
             if (equipmentElement.Item.ArmorComponent != null)
             {
                 if (equipmentElement.GetHeadArmor() > 0)
@@ -204,6 +223,8 @@ namespace XPanded.Common.Extensions
                 keyValues.Add("MANEUVER", equipmentElement.Item.HorseComponent.Maneuver.ToString());
                 keyValues.Add("HEALTH", equipmentElement.Item.HorseComponent.HitPoints.ToString());
             }
+            desc += "Value: {VALUE}\n";
+            keyValues.Add("VALUE", equipmentElement.Item.Value.ToString());
 
             TextObject toolTip = new TextObject(desc);
             foreach (var k in keyValues.Keys)

@@ -54,7 +54,9 @@ namespace BMTweakCollection
         {
             if (game.GameType is Campaign)
             {
+                //Harmony.PatchAll();
                 ApplyPatches(game, typeof(BMTweakCollectionSubModule));
+                
             }
         }       
         public override void OnMissionBehaviourInitialize(Mission mission)

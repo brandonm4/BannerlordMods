@@ -11,35 +11,35 @@ using TaleWorlds.Core;
 
 namespace BMTweakCollection.Patches
 {
-    [HarmonyPatch(typeof(CraftingCampaignBehavior), "DoSmelting")]
-    public class DoSmeltingPatch
-    {
-        private static MethodInfo openPartMethodInfo;
+    //[HarmonyPatch(typeof(CraftingCampaignBehavior), "DoSmelting")]
+    //public class DoSmeltingPatch
+    //{
+    //    private static MethodInfo openPartMethodInfo;
 
-        static void Postfix(CraftingCampaignBehavior __instance, ItemObject item)
-        {
-            if (item == null) return;
-            if (__instance == null) throw new ArgumentNullException(nameof(__instance), $"Tried to run postfix for {nameof(CraftingCampaignBehavior)}.DoSmelting but the instance was null.");
-            if (openPartMethodInfo == null) GetMethodInfo();
-            foreach (CraftingPiece piece in SmeltingHelper.GetNewPartsFromSmelting(item))
-            {
-                if (piece != null && piece.Name != null)
-                    openPartMethodInfo.Invoke(__instance, new object[] { piece });
-            }
-        }
+    //    static void Postfix(CraftingCampaignBehavior __instance, ItemObject item)
+    //    {
+    //        if (item == null) return;
+    //        if (__instance == null) throw new ArgumentNullException(nameof(__instance), $"Tried to run postfix for {nameof(CraftingCampaignBehavior)}.DoSmelting but the instance was null.");
+    //        if (openPartMethodInfo == null) GetMethodInfo();
+    //        foreach (CraftingPiece piece in SmeltingHelper.GetNewPartsFromSmelting(item))
+    //        {
+    //            if (piece != null && piece.Name != null)
+    //                openPartMethodInfo.Invoke(__instance, new object[] { piece });
+    //        }
+    //    }
 
-        static bool Prepare()
-        {
-            if (BMRandomTweaksConfiguration.Instance.AutoLearnSmeltedParts)
-                GetMethodInfo();
-            return BMRandomTweaksConfiguration.Instance.AutoLearnSmeltedParts;
-        }
+    //    static bool Prepare()
+    //    {
+    //        if (BMRandomTweaksConfiguration.Instance.AutoLearnSmeltedParts)
+    //            GetMethodInfo();
+    //        return BMRandomTweaksConfiguration.Instance.AutoLearnSmeltedParts;
+    //    }
 
-        private static void GetMethodInfo()
-        {
-            openPartMethodInfo = typeof(CraftingCampaignBehavior).GetMethod("OpenPart", BindingFlags.NonPublic | BindingFlags.Instance);
-        }
-    }
+    //    private static void GetMethodInfo()
+    //    {
+    //        openPartMethodInfo = typeof(CraftingCampaignBehavior).GetMethod("OpenPart", BindingFlags.NonPublic | BindingFlags.Instance);
+    //    }
+    //}
 
     [HarmonyPatch(typeof(CraftingCampaignBehavior), "GetMaxHeroCraftingStamina")]
     public class GetMaxHeroCraftingStaminaPatch

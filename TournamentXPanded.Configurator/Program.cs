@@ -40,7 +40,7 @@ namespace TournamentXPanded.Configurator
             frm.LoadConfig(path);
 
 
-
+#if DEBUG
             string pathxml = "E:\\Users\\Brandon\\OneDrive - Mathis Consulting, LLC\\Development\\BannerLord\\BrandonMods\\TournamentXPanded.Configurator\\Languages\\settings-en.xml";
             string pathcs = "E:\\Users\\Brandon\\OneDrive - Mathis Consulting, LLC\\Development\\BannerLord\\BrandonMods\\TournamentsXPanded.Settings\\TournamentXPSettings.cs";
             string pathoutput = "e:\\settings.cs";
@@ -58,7 +58,13 @@ namespace TournamentXPanded.Configurator
                         var newparts = "";
                         foreach(var p in parts)
                         {
-                            newparts += LocalizedTextManager.FindStringId("English", p) + "\"";
+                            var pt = LocalizedTextManager.FindStringId("English", p);
+                            if (pt.StartsWith("{"))
+                            {
+                                //pt = pt + LocalizedTextManager.GetTranslatedText("English", LocalizedTextManager.GetStringId(pt));
+                                pt = LocalizedTextManager.GetTranslatedText("English", LocalizedTextManager.GetStringId(pt));
+                            }
+                            newparts += pt + "\"";
                         }
                         newparts = newparts.Substring(0,newparts.Length - 1);
                         sw.WriteLine(newparts);
@@ -69,10 +75,10 @@ namespace TournamentXPanded.Configurator
                     }
                 }
             }
-        
+#endif
 
 
-        Application.Run(frm);
+            Application.Run(frm);
         }
     }
 }

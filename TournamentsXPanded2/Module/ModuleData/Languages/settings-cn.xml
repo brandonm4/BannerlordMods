@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-16" ?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
+  <tags>
+    <tag language="简体中文" />
+  </tags>
+  <strings>
+    <string id="txpg0001" text="1. 锦标赛配置" />
+    <string id="txpg0002" text="2. 重置奖池的次数" />
+    <string id="txpg0003" text="3.1 奖品选择" />
+    <string id="txpg0004" text="3.2 奖品来源" />
+    <string id="txpg0005" text="3.3 奖品价值" />
+    <string id="txpg0006" text="3.4 奖品类型筛选" />
+    <string id="txpg0007" text="3.5 奖品类型筛选" />
+    <string id="txpg0008" text="4.1 总奖金" />
+    <string id="txpg0009" text="4.2 每场比赛的奖金" />
+    <string id="txpg0010" text="4.3 每回合对手难度奖励的声望" />
+    <string id="txpg0011" text="98. 实验性的" />
+    <string id="txpg0012" text="99. 未使用" />
+    <string id="txpg0013" text="99. 诊断系统" />
+    <string id="txpd0014" text="启用锦标赛XP" />
+    <string id="txpd0015" text="锦标赛XP调整" />
+    <string id="txpd0016" text="启用竞技场XP" />
+    <string id="txpd0017" text="竞技场XP调整" />
+    <string id="txpd0018" text="装备过滤(移除矛)" />
+    <string id="txpd0019" text="每场比赛重新掷骰子" />
+    <string id="txpd0020" text="1. 奖品选择" />
+    <string id="txpd0021" text="2. 奖池奖品" />
+    <string id="txpd0022" text="1. 包括城镇库存" />
+    <string id="txpd0023" text="2. 包括标准(普通)项目" />
+    <string id="txpd0024" text="3. 包括自定义列表" />
+    <string id="txpd0025" text="4. 包括遗产" />
+    <string id="txpd0026" text="1. 奖品最小值" />
+    <string id="txpd0027" text="2. 奖品最大值" />
+    <string id="txpd0028" text="3. 每级奖励" />
+    <string id="txpd0029" text="4. 每级奖励" />
+    <string id="txpd0030" text="5. 奖品过滤。最小最大值适用于城镇库存" />
+    <string id="txpd0031" text="6. 奖品过滤。最小最大值适用于自定义项目" />
+    <string id="txpd0032" text="7. 奖品筛选器。最小最大值适用于标准项目" />
+    <string id="txpd0033" text="8. 奖品筛选器。最小最大值适用于遗留物品" />
+    <string id="txpd0034" text="9. 城镇繁荣影响奖品价值" />
+    <string id="txpd0035" text="10. 城镇繁荣度：低" />
+    <string id="txpd0036" text="11. 城镇繁荣度：中" />
+    <string id="txpd0037" text="12. 城镇繁荣度：高" />
+    <string id="txpd0038" text="启用城镇物品奖励类型筛选器" />
+    <string id="txpd0039" text="启用自定义物品奖励类型筛选器" />
+    <string id="txpd0040" text="启用标准物品奖励类型筛选器" />
+    <string id="txpd0041" text="启用遗产物品奖励类型筛选器" />
+    <string id="txpd0042" text="允许弓" />
+    <string id="txpd0043" text="允许弩" />
+    <string id="txpd0044" text="允许单手武器" />
+    <string id="txpd0045" text="允许长杆武器" />
+    <string id="txpd0046" text="允许盾牌" />
+    <string id="txpd0047" text="允许投掷武器" />
+    <string id="txpd0048" text="允许双手武器" />
+    <string id="txpd0049" text="允许箭矢" />
+    <string id="txpd0050" text="允许弩矢" />
+    <string id="txpd0051" text="允许头盔" />
+    <string id="txpd0052" text="允许护臂" />
+    <string id="txpd0053" text="允许铠甲" />
+    <string id="txpd0054" text="允许腿甲" />
+    <string id="txpd0055" text="允许披肩/护肩" />
+    <string id="txpd0056" text="允许马匹" />
+    <string id="txpd0057" text="允许马具/马鞍" />
+    <string id="txpd0058" text="按城镇文化过滤城镇库存" />
+    <string id="txpd0059" text="按城市文化过滤自定义物品" />
+    <string id="txpd0060" text="按城镇文化过滤标准物品" />
+    <string id="txpd0061" text="按城镇文化过滤遗产物品" />
+    <string id="txpd0062" text="锦标赛获胜金币奖励" />
+    <string id="txpd0063" text="锦标赛获胜声望奖励" />
+    <string id="txpd0064" text="锦标赛获胜影响力奖励" />
+    <string id="txpd0065" text="每回合奖励金币" />
+    <string id="txpd0066" text="比赛获胜时获得金币奖励" />
+    <string id="txpd0067" text="最高击杀声望奖励" />
+    <string id="txpd0068" text="最高伤害声望奖励" />
+    <string id="txpd0069" text="首杀声望奖励" />
+    <string id="txpd0070" text="最低承伤声望奖励" />
+    <string id="txpd0071" text="对手难度声望奖励" />
+    <string id="txpd0072" text="1级声望奖励" />
+    <string id="txpd0073" text="2级声望奖励" />
+    <string id="txpd0074" text="3级声望奖励" />
+    <string id="txpd0075" text="4级声望奖励" />
+    <string id="txpd0076" text="5级声望奖励" />
+    <string id="txpd0077" text="6级声望奖励" />
+    <string id="txpd0078" text="7级声望奖励" />
+    <string id="txpd0079" text="城镇本地英雄声望奖励" />
+    <string id="txpd0080" text="无名小卒声望奖励" />
+    <string id="txpd0081" text="同伴声望奖励" />
+    <string id="txpd0082" text="指挥官声望奖励" />
+    <string id="txpd0083" text="小家族英雄声望奖励" />
+    <string id="txpd0084" text="小家族领袖声望奖励" />
+    <string id="txpd0085" text="知名家族领袖声望奖励" />
+    <string id="txpd0086" text="为奖品启用ItemModifiers" />
+    <string id="txpd0087" text="城镇繁荣影响ItemModifiers" />
+    <string id="txpd0088" text="防止玩家制作的物品出现在列表中" />
+    <string id="txpd0089" text="游戏难度影响赔率" />
+    <string id="txpd0090" text="最大赔率" />
+    <string id="txpd0091" text="锦标赛声望奖励改为等级经验（？）" />
+    <string id="txpd0092" text="同伴赢取奖励(未激活)" />
+    <string id="txpd0093" text="启用随机比赛类型" />
+    <string id="txpd0094" text="启用比赛类型选择" />
+    <string id="txpd0095" text="启用调试模式" />
+    <string id="txph0096" text="去除比赛中步兵用的长矛" />
+    <string id="txph0097" text="每次比赛可以重置奖池的最大次数.设置为0将禁用." />
+    <string id="txph0098" text="是否启用从奖品池中选择奖品.这只影响弹出窗口,而不会影响其他筛选选项." />
+    <string id="txph0099" text="当前城镇库存中的物品都包括在考虑范围内." />
+    <string id="txph0100" text="这是游戏中的所有物品,包括注册到游戏物品库中的,手工制作或其他经过改装的物品." />
+    <string id="txph0101" text="自定义奖品列表中的物品 - CustomPrizeItems.json - 包括在考虑范围内." />
+    <string id="txph0102" text="这些是来自Bannerlord v1.0.5和更低版本的项目.它们包括了像Early Retirement或者The Scalpal这样被命名的物品." />
+    <string id="txph0103" text="不使用低于此值的任何项目." />
+    <string id="txph0104" text="不使用高于此值的任何项目." />
+    <string id="txph0105" text="每升一级就会增加奖品最低价值.." />
+    <string id="txph0106" text="每升一级就会增加奖品最高价值.." />
+    <string id="txph0107" text="设置为小数,所以.65表示最大值的65%." />
+    <string id="txph0108" text="设置为小数,所以1.0表示最大值的100%." />
+    <string id="txph0109" text="设置为小数,所以1.3表示最大值的130%." />
+    <string id="txph0110" text="物品池中仅允许使用当前城镇文化的物品." />
+    <string id="txph0111" text="物品池中仅允许使用当前城镇文化的物品." />
+    <string id="txph0112" text="物品池中仅允许使用当前城镇文化的物品." />
+    <string id="txph0113" text="物品池中仅允许使用当前城镇文化的物品." />
+    <string id="txph0114" text="如果启用,您将在每局比赛结束后立即获得奖励.如果禁用,则将在赢得所有比赛后获得奖励." />
+    <string id="txph0115" text="警告:可能导致物品丢失,核心游戏中的BUG.在BL-1.2.0Beta中似乎没有问题,在BL-1.1.1/1.1/1.1.2中已被禁用" />
+    <string id="txph0116" text="如果启用了ItemModifiers,则此设置将使它们倾向于在高繁荣时更好,在低繁荣时更糟." />
+    <string id="txph0117" text="如果启用,玩家制作的物品将被排除在奖励列表中." />
+    <string id="txph0118" text="不能在1.5-beta中使用" />
+    <string id="txph0119" text="比赛投注的最大赔率" />
+    <string id="txph0120" text="修复前禁用.如果开启,将被忽略." />
+  </strings>
+</base>

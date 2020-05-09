@@ -1,20 +1,16 @@
 ﻿using ModLib;
 using ModLib.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
+
 using TournamentsXPanded.Models;
 using TournamentsXPanded.Settings;
 
 namespace TournamentsXP.Addon.ModLib
 {
-   public class TournamentsXPSettingsModLib : SettingsBase
+    public class TournamentsXPSettingsModLib : SettingsBase
     {
-
         public const string InstanceID = "TournamentXPSettings";
         public override string ModName => "Tournaments XPanded";
         public override string ModuleFolderName => SettingsHelper.ModuleFolderName;
@@ -26,6 +22,7 @@ namespace TournamentsXP.Addon.ModLib
                 return (TournamentsXPSettingsModLib)SettingsDatabase.GetSettings(InstanceID);
             }
         }
+
         [XmlElement]
         public override string ID { get; set; } = InstanceID;
 
@@ -48,7 +45,7 @@ namespace TournamentsXP.Addon.ModLib
                             break;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         //ErrorLog.Log("Error in assigning ModLib property to TXPSettings: " + pTXP.Name + "\n" + ex.ToStringFull());
                     }
@@ -57,27 +54,29 @@ namespace TournamentsXP.Addon.ModLib
             return dto;
         }
 
-
-
         #region XP Adjustments
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("Enable Tournament XP")]
         public bool IsTournamentXPEnabled { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("TournamentXPAdjustment", 0, 10f)]
         public float TournamentXPAdjustment { get; set; } = 1.0f;
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("Enable Arena XP")]
         public bool IsArenaXPEnabled { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("1. Tournament Configuration")]
         [SettingProperty("ArenaXPAdjustment", 0, 10f)]
         public float ArenaXPAdjustment { get; set; } = 1.0f;
 
-        #endregion
+        #endregion XP Adjustments
 
         #region Other
 
@@ -110,6 +109,7 @@ namespace TournamentsXP.Addon.ModLib
         public int NumberOfPrizeOptions { get; set; } = 3;
 
         #region {=txpg0004}
+
         [XmlElement]
         [SettingPropertyGroup("3.2 Prize Sources")]
         [SettingProperty("1. Include Town Inventory", "Items in the current towns stock are included for consideration.")]
@@ -129,8 +129,11 @@ namespace TournamentsXP.Addon.ModLib
         [SettingPropertyGroup("3.2 Prize Sources")]
         [SettingProperty("4. Include Legacy", "These are the items from v1.0.5 and lower of Bannerlord.  They include the named items like Early Retirement or The Scalpal.")]
         public bool PrizeListIncludeLegacy { get; set; } = false;
-        #endregion
+
+        #endregion {=txpg0004}
+
         #region {=txpg0005}
+
         [XmlElement]
         [SettingProperty("1. Prize Min Value", 0, 10000, "Any item below this value will not be used.")]
         [SettingPropertyGroup("3.3 Prize Value")]
@@ -175,6 +178,7 @@ namespace TournamentsXP.Addon.ModLib
         [SettingProperty("9. Town Prosperity Affects Prize Value")]
         [SettingPropertyGroup("3.3 Prize Value")]
         public bool TownProsperityAffectsPrizeValues { get; set; } = true;
+
         [XmlElement]
         [SettingProperty("10. Town Prosperity: Low", 0, 1f, "Setting is a decimal so .65 means 65% of max value")]
         [SettingPropertyGroup("3.3 Prize Value")]
@@ -189,28 +193,30 @@ namespace TournamentsXP.Addon.ModLib
         [SettingProperty("12. Town Prosperity: High", 0, 3f, "Setting is a decimal so 1.3 means 130% of max value")]
         [SettingPropertyGroup("3.3 Prize Value")]
         public float TownProsperityHigh { get; set; } = 1.3f;
-        #endregion
 
-
+        #endregion {=txpg0005}
 
         #region 3.4 Prize Types Filter
+
         [XmlElement]
         [SettingProperty("Enable Prize Type Filter for Town Items")]
         [SettingPropertyGroup("3.4 Prize Type Filter")]
         public bool PrizeFilterItemTypesTownItems { get; set; } = true;
+
         [XmlElement]
         [SettingProperty("Enable Prize Type Filter for Custom Items")]
         [SettingPropertyGroup("3.4 Prize Type Filter")]
         public bool PrizeFilterItemTypesCustomItems { get; set; } = false;
+
         [XmlElement]
         [SettingProperty("Enable Prize Type Filter for Standard Items")]
         [SettingPropertyGroup("3.4 Prize Type Filter")]
         public bool PrizeFilterItemTypesStandardItems { get; set; } = true;
+
         [XmlElement]
         [SettingProperty("Enable Prize Type Filter for Legacy Items")]
         [SettingPropertyGroup("3.4 Prize Type Filter")]
         public bool PrizeFilterItemTypesLegacyItems { get; set; } = false;
-
 
         [XmlElement]
         [SettingPropertyGroup("3.4 Prize Type Filter")]
@@ -291,27 +297,32 @@ namespace TournamentsXP.Addon.ModLib
         [SettingPropertyGroup("3.4 Prize Type Filter")]
         [SettingProperty("Allow Horse Harness/Saddle")]
         public bool EnableItemType_HorseHarness { get; set; } = true;
-        #endregion
+
+        #endregion 3.4 Prize Types Filter
+
         #region 3.5 Prize Filter on Culture
+
         [XmlElement]
         [SettingProperty("Filter Town Stock by Town Culture", "Only allow items from the current towns culture in the item pool.")]
         [SettingPropertyGroup("3.5 Prize Type Filter")]
         public bool PrizeFilterCultureTownItems { get; set; } = false;
+
         [XmlElement]
         [SettingProperty("Filter Custom by Town Culture", "Only allow items from the current towns culture in the item pool.")]
         [SettingPropertyGroup("3.5 Prize Type Filter")]
         public bool PrizeFilterCultureCustomItems { get; set; } = false;
+
         [XmlElement]
         [SettingProperty("Filter Standard Items by Town Culture", "Only allow items from the current towns culture in the item pool.")]
         [SettingPropertyGroup("3.5 Prize Type Filter")]
         public bool PrizeFilterCultureStandardItems { get; set; } = true;
+
         [XmlElement]
         [SettingProperty("Filter Legacy Items by Town Culture", "Only allow items from the current towns culture in the item pool.")]
         [SettingPropertyGroup("3.5 Prize Type Filter")]
         public bool PrizeFilterCultureLegacyItems { get; set; } = false;
 
-        #endregion
-
+        #endregion 3.5 Prize Filter on Culture
 
         #region Bonus Winnings
 
@@ -319,6 +330,7 @@ namespace TournamentsXP.Addon.ModLib
         [SettingPropertyGroup("4.1 Overall Tournament Winnings")]
         [SettingProperty("Bonus Gold for Tournament Win", 0, 20000)]
         public int BonusTournamentWinGold { get; set; } = 0;
+
         [XmlElement]
         [SettingPropertyGroup("4.1 Overall Tournament Winnings")]
         [SettingProperty("Bonus Renown for Tournament Win", 0, 100)]
@@ -328,8 +340,6 @@ namespace TournamentsXP.Addon.ModLib
         [SettingPropertyGroup("4.1 Overall Tournament Winnings")]
         [SettingProperty("Bonus Influence for Tournament Win", 0f, 50f)]
         public float BonusTournamentWinInfluence { get; set; } = 0;
-
-
 
         [XmlElement]
         [SettingPropertyGroup("4.2 Per Match Winnings")]
@@ -345,20 +355,21 @@ namespace TournamentsXP.Addon.ModLib
         [SettingPropertyGroup("4.2 Per Match Winnings")]
         [SettingProperty("Bonus Renown for Most Kills", 0f, 5f)]
         public float BonusRenownMostKills { get; set; } = 0f;
+
         [XmlElement]
         [SettingPropertyGroup("4.2 Per Match Winnings")]
         [SettingProperty("Bonus Renown for Most Damage Inflicted", 0f, 5f)]
         public float BonusRenownMostDamage { get; set; } = 0f;
+
         [XmlElement]
         [SettingPropertyGroup("4.2 Per Match Winnings")]
         [SettingProperty("Bonus Renown for First Kill", 0f, 5f)]
         public float BonusRenownFirstKill { get; set; } = 0f;
+
         [XmlElement]
         [SettingPropertyGroup("4.2 Per Match Winnings")]
         [SettingProperty("Bonus Renown for Least Damage Taken", 0f, 5f)]
         public float BonusRenownLeastDamage { get; set; } = 0f;
-
-
 
         [XmlElement]
         [SettingPropertyGroup("4.3 Bonus Renown for Opponent Difficulty Per Round")]
@@ -412,7 +423,7 @@ namespace TournamentsXP.Addon.ModLib
 
         [XmlElement]
         [SettingPropertyGroup("4.3 Bonus Renown for Opponent Difficulty Per Round")]
-        [SettingProperty("Bonus Renown IsBotable", 0f, 50f)]
+        [SettingProperty("Bonus Renown IsNotable", 0f, 50f)]
         public float RenownPerHeroPropertyIsNotable { get; set; } = 1f;
 
         [XmlElement]
@@ -436,16 +447,20 @@ namespace TournamentsXP.Addon.ModLib
         public float RenownPerHeroPropertyIsMajorFactionLeader { get; set; } = 10f;
 
         #endregion Bonus Winnings
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Enable ItemModifiers For Prizes", "Warning: May cause item loss, bug in core game. Seems OK in BL-1.2.0Beta, Disabled in BL-1.1.1/1.1.2")]
         public bool EnableItemModifiersForPrizes { get; set; } = false;
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Town Prosperity Affects ItemModifiers", "If ItemModifiers are on, this setting will make them lean towards better if high prosperity or worse if it's low prosperity.")]
         public bool TownProsperityAffectsItemModifiers { get; set; } = false;
+
         [XmlElement]
         public bool EnableCleanSave { get; set; } = false;
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Prevent Player Crafted Items in Lists", "If enabled, player crafted items will be excluded from the prize lists.")]
@@ -453,15 +468,26 @@ namespace TournamentsXP.Addon.ModLib
 
         #endregion Prize Selection
 
-        #region Match Odds        
+        #region Match Odds
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("OppenentDifficultyAffectsOdds", "Not working in 1.5-beta")]
         public bool OppenentDifficultyAffectsOdds { get; set; } = true;
+
         [XmlElement]
         [SettingPropertyGroup("98. Experimental")]
         [SettingProperty("Max Odds", 4f, 10f, "Maximum Odds for Tournament Bets")]
         public float MaximumBetOdds { get; set; } = 4;
+
+        [XmlElement]
+        [SettingPropertyGroup("98. Experimental")]
+        [SettingProperty("Bonus Reputation Amount", 0, 5, "Reputation Gain to Notables in Tournament Settlement, Villages, Owning Clan (random, not every character)")]
+        public int BonusReputationForTournamentWin { get; set; } = 0;
+
+        [SettingPropertyGroup("98. Experimental")]
+        [SettingProperty("Disable Save Data", "Disables saving any data to save file.")]
+        public bool DisableSaveData { get; set; } = false;
 
         #endregion Match Odds
 
@@ -471,20 +497,24 @@ namespace TournamentsXP.Addon.ModLib
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("TournamentBonusMoneyBaseNamedCharLevel", 0, 1)]
         public int TournamentBonusMoneyBaseNamedCharLevel { get; set; } = 0;
+
         [XmlElement]
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("CompanionsWinPrizes(Not Active)")]
         public bool CompanionsWinPrizes { get; set; } = false;
+
         [XmlElement]
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("Enable Random Tournament Type at Spawn", "Disabled until fixed. Will be ignored if turned on.")]
         public bool EnableTournamentRandomSelection { get; set; } = false;
+
         [XmlElement]
         [SettingPropertyGroup("99. Not Used")]
         [SettingProperty("Enable Tournament Type Selection")]
         public bool EnableTournamentTypeSelection { get; set; } = true;
 
-        #endregion
+        #endregion UnImplemented
+
         [XmlElement]
         [SettingPropertyGroup("99. Diagnostics")]
         [SettingProperty("Enable Debug")]

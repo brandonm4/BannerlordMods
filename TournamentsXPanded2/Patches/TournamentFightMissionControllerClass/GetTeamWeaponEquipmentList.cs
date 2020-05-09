@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+
 using SandBox;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +9,17 @@ using System.Reflection;
 
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+
 #if VERSION130
+
 using TaleWorlds.ObjectSystem;
+
 #endif
+
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -49,10 +56,10 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
               );
 
             Applied = true;
-        }      
+        }
+
         private static bool Prefix(TournamentFightMissionController __instance, ref List<Equipment> __result, int teamSize)
         {
-
             List<string> list;
             List<Equipment> equipment = new List<Equipment>();
             string stringId = PlayerEncounter.Settlement.Culture.StringId;
@@ -60,7 +67,7 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
             var list4 = (string[])Traverse.Create(__instance).Field("_weaponTemplatesIdTeamSizeFour").GetValue();
             var list2 = (string[])Traverse.Create(__instance).Field("_weaponTemplatesIdTeamSizeTwo").GetValue();
             var list1 = (string[])Traverse.Create(__instance).Field("_weaponTemplatesIdTeamSizeOne").GetValue();
-          
+
             if (teamSize == 4)
             {
                 //list = __instance._weaponTemplatesIdTeamSizeFour.ToList<string>();
@@ -95,7 +102,6 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                 var equipment = battleEquipment.Clone();
                 equipments.Add(equipment);
             }
-
 
             foreach (var r in TournamentsXPandedBehavior.EquipmentFilters.OrderBy(x => x.RuleOrder))
             {
@@ -135,7 +141,6 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                                 var itemRoster = new ItemRosterElement(Game.Current.ObjectManager.GetObject<ItemObject>(r.ReplacementItemStringId));
                                 battleEquipment.AddEquipmentToSlotWithoutAgent(EquipmentIndex.Weapon0, itemRoster.EquipmentElement);
                             }
-
                         }
                     }
                 }
@@ -144,7 +149,6 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                     //MessageBox.Show("TournamentsXPanded\nError Applying Rule Equipement Filter\n" + ex.ToStringFull());
                     ErrorLog.Log("Error Applying Rule Equipement Filter\n" + ex.ToStringFull());
                 }
-
             }
             return equipments;
         }

@@ -2,16 +2,17 @@
 
 using System.Linq;
 using System.Reflection;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+
 using TournamentsXPanded.Common.Patches;
 
 namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
 {
-
     public class CalculateTownFoodStocksChange : PatchBase<CalculateTownFoodStocksChange>
     {
         public override bool Applied { get; protected set; }
@@ -19,10 +20,12 @@ namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
         private static readonly MethodInfo TargetMethodInfo = typeof(DefaultSettlementFoodModel).GetMethod("CalculateTownFoodStocksChange", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private static readonly MethodInfo PatchMethodInfo = typeof(CalculateTownFoodStocksChange).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
         public override bool IsApplicable(Game game)
         {
             return true;
         }
+
         public override void Apply(Game game)
         {
             if (Applied)
@@ -44,7 +47,8 @@ namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
         public override void Reset()
         {
         }
-        static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
+
+        private static void Postfix(ref float __result, ref Town town, ref StatExplainer explanation)
         {
             if (!(town.Settlement.SiegeEvent != null && town.IsUnderSiege &&
                 town.Settlement.SiegeEvent.BesiegerCamp.SiegeParties.Any<PartyBase>((PartyBase party) => party.MobileParty == Hero.MainHero.PartyBelongedTo)))
@@ -73,10 +77,12 @@ namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
         private static readonly MethodInfo TargetMethodInfo = typeof(DefaultMobilePartyFoodConsumptionModel).GetMethod("CalculateDailyFoodConsumptionf", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
         private static readonly MethodInfo PatchMethodInfo = typeof(CalculateDailyFoodConsumptionf).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
         public override bool IsApplicable(Game game)
         {
             return true;
         }
+
         public override void Apply(Game game)
         {
             if (Applied)
@@ -98,7 +104,8 @@ namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
         public override void Reset()
         {
         }
-        static void Postfix(ref float __result, MobileParty party, StatExplainer explainer)
+
+        private static void Postfix(ref float __result, MobileParty party, StatExplainer explainer)
         {
             //For now only do hero
             if (party.LeaderHero == Hero.MainHero)
@@ -116,7 +123,7 @@ namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
 
                         mod = MBRandom.RandomFloatRanged(mod, 1.0f);
                         var orig = __result;
-                        var deduction = (orig - ((__result * mod))) * -1f;
+                        var deduction = (orig - (__result * mod)) * -1f;
 
                         ExplainedNumber en = new ExplainedNumber(__result, explainer);
                         explainer?.Lines.Remove(explainer.Lines.Last());
@@ -130,5 +137,4 @@ namespace BMTweakCollection.Patches.DefaultSettlementFoodModelClass
             }
         }
     }
-
 }

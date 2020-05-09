@@ -17,16 +17,16 @@
     <string id="tourn011" text="What kind of Tournament would you like to compete in today?" />
     <string id="tourn012" text="You can choose an item from the list below as your reward if you win the tournament!" />
     <string id="tourn013" text="Battle Royal Melee Tournament" />
-    <string id="tourn014" text="The tournament will be 1v1 and free for all melee group fights."/>
-    <string id="tourn015" text="The tournament will be bracket of 1v1 rounds."/>
-    <string id="tourn016" text="The tournament will be a series of free for all matches."/>
-    <string id="tourn017" text="The tournament will be a series of all remaining participants in group fights."/>
-    <string id="tourn018" text="QUICK ACTION! You got the first kill: "/>
-    <string id="tourn019" text="AGGRESSIVE! You got the most kills: "/>
-    <string id="tourn020" text="You tied for the most kills: "/>
-    <string id="tourn021" text="SAVAGE! You inflicted the most damage: "/>
-    <string id="tourn022" text="You tied for inflicting the most damage: "/>
-    <string id="tourn023" text="DEFENSIVE! You took the least damage: "/>
-    <string id="tourn024" text="You tied for the least damage taken: "/>
+    <string id="tourn014" text="The tournament will be 1v1 and free for all melee group fights." />
+    <string id="tourn015" text="The tournament will be bracket of 1v1 rounds." />
+    <string id="tourn016" text="The tournament will be a series of free for all matches." />
+    <string id="tourn017" text="The tournament will be a series of all remaining participants in group fights." />
+    <string id="tourn018" text="QUICK ACTION! You got the first kill: " />
+    <string id="tourn019" text="AGGRESSIVE! You got the most kills: " />
+    <string id="tourn020" text="You tied for the most kills: " />
+    <string id="tourn021" text="SAVAGE! You inflicted the most damage: " />
+    <string id="tourn022" text="You tied for inflicting the most damage: " />
+    <string id="tourn023" text="DEFENSIVE! You took the least damage: " />
+    <string id="tourn024" text="You tied for the least damage taken: " />
   </strings>
 </base>

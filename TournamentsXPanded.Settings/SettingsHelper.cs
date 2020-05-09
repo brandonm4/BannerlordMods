@@ -13,9 +13,6 @@ namespace TournamentsXPanded.Settings
     {
         public static string ModuleFolderName { get; } = "TournamentsXPanded";
 
-
-       
-
         public static bool LoadSettings(string configPath)
         {
             //Load Settings
@@ -46,78 +43,9 @@ namespace TournamentsXPanded.Settings
                 {
                     File.WriteAllText(overridefile, "");
                 }
-                //                var modnames = Utilities.GetModulesNames().ToList();
+              
                 bool modLibLoaded = false;
-                //                if (
-                //                    (modnames.Contains("ModLib")
-                //                  //  || modnames.Contains("Bannerlord.MBOptionScreen")
-                //                    ) && !overrideSettings)
-                //                {
-
-                Type settingsHelperModLibType = null;
-                //                    Assembly modlibassembly = null;
-                Assembly modlibSettingsAssembly = null;
-
-                //                    try
-                //                    {
-                //                        modlibassembly = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.GetName().Name == "ModLib").FirstOrDefault();
-
-                //                    }
-                //                    catch { }
-
-                //                    //try
-                //                    //{
-                //                    //    if (!AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetName().Name).ToList().Contains("ModLib"))
-                //                    //    {
-                //                    //        var modlibdllpath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "Bannerlord.MBOptionScreen", "bin", "Win64_Shipping_Client", "ModLib.dll");
-                //                    //        modlibdllpath = System.IO.Path.GetFullPath(modlibdllpath);
-                //                    //        if (File.Exists(modlibdllpath))
-                //                    //            modlibassembly = Assembly.LoadFile(modlibdllpath);
-                //                    //    }
-                //                    //}
-                //                    //catch (Exception ex)
-                //                    //{
-                //                    //    ErrorLog.Log("Error Loading ModLib Assembly\n" + ex.ToStringFull());
-                //                    //}
-
-                /* My Own ModLib */
-                /*
-                try
-                {
-                    //     if (modlibassembly != null)
-                    {
-                        var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentsXPanded.Settings.ModLib.dll");
-                        modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
-                        modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
-                        settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXPanded.Settings.SettingsHelperModLib");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ErrorLog.Log("Error Loading SettingsModLib Assembly\n" + ex.ToStringFull());
-                }
-                */
-
-                //                if (settingsHelperModLibType != null)
-                //                {
-                //                    try
-                //                    {
-                //                        TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { forceDebug });
-                //                        if (osettings != null)
-                //                        {
-                //#if DEBUG
-                //                            osettings.DebugMode = true;
-                //#endif
-                //                            TournamentXPSettings.SetSettings(osettings);
-                //                            modLibLoaded = true;
-                //                        }
-                //                    }
-                //                    catch (Exception ex)
-                //                    {
-                //                        ErrorLog.Log("Error getting ModLib settings\n" + ex.ToStringFull());
-                //                    }
-                //                }
-
+                
                 if (!modLibLoaded)
                 {
                     string configFilePath = System.IO.Path.Combine(configPath, "tournamentxpsettings.json");
@@ -133,7 +61,7 @@ namespace TournamentsXPanded.Settings
                     TournamentXPSettings.SetSettings(settings);
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 // ErrorLog.Log("Error Loading Settings\n" + ex.ToStringFull());
                 return false;

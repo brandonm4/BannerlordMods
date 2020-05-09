@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -37,7 +38,7 @@ namespace TournamentsXPanded.Patches.PlayerTownVisitCampaignBehaviorClass
 
             TournamentsXPandedSubModule.Harmony.Patch(TargetMethodInfo,
                   prefix: new HarmonyMethod(PatchMethodInfoP)
-                //  ,transpiler:new HarmonyMethod(PatchMethodInfoT)
+              //  ,transpiler:new HarmonyMethod(PatchMethodInfoT)
               );
 
             Applied = true;
@@ -99,17 +100,18 @@ namespace TournamentsXPanded.Patches.PlayerTownVisitCampaignBehaviorClass
             args.MenuTitle = new TextObject("{=mMU3H6HZ}Arena", null);
             return false;
         }
+
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             //Chop out the existing TextObject name and use the new one.
-            var codes = instructions.ToList();            
+            var codes = instructions.ToList();
             var opCount = 0;
             var targetNode = 0;
-            foreach(var ci in instructions)
+            foreach (var ci in instructions)
             {
                 if (ci.operand as string == "ITEM")
                 {
-                    targetNode = opCount -2;
+                    targetNode = opCount - 2;
                     break;
                 }
                 opCount++;

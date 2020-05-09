@@ -6,7 +6,6 @@ using System.Reflection;
 
 using TaleWorlds.Core;
 
-using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
 
@@ -47,7 +46,7 @@ namespace TournamentsXPanded.Patches.TournamentBehaviorClass
         }
 
         private static bool Prefix(TournamentBehavior __instance)
-        {         
+        {
             typeof(TournamentBehavior).GetProperty("OverallExpectedDenars").SetValue(__instance, __instance.OverallExpectedDenars + TournamentXPSettings.Instance.BonusTournamentWinGold);
             return true;
         }

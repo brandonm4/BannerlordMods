@@ -3,7 +3,6 @@
 using SandBox.ViewModelCollection.Tournament;
 
 using System;
-using System.Linq;
 using System.Reflection;
 
 using TaleWorlds.Core;

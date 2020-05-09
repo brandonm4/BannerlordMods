@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.Core;
 
 namespace TournamentsXPanded.Models
@@ -23,6 +19,7 @@ namespace TournamentsXPanded.Models
 
         [JsonIgnore]
         public ItemObject.ItemTypeEnum TargetItemType { get; set; } = ItemObject.ItemTypeEnum.Invalid;
+
         [JsonIgnore]
         public ItemObject.ItemTypeEnum ReplacementItemType { get; set; } = ItemObject.ItemTypeEnum.Invalid;
     }

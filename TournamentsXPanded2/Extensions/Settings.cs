@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+
 using TournamentsXPanded.Common;
 using TournamentsXPanded.Models;
 
@@ -81,6 +79,7 @@ namespace TournamentsXPanded.Extensions
             }
             return validTypes;
         }
+
         public static float GetRenownValue(this TournamentXPSettings settings, CharacterObject character)
         {
             var worth = 0f;

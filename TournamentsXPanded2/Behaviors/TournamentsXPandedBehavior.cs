@@ -1,24 +1,24 @@
-﻿using HarmonyLib;
-using Helpers;
+﻿using Helpers;
+
 using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+
 using TournamentsXPanded.Extensions;
 using TournamentsXPanded.Models;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Behaviors
 {
-
-
     public partial class TournamentsXPandedBehavior : CampaignBehaviorBase
     {
         internal const string saveId = "57AA1526EC9A43768612F4EF71D0F901";
@@ -42,13 +42,14 @@ namespace TournamentsXPanded.Behaviors
             return t;
         }
 
-
         #region Events
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnAfterNewGameCreated));
         }
+
         private void OnAfterNewGameCreated(CampaignGameStarter starter)
         {
             if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament > 0)
@@ -76,26 +77,38 @@ namespace TournamentsXPanded.Behaviors
 
         public override void SyncData(IDataStore dataStore)
         {
-            SaveData data;
-            string saveDataAsJson = null;
-            if (dataStore.IsSaving)
+            if (!TournamentXPSettings.Instance.DisableSaveData)
             {
-                data = new SaveData() { Tournaments = TournamentsXPandedBehavior.Tournaments };
-                saveDataAsJson = JsonConvert.SerializeObject(data);
+                try
+                {
+                    SaveData data;
+                    string saveDataAsJson = null;
+                    if (dataStore.IsSaving)
+                    {
+                        data = new SaveData() { Tournaments = TournamentsXPandedBehavior.Tournaments };
+                        saveDataAsJson = JsonConvert.SerializeObject(data);
+                    }
+
+                    dataStore.SyncData(saveId, ref saveDataAsJson);
+
+                    if (dataStore.IsLoading)
+                    {
+                        data = JsonConvert.DeserializeObject<SaveData>(saveDataAsJson);
+                        TournamentsXPandedBehavior.Tournaments = data.Tournaments;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog.Log("Error in SyncData\n" + ex.ToStringFull());
+                    Tournaments = new List<TournamentXPandedModel>();
+                }
             }
-
-            dataStore.SyncData(saveId, ref saveDataAsJson);
-
-            if (dataStore.IsLoading)
-            {
-                data = JsonConvert.DeserializeObject<SaveData>(saveDataAsJson);
-                TournamentsXPandedBehavior.Tournaments = data.Tournaments;
-            }
-
         }
-        #endregion
+
+        #endregion Events
 
         #region Reroll
+
         private static bool RerollCondition(MenuCallbackArgs args)
         {
             if (TournamentXPSettings.Instance.MaxNumberOfRerollsPerTournament == 0)
@@ -116,6 +129,7 @@ namespace TournamentsXPanded.Behaviors
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
             return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
         }
+
         public static void RerollConsequence(MenuCallbackArgs args)
         {
             try
@@ -148,9 +162,11 @@ namespace TournamentsXPanded.Behaviors
                 ErrorLog.Log(ex.ToStringFull());
             }
         }
-        #endregion
+
+        #endregion Reroll
 
         #region PrizeSelect
+
         public static bool PrizeSelectCondition(MenuCallbackArgs args)
         {
             if (!TournamentXPSettings.Instance.EnablePrizeSelection)
@@ -163,6 +179,7 @@ namespace TournamentsXPanded.Behaviors
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
             return MenuHelper.SetOptionProperties(args, flag1, flag, textObject);
         }
+
         public static void PrizeSelectConsequence(MenuCallbackArgs args)
         {
             try
@@ -244,6 +261,7 @@ namespace TournamentsXPanded.Behaviors
                 ErrorLog.Log(ex.ToStringFull());
             }
         }
+
         private static void OnSelectPrize(List<InquiryElement> prizeSelections)
         {
             if (prizeSelections.Count > 0)
@@ -272,15 +290,16 @@ namespace TournamentsXPanded.Behaviors
                 }
             }
         }
+
         private static void OnDeSelectPrize(List<InquiryElement> prizeSelections)
         {
         }
-        #endregion
+
+        #endregion PrizeSelect
     }
 
-    class SaveData
+    internal class SaveData
     {
         public List<TournamentXPandedModel> Tournaments { get; set; }
     }
-
 }

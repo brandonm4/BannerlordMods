@@ -59,9 +59,28 @@ namespace BMTweakCollection.Models
         public float LootSkillXpGain { get; set; } = 10f;
 
         public bool AutoLearnSmeltedParts { get; set; } = true;
+
+        [XmlElement]
+        [SettingProperty("MaxCraftingStamina", 0, 1000)]
         public int MaxCraftingStamina { get; set; } = 400;
+        [XmlElement]
+        [SettingProperty("CraftingStaminaTweakEnabled")]
         public bool CraftingStaminaTweakEnabled { get; set; } = true;
+        [XmlElement]
+        [SettingProperty("CraftingStaminaGainAmount", 0, 30)]
         public int CraftingStaminaGainAmount { get; set; } = 10;
+        [XmlElement]
+        [SettingProperty("CraftingStaminaGainOutsideSettlementMultiplier", 0, 1f)]
         public float CraftingStaminaGainOutsideSettlementMultiplier { get; set; } = 1.0f;
+
+        [XmlElement]
+        [SettingProperty("Leave Kingdom: Relationship Penalty No Fiefs", -40, 0)]
+        public int RelationLossNoSettlements { get; set; } = -20;
+        [XmlElement]
+        [SettingProperty("Leave Kingdom: Relationship Penalaty with Fiefs", -40, 0)]
+        public int RelationLossWithSettlements { get; set; } = -40;
+        [XmlElement]
+        [SettingProperty("Leave Kingdom: Rebellion with Fiefs")]
+        public bool LeaveKingdomWithSettlementsRebellion { get; set; } = true;
     }
 }

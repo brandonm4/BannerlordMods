@@ -1,38 +1,38 @@
 ﻿using SandBox.TournamentMissions.Missions;
+
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
+
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using TournamentsXPanded.Models;
 
 /*
  * public float BonusRenownMostKills { get; set; } = 0;
         public float BonusRenownMostDamage { get; set; } = 0;
         public float BonusRenownFirstKill { get; set; } = 0;
         public float BonusRenownLeastDamage { get; set; } = 0;*/
+
 namespace TournamentsXPanded.Behaviors
 {
     public class TournamentXPandedMatchListener : IMissionListener
     {
-        TournamentBehavior tournamentBehavior;
+        private TournamentBehavior tournamentBehavior;
+
         public TournamentXPandedMatchListener(TournamentBehavior behavor)
         {
             tournamentBehavior = behavor;
         }
+
         public void OnConversationCharacterChanged()
         {
-            
         }
 
         public void OnEndMission()
         {
-         
         }
 
         public void OnEquipItemsFromSpawnEquipment(Agent agent, Agent.CreationType creationType)
         {
-          
         }
 
         public void OnEquipItemsFromSpawnEquipmentBegin(Agent agent, Agent.CreationType creationType)
@@ -48,15 +48,12 @@ namespace TournamentsXPanded.Behaviors
 
         public void OnMissionModeChange(MissionMode oldMissionMode, bool atStart)
         {
-            
         }
 
         public void OnResetMission()
         {
-            
         }
     }
-
 
     public class TournamentXPandedMatchBehavior : MissionLogic, ITournamentGameBehavior
     {
@@ -64,9 +61,9 @@ namespace TournamentsXPanded.Behaviors
         internal static TournamentMatch _match;
         internal static Dictionary<TournamentParticipant, ParticipantAchievements> achievements;
         internal TournamentBehavior tournamentBehavior;
-        
+
         //public override MissionBehaviourType BehaviourType { get; }
-      
+
         public TournamentXPandedMatchBehavior(TournamentBehavior behavior)
         {
             tournamentBehavior = behavior;
@@ -101,7 +98,7 @@ namespace TournamentsXPanded.Behaviors
         }
 
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow killingBlow)
-        {            
+        {
             if (!GameNetwork.IsClientOrReplay && !this.IsMatchEnded() && affectorAgent != null && affectedAgent != null && affectedAgent != affectorAgent && affectedAgent.IsHuman && affectorAgent.IsHuman && _match != null)
             {
                 try
@@ -116,25 +113,21 @@ namespace TournamentsXPanded.Behaviors
                 catch { }
             }
         }
-       
+
         public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, int damage, int weaponKind, int currentWeaponUsageIndex)
         {
-
         }
-              
+
         public override void EarlyStart()
         {
-            
         }
+
         public override void AfterStart()
         {
-            
         }
-        
 
         public void SkipMatch(TournamentMatch match)
         {
-
         }
 
         public bool IsMatchEnded()
@@ -144,8 +137,7 @@ namespace TournamentsXPanded.Behaviors
 
         public void OnMatchEnded()
         {
-            
-        }        
+        }
 
         public static List<TournamentParticipant> MostKills()
         {
@@ -169,6 +161,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return mostScore;
         }
+
         public static List<TournamentParticipant> MostDamage()
         {
             float best = 0;
@@ -216,7 +209,7 @@ namespace TournamentsXPanded.Behaviors
         }
 
         public void StartMatch(TournamentMatch match, bool isLastRound)
-        {            
+        {
         }
     }
 
@@ -226,5 +219,4 @@ namespace TournamentsXPanded.Behaviors
         public float DamageTaken { get; set; } = 0;
         public int NumberOfKills { get; set; } = 0;
     }
-    
 }

@@ -84,7 +84,7 @@
     <string id="txpd0078" text="Bonus Renown Tier 7" />
     <string id="txpd0079" text="Bonus Renown Hero Base" />
     <string id="txpd0080" text="Bonus Renown IsNoble" />
-    <string id="txpd0081" text="Bonus Renown IsBotable" />
+    <string id="txpd0081" text="Bonus Renown IsNotable" />
     <string id="txpd0082" text="Bonus Renown IsCommander" />
     <string id="txpd0083" text="Bonus Renown Minor Faction Hero" />
     <string id="txpd0084" text="Bonus Renown Minor Faction Leader" />
@@ -124,5 +124,7 @@
     <string id="txph0118" text="Not working in 1.5-beta" />
     <string id="txph0119" text="Maximum Odds for Tournament Bets" />
     <string id="txph0120" text="Disabled until fixed. Will be ignored if turned on." />
+    <string id="txpd0121" text="Bonus Reputation Amount" />
+    <string id="txph0122" text="Reputation Gain to Notables in Tournament Settlement, Villages, Owning Clan (random, not every character)" />
   </strings>
 </base>

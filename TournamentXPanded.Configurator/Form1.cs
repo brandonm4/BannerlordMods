@@ -69,8 +69,6 @@ namespace TournamentXPanded.Configurator
             groupPanels.Add(new FlowLayoutPanel() { Name = "Default" });
 
             var groupcount = 0;
-            var desccount = 0;
-            var hintcount = 0;
 
             foreach (var pr in propList)
             {

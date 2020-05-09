@@ -406,6 +406,10 @@ namespace TournamentsXPanded.Models
         [SettingPropertyGroup("{=txpg0011}")]
         [SettingProperty("{=txpd0088}", "{=txph0117}")]
         public bool PrizeFilterPreventPlayerCraftedItems { get; set; } = false;
+        [SettingPropertyGroup("{=txpg0011}")]
+        [SettingProperty("{=txpd0121}", 0, 5, "{=txph0122}")]
+        public int BonusReputationForTournamentWin { get; set; } = 0;
+
 
         #endregion Prize Selection
 
@@ -417,12 +421,15 @@ namespace TournamentsXPanded.Models
         [SettingProperty("{=txpd0090}", 4f, 10f, "{=txph0119}")]
         public float MaximumBetOdds { get; set; } = 4;
 
+        [SettingPropertyGroup("{=txpg0011}")]
+        [SettingProperty("Disable Save Data", "Disables saving any data to save file.")]
+        public bool DisableSaveData { get; set; } = false;
         #endregion Match Odds
 
         #region UnImplemented
 
 
-        [SettingPropertyGroup("{=txpg0012}")]
+       [SettingPropertyGroup("{=txpg0012}")]
         [SettingProperty("{=txpd0091}", 0, 1)]
         public int TournamentBonusMoneyBaseNamedCharLevel { get; set; } = 0;
         [SettingPropertyGroup("{=txpg0012}")]

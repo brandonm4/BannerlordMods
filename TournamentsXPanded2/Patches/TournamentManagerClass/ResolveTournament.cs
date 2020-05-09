@@ -8,7 +8,6 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
-using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentManagerClass
 {
@@ -45,9 +44,7 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
         private static void Postfix(TournamentGame tournament)
         {
             var info = TournamentsXPandedBehavior.GetTournamentInfo(tournament.Town);
-            info.ReRollsUsed = 0;       
+            info.ReRollsUsed = 0;
         }
-
-     
     }
 }

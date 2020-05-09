@@ -6,9 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 
-using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
-using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentCampaignBehaviorClass
 {
@@ -17,7 +15,7 @@ namespace TournamentsXPanded.Patches.TournamentCampaignBehaviorClass
         public override bool Applied { get; protected set; }
 
         private static readonly MethodInfo TargetMethodInfo = typeof(TournamentCampaignBehavior).GetMethod("AddTournament", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-        private static readonly MethodInfo PatchMethodInfo = typeof(ConsiderStartOrEndTournament).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);       
+        private static readonly MethodInfo PatchMethodInfo = typeof(ConsiderStartOrEndTournament).GetMethod(nameof(Postfix), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
         public override bool IsApplicable(Game game)
         {
@@ -44,7 +42,6 @@ namespace TournamentsXPanded.Patches.TournamentCampaignBehaviorClass
             Applied = true;
         }
 
-     
         private static void Postfix(Town town)
         {
             //if (game.Town != null)

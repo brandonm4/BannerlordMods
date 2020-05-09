@@ -1,6 +1,4 @@
-﻿using TaleWorlds.CampaignSystem;
-
-namespace TournamentsXPanded.Models
+﻿namespace TournamentsXPanded.Models
 {
     public class TournamentReward
     {

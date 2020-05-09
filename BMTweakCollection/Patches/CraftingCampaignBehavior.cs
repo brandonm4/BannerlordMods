@@ -1,13 +1,13 @@
 using BMTweakCollection.Models;
+
 using HarmonyLib;
-using ModLib;
+
 using System;
 using System.Collections;
 using System.Reflection;
-using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
-using TaleWorlds.Core;
 
 namespace BMTweakCollection.Patches
 {
@@ -44,13 +44,13 @@ namespace BMTweakCollection.Patches
     [HarmonyPatch(typeof(CraftingCampaignBehavior), "GetMaxHeroCraftingStamina")]
     public class GetMaxHeroCraftingStaminaPatch
     {
-        static bool Prefix(CraftingCampaignBehavior __instance, ref int __result)
+        private static bool Prefix(CraftingCampaignBehavior __instance, ref int __result)
         {
             __result = BMRandomTweaksConfiguration.Instance.MaxCraftingStamina;
             return false;
         }
 
-        static bool Prepare()
+        private static bool Prepare()
         {
             return BMRandomTweaksConfiguration.Instance.CraftingStaminaTweakEnabled;
         }
@@ -61,7 +61,7 @@ namespace BMTweakCollection.Patches
     {
         private static FieldInfo recordsInfo;
 
-        static bool Prefix(CraftingCampaignBehavior __instance)
+        private static bool Prefix(CraftingCampaignBehavior __instance)
         {
             if (recordsInfo == null)
                 GetRecordsInfo();
@@ -89,7 +89,7 @@ namespace BMTweakCollection.Patches
             return false;
         }
 
-        static bool Prepare()
+        private static bool Prepare()
         {
             if (BMRandomTweaksConfiguration.Instance.CraftingStaminaTweakEnabled)
                 GetRecordsInfo();

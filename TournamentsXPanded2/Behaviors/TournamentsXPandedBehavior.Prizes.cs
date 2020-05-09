@@ -1,19 +1,12 @@
-﻿using HarmonyLib;
-
-using Helpers;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
-using TournamentsXPanded.Common;
 using TournamentsXPanded.Extensions;
 using TournamentsXPanded.Models;
 
@@ -22,7 +15,7 @@ using XPanded.Common.Extensions;
 
 namespace TournamentsXPanded.Behaviors
 {
-    public partial class TournamentsXPandedBehavior 
+    public partial class TournamentsXPandedBehavior
     {
         internal static List<ItemObject> _customItems;
         internal static List<ItemObject> _legacyItems;
@@ -32,9 +25,8 @@ namespace TournamentsXPanded.Behaviors
             if (tournamentGame == null)
                 return null;
 
-            var numItemsToGet = TournamentXPSettings.Instance.NumberOfPrizeOptions;                      
+            var numItemsToGet = TournamentXPSettings.Instance.NumberOfPrizeOptions;
             var allitems = GetItemStringsRevised(tournamentGame, TournamentXPSettings.Instance.GetActivePrizeTypes());
-
 
             if (allitems.Count == 0)
             {
@@ -60,7 +52,7 @@ namespace TournamentsXPanded.Behaviors
                 {
                     foreach (PrizeItem existingPrize in tournamentInfo.PrizePool)
                     {
-                        if (pickeditems.Where( x=> x.ItemStringId == existingPrize.ItemStringId).Count() == 0)
+                        if (pickeditems.Where(x => x.ItemStringId == existingPrize.ItemStringId).Count() == 0)
                         {
                             pickeditems.Add(existingPrize);
                         }
@@ -85,7 +77,7 @@ namespace TournamentsXPanded.Behaviors
             while (pickeditems.Count < numItemsToGet && allitems.Count() > 0)
             {
                 var randomId = allitems.GetRandomElement<string>();
-                if (pickeditems.Where( x=> x.ItemStringId == randomId).Count() == 0)
+                if (pickeditems.Where(x => x.ItemStringId == randomId).Count() == 0)
                 {
                     pickeditems.Add(new PrizeItem() { ItemStringId = randomId, ItemModifierStringId = "" });
                 }
@@ -99,10 +91,10 @@ namespace TournamentsXPanded.Behaviors
                 ItemObject pickedPrize = null;
                 string itemModifierStringId = "";
                 try
-                {                    
+                {
                     pickedPrize = Game.Current.ObjectManager.GetObject<ItemObject>(pickedItem.ItemStringId);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ErrorLog.Log("Error getting object StringId: " + pickedItem.ItemStringId + "\n" + ex.ToStringFull());
                 }
@@ -127,7 +119,6 @@ namespace TournamentsXPanded.Behaviors
                         {
                             ErrorLog.Log("Error in GetEquipmentWithModifier\nItem:" + pickedPrize.StringId + "\n" + ex.ToStringFull());
                         }
-
                     }
                     try
                     {
@@ -149,18 +140,20 @@ namespace TournamentsXPanded.Behaviors
                 if (tournamentInfo.PrizePool.Count > 0)
                 {
                     tournamentInfo.SelectedPrizeStringId = tournamentInfo.PrizePool.First().ItemStringId;
-                //    SetTournamentSelectedPrize(tournamentGame, tournamentInfo.SelectPrizeItemRosterElement?.EquipmentElement.Item);
+                    //    SetTournamentSelectedPrize(tournamentGame, tournamentInfo.SelectPrizeItemRosterElement?.EquipmentElement.Item);
                 }
             }
             try
             {
                 return tournamentInfo.SelectedPrizeItem.ToItemRosterElement().EquipmentElement.Item;
             }
-            catch {
+            catch
+            {
                 //something went wrong generating a valid prize somewhere up above. hopefully earlier try catches will provide info, this is just a final failsafe to let it revert to default behavior.
             }
             return null;
         }
+
         public static List<string> GetItemStringsRevised(TournamentGame tournamentGame, List<ItemObject.ItemTypeEnum> validTypes)
         {
             int prizeMin = MathF.Floor(GetMinPrizeValue() * .7f);
@@ -261,10 +254,10 @@ namespace TournamentsXPanded.Behaviors
                     int v;
                     vanillaItems = vanillaItems.Where(x => int.TryParse(x.StringId, out v) == false);
                 }
-                allitems = allitems.Concat(vanillaItems.Select( x=> x.StringId)).ToList();
+                allitems = allitems.Concat(vanillaItems.Select(x => x.StringId)).ToList();
             }
-            
-			if (allitems.Count == 0)
+
+            if (allitems.Count == 0)
             {
                 //Alert - fix it somehow
                 MessageBox.Show("TournamentXPanded Error:\nYour filters are too strict, no items are found to populate the tournaments with. Check your settings to allow for a wider choice.  Generally, this can only occur if you've set the lists to only allow for custom items, and those items are not loaded correctly.\nYou can enable debug mode to view additional diagnostics, to help determine if you items are loading or not.");
@@ -278,14 +271,17 @@ namespace TournamentsXPanded.Behaviors
         {
             typeof(TournamentGame).GetProperty("Prize").SetValue(tournamentGame, prize);
         }
+
         public static int GetMinPrizeValue(Settlement settlement = null)
         {
             return MathF.Floor(((float)TournamentXPSettings.Instance.PrizeValueMin + MathF.Ceiling((Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMinIncreasePerLevel))) * GetProsperityModifier(settlement));
         }
+
         public static int GetMaxPrizeValue(Settlement settlement = null)
         {
             return MathF.Ceiling(((float)TournamentXPSettings.Instance.PrizeValueMax + MathF.Ceiling((Hero.MainHero.Level * (float)TournamentXPSettings.Instance.PrizeValueMaxIncreasePerLevel))) * GetProsperityModifier(settlement));
         }
+
         public static float GetProsperityModifier(Settlement settlement)
         {
             var prosperityMod = 1f;
@@ -308,6 +304,7 @@ namespace TournamentsXPanded.Behaviors
             }
             return prosperityMod;
         }
+
         public static EquipmentElement GetEquipmentWithModifier(ItemObject item, float prosperityFactor)
         {
             ItemModifierGroup itemModifierGroup;

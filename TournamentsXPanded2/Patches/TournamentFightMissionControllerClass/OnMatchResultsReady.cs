@@ -1,18 +1,19 @@
 ﻿using HarmonyLib;
+
 using SandBox;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
-using TaleWorlds.CampaignSystem.SandBox.Source.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
 using TournamentsXPanded.Models;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -53,6 +54,7 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
 
             Applied = true;
         }
+
         private static bool Prefix(TournamentFightMissionController __instance)
         {
             try
@@ -102,7 +104,6 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                             var mostdamage = TournamentXPandedMatchBehavior.MostDamage();
                             if (mostdamage.Contains(pc))
                             {
-
                                 var bonusmd = TournamentXPSettings.Instance.BonusRenownMostDamage / mostdamage.Count;
                                 if (bonusmd > 0)
                                 {
@@ -146,11 +147,10 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
                         {
                             TournamentsXPandedBehavior.Tournaments.Where(x => x.Active == true).First().Rewards.BonusRenown += renown;
                         }
-
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ErrorLog.Log("Could not award tournament achievments\n" + ex.ToStringFull());
             }
@@ -158,5 +158,3 @@ namespace TournamentsXPanded.Patches.TournamentFightMissionControllerClass
         }
     }
 }
-
-

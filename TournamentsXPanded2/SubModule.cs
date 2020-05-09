@@ -1,31 +1,31 @@
 ﻿using Newtonsoft.Json;
+
 using SandBox;
 using SandBox.TournamentMissions.Missions;
+
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.Engine.Screens;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common;
 using TournamentsXPanded.Models;
 using TournamentsXPanded.Settings;
+
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using TaleWorlds.Engine;
-using System.Reflection;
 
 namespace TournamentsXPanded
 {
@@ -33,9 +33,7 @@ namespace TournamentsXPanded
     {
         private static bool disabled = false;
         private static ApplicationVersion versionNative;
-        private System.ComponentModel.BackgroundWorker menuChecker1;
         private string _id;
-        private bool inMenu;
         private bool addMenu = false;
 
         protected override void OnSubModuleLoad()
@@ -48,7 +46,7 @@ namespace TournamentsXPanded
                     Directory.CreateDirectory(dirpath);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Failed to create config directory.  Please manually create this directory: " + dirpath);
             }
@@ -57,12 +55,12 @@ namespace TournamentsXPanded
             bool mismatch = false;
             try
             {
-                versionNative = ModuleInfo.GetModules().Where(x => x.Name == "Native").Select(x => new { x.Name, x.Version }).FirstOrDefault().Version;
+                versionNative = ModuleInfo.GetModules().Where(x => x.Name == "Native").Select(x => new { x.Name, x.Version }).FirstOrDefault()?.Version ?? default;
 #if VERSION130
-                if (versionNative.Major == 1 && versionNative.Minor < 3)
-                {
-                    mismatch = true;
-                }
+                //if (versionNative.Major == 1 && versionNative.Minor < 3)
+                //{
+                //    mismatch = true;
+                //}
 #endif
 #if VERSION120
                 if (versionNative.Major == 1 && versionNative.Minor != 2)
@@ -78,7 +76,6 @@ namespace TournamentsXPanded
                 else
                 {
                     _id = Guid.NewGuid().ToString();
-                    menuChecker1 = new System.ComponentModel.BackgroundWorker();
                     var configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName);
                     bool haveSettings = false;
 
@@ -102,7 +99,6 @@ namespace TournamentsXPanded
                     }
                     catch
                     {
-
                     }
                     if (!haveSettings)
                     {
@@ -130,6 +126,7 @@ namespace TournamentsXPanded
                 disabled = true;
             }
         }
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             string version = typeof(TournamentsXPandedSubModule).Assembly.GetName().Version.ToString();
@@ -146,9 +143,7 @@ namespace TournamentsXPanded
 
                 if (addMenu)
                 {
-                    inMenu = true;
-                    menuChecker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.menuChecker1_DoWork);
-                    menuChecker1.RunWorkerAsync();
+                    AddMenu();
                 }
             }
             else
@@ -161,28 +156,18 @@ namespace TournamentsXPanded
         {
             if (!disabled)
             {
-                try
-                {
-                    inMenu = false;
-                }
-                catch
-                { }
-
                 if (game.GameType is Campaign)
                 {
                     ApplyPatches(game, typeof(TournamentsXPandedSubModule), TournamentXPSettings.Instance.DebugMode);
 
-                    CampaignGameStarter campaignGameStarter = gameStarterObject as CampaignGameStarter;
-
-                    if (campaignGameStarter != null)
+                    if (gameStarterObject is CampaignGameStarter campaignGameStarter)
                     {
                         campaignGameStarter.AddBehavior(new TournamentsXPandedBehavior());
                     }
                 }
             }
-
-
         }
+
         public override void OnGameInitializationFinished(Game game)
         {
             if (!disabled)
@@ -202,10 +187,10 @@ namespace TournamentsXPanded
                     //Setup Legacy Items
                     List<string> strArray = new List<string>() { "winds_fury_sword_t3", "bone_crusher_mace_t3", "tyrhung_sword_t3", "pernach_mace_t3", "early_retirement_2hsword_t3", "black_heart_2haxe_t3", "knights_fall_mace_t3", "the_scalpel_sword_t3", "judgement_mace_t3", "dawnbreaker_sword_t3", "ambassador_sword_t3", "heavy_nasalhelm_over_imperial_mail", "closed_desert_helmet", "sturgian_helmet_closed", "full_helm_over_laced_coif", "desert_mail_coif", "heavy_nasalhelm_over_imperial_mail", "plumed_nomad_helmet", "eastern_studded_shoulders", "ridged_northernhelm", "armored_bearskin", "noble_horse_southern", "noble_horse_imperial", "noble_horse_western", "noble_horse_eastern", "noble_horse_battania", "noble_horse_northern", "special_camel" };
                     InitItemsList(strArray, out TournamentsXPandedBehavior._legacyItems);
-
                 }
             }
         }
+
         public override void OnMissionBehaviourInitialize(Mission mission)
         {
             if (!disabled && !mission.HasMissionBehaviour<TournamentXPandedMatchBehavior>() &&
@@ -234,16 +219,11 @@ namespace TournamentsXPanded
                 }
             }
         }
+
         protected override void OnSubModuleUnloaded()
         {
-            try
-            {
-                inMenu = false;
-                menuChecker1.CancelAsync();
-            }
-            catch
-            { }
         }
+
         private void CreateEquipmentRules()
         {
             try
@@ -294,6 +274,7 @@ namespace TournamentsXPanded
                 ErrorLog.Log("Error Processing Rule Equipement Filter\n" + ex.ToStringFull());
             }
         }
+
         private void InitItemsList(List<string> itemStringIds, out List<ItemObject> itemList)
         {
             itemList = new List<ItemObject>();
@@ -335,62 +316,51 @@ namespace TournamentsXPanded
                 //    true, false, "Ok", "No", null, null, ""), false);
             }
         }
-        private void menuChecker1_DoWork(object sender, DoWorkEventArgs e)
+
+        private void AddMenu()
         {
-            BackgroundWorker StayTheFuckAway = sender as BackgroundWorker;
-            //int arg = (int)e.Argument;
-            CheckMenu();
-            if (StayTheFuckAway.CancellationPending)
+            try
             {
-                e.Cancel = true;
-            }
-        }
-        private void CheckMenu()
-        {
-            while (inMenu)
-            {
-                try
+                var menu = TaleWorlds.MountAndBlade.Module.CurrentModule.GetInitialStateOptions().FirstOrDefault(x => x.Id == _id);
+                if (menu == null)
                 {
-                    var menu = TaleWorlds.MountAndBlade.Module.CurrentModule.GetInitialStateOptions().Where(x => x.Id == _id).FirstOrDefault();
-                    if (menu == null)
-                    {
-                        //Stay the fuck away from my menu, k thx bye
-                        TaleWorlds.MountAndBlade.Module.CurrentModule.AddInitialStateOption(new InitialStateOption(_id,
-        new TextObject("TournamentXP Options", null),
-        9990,
-        () =>
-        {
-            //  ScreenManager.PushScreen(new ModOptionsGauntletScreen());
-            var confpath = System.IO.Path.GetFullPath(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentXPanded.Configurator.exe"));
-            
+                    TaleWorlds.MountAndBlade.Module.CurrentModule.AddInitialStateOption(new InitialStateOption(_id,
+                        new TextObject("TournamentXP Options", null),
+                        9990,
+                        () =>
+                        {
+                            //  ScreenManager.PushScreen(new ModOptionsGauntletScreen());
+                            var confpath = System.IO.Path.GetFullPath(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", ModuleFolderName, "bin", "Win64_Shipping_Client", "TournamentXPanded.Configurator.exe"));
 
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.CreateNoWindow = false;
-            startInfo.UseShellExecute = false;
-            startInfo.FileName = confpath;
-            startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            startInfo.Arguments = "\"" + System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json") + "\"";
+                            ProcessStartInfo startInfo = new ProcessStartInfo
+                            {
+                                CreateNoWindow = false,
+                                UseShellExecute = false,
+                                FileName = confpath,
+                                WindowStyle = ProcessWindowStyle.Normal,
+                                Arguments = "\"" + System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName, "tournamentxpsettings.json") + "\""
+                            };
 
-            using (Process exeProcess = Process.Start(startInfo))
-            {
-                exeProcess.WaitForExit();
-                SettingsHelper.LoadSettings(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName));
-                ShowWindow((int)Process.GetCurrentProcess().MainWindowHandle, SW_RESTORE);
-            }
-        },
-        false));
-                    }
+                            using (Process exeProcess = Process.Start(startInfo))
+                            {
+                                exeProcess.WaitForExit();
+                                SettingsHelper.LoadSettings(System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName));
+                                ShowWindow((int)Process.GetCurrentProcess().MainWindowHandle, SW_RESTORE);
+                            }
+                        },
+                        false));
                 }
-                catch { }
-                Thread.Sleep(200);
             }
+            catch { }
         }
 
         #region Windows
-        private const int SW_HIDE = 0;
+
         private const int SW_RESTORE = 9;
+
         [DllImport("User32")]
         private static extern int ShowWindow(int hwnd, int nCmdShow);
-        #endregion
+
+        #endregion Windows
     }
 }

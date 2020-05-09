@@ -8,7 +8,6 @@ using TaleWorlds.Core;
 
 using TournamentsXPanded.Behaviors;
 using TournamentsXPanded.Common.Patches;
-using TournamentsXPanded.Models;
 
 namespace TournamentsXPanded.Patches.TournamentManagerClass
 {
@@ -47,7 +46,6 @@ namespace TournamentsXPanded.Patches.TournamentManagerClass
 
         private static void Prefix(TournamentGame game)
         {
-            
         }
 
         private static void Postfix(TournamentGame game)

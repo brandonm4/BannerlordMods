@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.CampaignBehaviors;
 
 namespace BMTweakCollection.Behaviors
 {
     public class SmithingStanimaRecovery : CampaignBehaviorBase
     {
-    
         public void HourlyTick()
         {
             bool currentSettlement;

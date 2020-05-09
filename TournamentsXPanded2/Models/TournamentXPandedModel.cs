@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.Core;
+
 #if VERSION130
-using TaleWorlds.ObjectSystem;
 #endif
-using TaleWorlds.SaveSystem;
 
 namespace TournamentsXPanded.Models
 {
@@ -20,7 +19,7 @@ namespace TournamentsXPanded.Models
         public string SettlementStringId { get; set; }
         public string TournamentTypeId { get; set; }
         public bool Active { get; set; }
-        
+
         [JsonIgnore]
         public TournamentReward Rewards { get; set; }
 
@@ -36,7 +35,7 @@ namespace TournamentsXPanded.Models
                 return null;
             }
         }
-        
+
         [JsonIgnore]
         public Settlement Settlement
         {
@@ -55,8 +54,6 @@ namespace TournamentsXPanded.Models
             SettlementStringId = "";
             Rewards = new TournamentReward();
             Active = false;
-        }             
+        }
     }
-
-  
 }

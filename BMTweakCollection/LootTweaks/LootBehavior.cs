@@ -11,7 +11,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-using TournamentsXPanded;
 using XPanded.Common.Diagnostics;
 using XPanded.Common.Extensions;
 
@@ -139,7 +138,6 @@ namespace BMTweakCollection.LootTweaks
         //    {
         //        //if (item.WeaponCopy.PrimaryItem != null && item.WeaponCopy.PrimaryItem.ItemCategory == ItemCategory.)
         //        //{
-
         //        //}
         //    }
         //}

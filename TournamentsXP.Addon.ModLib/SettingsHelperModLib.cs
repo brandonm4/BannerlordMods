@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
+
 using TournamentsXPanded.Models;
 
 using XPanded.Common.Diagnostics;
@@ -23,8 +22,6 @@ namespace TournamentsXP.Addon.ModLib
             }
             return null;
         }
-
-        
     }
 
     //internal class ModOptionsGauntletScreen : ScreenBase

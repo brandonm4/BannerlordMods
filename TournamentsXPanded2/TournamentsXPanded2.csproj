@@ -253,10 +253,6 @@
       <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.Helpers.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TaleWorlds.MountAndBlade.Launcher">
-      <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.Launcher.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="TaleWorlds.MountAndBlade.View">
       <HintPath>..\..\BannerlordVersions\target\TaleWorlds.MountAndBlade.View.dll</HintPath>
       <Private>False</Private>
@@ -384,6 +380,7 @@
     <ProjectReference Include="..\TournamentsXPanded.Settings\TournamentsXPanded.Settings.csproj">
       <Project>{66ad0016-bc49-4990-9f31-8ae1cebf3806}</Project>
       <Name>TournamentsXPanded.Settings</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

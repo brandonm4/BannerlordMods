@@ -3,11 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using TaleWorlds.CampaignSystem;
-
-#if VERSION130
-#endif
 
 namespace TournamentsXPanded.Models
 {

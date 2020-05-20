@@ -37,7 +37,7 @@ namespace BMTweakCollection.Behaviors
 
         private void OnDailyTick()
         {
-            foreach (Town all in Town.All)
+            foreach (Town all in Town.AllTowns)
             {
                 if (all.Governor != null)
                 {

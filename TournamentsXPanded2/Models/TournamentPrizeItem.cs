@@ -1,10 +1,7 @@
 ﻿using TaleWorlds.Core;
-
-#if VERSION130
-
 using TaleWorlds.ObjectSystem;
 
-#endif
+
 
 namespace TournamentsXPanded.Models
 {

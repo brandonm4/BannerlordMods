@@ -56,18 +56,6 @@ namespace TournamentsXPanded
             try
             {
                 versionNative = ModuleInfo.GetModules().Where(x => x.Name == "Native").Select(x => new { x.Name, x.Version }).FirstOrDefault()?.Version ?? default;
-#if VERSION130
-                //if (versionNative.Major == 1 && versionNative.Minor < 3)
-                //{
-                //    mismatch = true;
-                //}
-#endif
-#if VERSION120
-                if (versionNative.Major == 1 && versionNative.Minor != 2)
-                {
-                    mismatch = true;
-                }
-#endif
                 if (mismatch)
                 {
                     MessageBox.Show("TournamentsXPanded Version Mismatch detected.\nInstall the correct one for your version of the game.\nGame Version: " + versionNative.Major + "." + versionNative.Minor + "." + versionNative.Revision);
@@ -76,53 +64,11 @@ namespace TournamentsXPanded
                 else
                 {
                     _id = Guid.NewGuid().ToString();
-                    var configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName);
-                    bool haveSettings = false;
-
-                    try
-                    {
-                        var modnames = Utilities.GetModulesNames().ToList();
-                        if (modnames.Contains("TournamentsXP.Addon.ModLib"))
-                        {
-                            //   haveSettings = SettingsHelper.TryLoadFromModLib();
-                            var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "TournamentsXP.Addon.ModLib", "bin", "Win64_Shipping_Client", "TournamentsXP.Addon.ModLib.dll");
-                            modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
-                            var modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
-                            var settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXP.Addon.ModLib.SettingsHelperModLib");
-                            TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { });
-                            if (osettings != null)
-                            {
-                                TournamentXPSettings.SetSettings(osettings);
-                                haveSettings = true;
-                            }
-                        }
-                    }
-                    catch
-                    {
-                    }
-                    if (!haveSettings)
-                    {
-                        haveSettings = SettingsHelper.LoadSettings(configPath);
-                        addMenu = true;
-                    }
-                    if (haveSettings)
-                    {
-                        if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
-                        {
-                            CreateEquipmentRules();
-                        }
-                        //Add localizations
-                        LocalizedTextManager.LoadLocalizationXmls();
-                    }
-                    else
-                    {
-                        disabled = true;
-                        MessageBox.Show("TournamentXP had a critical failure during initialization.  Check your error logs.\nDisabling TournamentXP.");
-                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                ErrorLog.Log(ex.ToStringFull());
                 disabled = true;
             }
         }
@@ -139,6 +85,50 @@ namespace TournamentsXPanded
                 else
                 {
                     ShowMessage("Tournaments XPanded v" + version + " Loaded {DEBUG MODE}", Colors.Red);
+                }
+
+                var configPath = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetConfigsPath(), ModuleFolderName);
+                bool haveSettings = false;
+
+                try
+                {
+                    //var modnames = Utilities.GetModulesNames().ToList();
+                    //if (modnames.Contains("TournamentsXP.Addon.ModLib"))
+                    //{
+                    //    //   haveSettings = SettingsHelper.TryLoadFromModLib();
+                    //    var modlibsettingsdll = System.IO.Path.Combine(TaleWorlds.Engine.Utilities.GetBasePath(), "Modules", "TournamentsXP.Addon.ModLib", "bin", "Win64_Shipping_Client", "TournamentsXP.Addon.ModLib.dll");
+                    //    modlibsettingsdll = System.IO.Path.GetFullPath(modlibsettingsdll);
+                    //    var modlibSettingsAssembly = Assembly.LoadFile(modlibsettingsdll);
+                    //    var settingsHelperModLibType = modlibSettingsAssembly.GetType("TournamentsXP.Addon.ModLib.SettingsHelperModLib");
+                    //    TournamentXPSettings osettings = (TournamentXPSettings)settingsHelperModLibType.GetMethod("GetModLibSettings", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Invoke(null, new object[] { });
+                    //    if (osettings != null)
+                    //    {
+                    //        TournamentXPSettings.SetSettings(osettings);
+                    //        haveSettings = true;
+                    //    }
+                    //}
+                }
+                catch
+                {
+                }
+                if (!haveSettings)
+                {
+                    haveSettings = SettingsHelper.LoadSettings(configPath);
+                    // addMenu = true;
+                }
+                if (haveSettings)
+                {
+                    if (TournamentXPSettings.Instance.TournamentEquipmentFilter)
+                    {
+                        CreateEquipmentRules();
+                    }
+                    //Add localizations
+                    //  LocalizedTextManager.LoadLocalizationXmls();
+                }
+                else
+                {
+                    disabled = true;
+                    MessageBox.Show("TournamentXP had a critical failure during initialization.  Check your error logs.\nDisabling TournamentXP.");
                 }
 
                 if (addMenu)

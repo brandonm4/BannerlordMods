@@ -13,12 +13,9 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-
-#if VERSION130
-
 using TaleWorlds.ObjectSystem;
 
-#endif
+
 
 using TournamentsXPanded.Common.Patches;
 
